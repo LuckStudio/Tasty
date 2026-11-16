@@ -24,7 +24,7 @@
    se borra la caché vieja y todos ven lo nuevo.
    ============================================================ */
 
-const VERSION = 'compra-v24';
+const VERSION = 'compra-v25';
 
 const ESENCIALES = [
   './',

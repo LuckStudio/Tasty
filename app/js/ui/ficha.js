@@ -3,28 +3,30 @@
    Precios por supermercado, comparativa y preferencia
    ============================================================ */
 
-import { POR_ID, cantidad, sumar, alternar } from '../estado.js?v=24';
+import { POR_ID, cantidad, sumar, alternar } from '../estado.js?v=25';
 import { preciosDe, guardarPrecio, borrarPrecio, preferencias,
          alternarPreferencia, moverPreferencia, calcularBase, aNumero,
          formatoBase, FORMATOS, NOMBRE_BASE, DIAS_VIEJO,
          equivalentes, enlazarEquivalente, desenlazarEquivalente,
-         masBaratoQue, marcaDe, fijarMarca } from '../precios.js?v=24';
-import { tiendasActivas, TIENDA_POR_ID } from '../tiendas.js?v=24';
-import { CAT_POR_ID } from '../../datos/categorias.js?v=24';
-import { PRODUCTOS } from '../estado.js?v=24';
-import { historialHTML } from './stats.js?v=24';
+         masBaratoQue, marcaDe, fijarMarca } from '../precios.js?v=25';
+import { tiendasActivas, TIENDA_POR_ID } from '../tiendas.js?v=25';
+import { CAT_POR_ID } from '../../datos/categorias.js?v=25';
+import { PRODUCTOS } from '../estado.js?v=25';
+import { historialHTML } from './stats.js?v=25';
 import { periodicidad, fijarPeriodicidad, textoOrigen, ultimaCompra,
-         diasDesde } from '../reposicion.js?v=24';
-import { iconoHTML } from '../iconos.js?v=24';
-import { datos } from '../almacen.js?v=24';
-import { editarProducto } from '../catalogo-edit.js?v=24';
-import { SECCIONES, seccionDe, SECCION_POR_ID } from '../secciones.js?v=24';
-import { textosDe as textosDeTicket } from '../alias.js?v=24';
-import { recetas as todasLasRecetas } from '../recetas.js?v=24';
-import { serie, tendencia } from '../historial.js?v=24';
-import { euros, esc, $, tap } from '../util.js?v=24';
+         diasDesde } from '../reposicion.js?v=25';
+import { iconoHTML } from '../iconos.js?v=25';
+import { datos } from '../almacen.js?v=25';
+import { editarProducto } from '../catalogo-edit.js?v=25';
+import { SECCIONES, seccionDe, SECCION_POR_ID } from '../secciones.js?v=25';
+import { textosDe as textosDeTicket } from '../alias.js?v=25';
+import { recetas as todasLasRecetas } from '../recetas.js?v=25';
+import { serie, tendencia } from '../historial.js?v=25';
+import { fusionarProductos } from '../fusion.js?v=25';
+import { euros, esc, normalizar, $, tap } from '../util.js?v=25';
 
 let fondo, cuerpo, idActual = null, formAbierto = false, tiendaForm = null;
+let fusionando = false, qFusion = '';
 
 export function iniciarFicha(nodoFondo, nodoCuerpo) {
   fondo = nodoFondo;
@@ -38,6 +40,10 @@ export function iniciarFicha(nodoFondo, nodoCuerpo) {
     const t = e.target;
 
     if (t.closest('#fi-cerrar')) { cerrarFicha(); return; }
+
+    if (t.closest('#fi-fusionar')) { tap(); fusionando = !fusionando; qFusion = ''; pintar(); return; }
+    const fus = t.closest('[data-fusion-con]');
+    if (fus) { confirmarFusion(+fus.dataset.fusionCon); return; }
 
     if (t.closest('#fi-historial')) {
       const id = idActual;
@@ -130,6 +136,12 @@ export function iniciarFicha(nodoFondo, nodoCuerpo) {
 
   /* Vista previa del €/kg mientras se escribe */
   cuerpo.addEventListener('input', e => {
+    if (e.target.id === 'fi-fusion-buscar') {
+      qFusion = e.target.value;
+      const caja = cuerpo.querySelector('#fi-fusion-res');
+      if (caja) caja.innerHTML = resultadosFusion();
+      return;
+    }
     if (e.target.closest('#fi-form')) refrescarPrevia();
   });
   cuerpo.addEventListener('change', e => {
@@ -160,6 +172,7 @@ export function abrirFicha(id) {
   if (!POR_ID[id]) return;
   idActual = Number(id);
   formAbierto = false;
+  fusionando = false; qFusion = '';
   tiendaForm = preferencias(id)[0] || tiendasActivas()[0]?.id || null;
   fondo.hidden = false;
   pintar();
@@ -331,6 +344,37 @@ function pintar() {
   if (formAbierto) refrescarPrevia();
 }
 
+/* ---------- fusionar con un duplicado ---------- */
+
+function resultadosFusion() {
+  const q = normalizar(qFusion.trim());
+  if (!q) return '<p class="ga-nota">Escribe el nombre del producto que se queda.</p>';
+  const lista = PRODUCTOS.filter(x => x.id !== idActual && normalizar(x.n).includes(q)).slice(0, 8);
+  return lista.length
+    ? lista.map(x => `<button class="fi-fus-op" data-fusion-con="${x.id}">
+        <span class="rv-ico">${iconoHTML(x)}</span><b>${esc(x.n)}</b></button>`).join('')
+    : '<p class="ga-nota">No hay ningún producto con ese nombre.</p>';
+}
+
+function confirmarFusion(destinoId) {
+  const origen = POR_ID[idActual], destino = POR_ID[destinoId];
+  if (!origen || !destino) return;
+  document.dispatchEvent(new CustomEvent('abrir-hoja', { detail: {
+    titulo: `Fusionar «${origen.n}» con «${destino.n}»`,
+    opciones: [
+      { texto: `Fusionar en ${destino.n}`,
+        nota: `Compras, precios, recetas y textos de ticket de ${origen.n} pasan a ${destino.n}. ${origen.n} se archiva (no se borra).`,
+        peligro: true,
+        accion: () => {
+          const r = fusionarProductos(origen.id, destinoId);
+          document.dispatchEvent(new CustomEvent('aviso', {
+            detail: r.ok ? `Fusionados en ${destino.n}` : r.error }));
+          if (r.ok) { fusionando = false; qFusion = ''; abrirFicha(destinoId); }
+        } },
+      { texto: 'Cancelar' }
+    ] } }));
+}
+
 /* ------------------------------------------------------------
    DATOS DE LA FICHA: sección, peso medio, tendencia, textos de
    ticket y recetas. Lo editable (sección, peso medio) vive en la
@@ -376,6 +420,13 @@ function bloqueFicha(p) {
 
       ${enRecetas.length ? `<p class="fi-label">En tus recetas</p>
         <div class="fi-chips">${enRecetas.map(r => `<span class="fi-chip">${esc(r.nombre)}</span>`).join('')}</div>` : ''}
+
+      <button class="rv-link fi-fusionar" id="fi-fusionar" aria-expanded="${fusionando}">
+        ${fusionando ? 'Cancelar la fusión' : 'Es un duplicado: fusionar con otro producto'}</button>
+      ${fusionando ? `<div class="fi-fusion">
+        <input id="fi-fusion-buscar" class="ga-fecha" type="search" autocomplete="off"
+               placeholder="¿Con qué producto se fusiona?" value="${esc(qFusion)}" aria-label="Buscar producto">
+        <div id="fi-fusion-res">${resultadosFusion()}</div></div>` : ''}
     </div>`;
 }
 

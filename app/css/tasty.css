@@ -278,3 +278,15 @@ a { color: var(--accent); }
 .fi-dato .ga-fecha { width: 100%; padding: 0 0.9rem; }
 
 .ga-peso { min-height: 40px; min-width: 64px; padding: 0 0.7rem; border-radius: var(--r-pill); background: var(--ticket); border: 1px solid var(--accent); color: var(--accent); font-family: var(--f-mono); font-size: 0.74rem; font-weight: 600; }
+
+.fi-fusionar { display: block; margin-top: 0.6rem; padding-left: 0; }
+.fi-fusion { margin-top: 0.4rem; }
+.fi-fusion .ga-fecha { width: 100%; padding: 0 0.9rem; }
+.fi-fus-op { width: 100%; display: flex; align-items: center; gap: 0.7rem; min-height: 56px; padding: 0.3rem 0.6rem; margin-top: 6px; text-align: left; background: var(--ticket); border: 1px solid var(--line-sutil); border-radius: var(--r-md); }
+
+/* La hoja genérica (confirmaciones, listas de opciones) tiene que quedar
+   POR ENCIMA de la ficha de producto, que se abre antes; si no, lo que
+   se abre desde la ficha queda tapado y no se puede pulsar. Los avisos
+   (60) siguen por encima de las dos. */
+#hoja-fondo { z-index: 50; }
+.aviso { border-radius: var(--r-pill); background: var(--tinta); color: var(--papel); }

@@ -11,10 +11,10 @@
    ahí desde el primer día, solo hay que leerlo.
    ============================================================ */
 
-import { datos } from './almacen.js?v=24';
-import { POR_ID } from './estado.js?v=24';
-import { CAT_POR_ID, CATEGORIAS } from '../datos/categorias.js?v=24';
-import { TIENDA_POR_ID } from './tiendas.js?v=24';
+import { datos } from './almacen.js?v=25';
+import { POR_ID } from './estado.js?v=25';
+import { CAT_POR_ID, CATEGORIAS } from '../datos/categorias.js?v=25';
+import { TIENDA_POR_ID } from './tiendas.js?v=25';
 
 export const PERIODOS = [
   { id: 'mes',  nombre: 'Este mes',  meses: 0 },
