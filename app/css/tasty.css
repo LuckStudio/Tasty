@@ -1,0 +1,265 @@
+/* ============================================================
+   TASTY — capa de componentes del sistema visual
+   ------------------------------------------------------------
+   Se carga la última. Aplica el lenguaje de la propuesta visual
+   (papel, tinta, esquinas suaves, datos en monoespaciada,
+   separadores de ticket) sobre las pantallas que ya existían,
+   sin tocar su estructura.
+
+   Reglas:
+   · El acento cambia por tienda (--accent); lo demás no.
+   · La monoespaciada solo para datos: precios, cantidades,
+     totales y metadatos. Los textos de lectura, en Inter.
+   · Objetivos táctiles de al menos 44 px.
+   ============================================================ */
+
+/* ---------- tipografía ---------- */
+
+.res-cab h1, .barra-titulo, #fallo-carga h2, .hoja-titulo, .st-titulo {
+  font-family: var(--f-titulo);
+}
+.res-cab h1 {
+  font-size: 2.1rem;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+}
+.barra-titulo {
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  text-transform: none;
+}
+
+/* Metadato de ticket: mono pequeña en mayúsculas */
+.label, .res-cab p, .aj-bloque h2, .res-grupo-cab, .hoja-titulo,
+.fi-label, .seccion-cuenta, .nav-btn span, .conmutador button {
+  font-family: var(--f-mono);
+}
+.nav-btn span, .conmutador button { letter-spacing: 0.08em; }
+
+/* Datos: precios, cantidades, totales */
+.pr-cab b, #ga-total, .cmp-precio input, .ga-mini input, .prod-cant,
+.aj-dato span:last-child, .nav-contador, .res-nombre + *, .st-cifra {
+  font-family: var(--f-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- estructura ---------- */
+
+.app { background: var(--papel); border-color: var(--line-sutil); }
+.barra, .nav { background: var(--papel); }
+.nav { border-top-color: var(--line-sutil); }
+.barra { border-bottom-color: var(--line-sutil); }
+.res-cab { border-bottom: 0; padding-bottom: 1rem; }
+
+/* título de la barra cuando es el nombre de la lista */
+.barra-lista span {
+  font-family: var(--f-titulo);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  text-transform: none;
+}
+
+a { color: var(--accent); }
+
+/* ---------- botones ---------- */
+
+.btn-principal, .btn-secundario {
+  min-height: 52px;
+  border-radius: var(--r-md);
+  font-family: var(--f-texto);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.btn-principal {
+  background: var(--accent);
+  color: var(--sobre-acento);
+}
+.btn-secundario {
+  background: var(--ticket);
+  border: 1px solid var(--line);
+  color: var(--tinta);
+}
+.btn-secundario:hover { border-color: var(--tinta); }
+.aj-peligro { color: var(--agotado); }
+
+.ga-acciones, .ga-acciones button { gap: 8px; }
+.ga-acciones { gap: 8px; }
+
+/* ---------- campos y chips ---------- */
+
+.buscador input, .ga-fecha, .ga-buscador input, select.ga-fecha,
+.ga-json textarea, input.ga-fecha {
+  background: var(--ticket);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  min-height: 44px;
+}
+.buscador input:focus, .ga-fecha:focus, .ga-buscador input:focus {
+  border-color: var(--accent);
+  outline: none;
+}
+
+.cmp-tiendas, .cmp-pago { gap: 8px; }
+.cmp-tiendas button, .cmp-pago button {
+  min-height: 44px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--line);
+  background: var(--ticket);
+  color: var(--tinta);
+  font-size: 0.82rem;
+  letter-spacing: 0;
+}
+.cmp-tiendas button[aria-pressed="true"], .cmp-pago button[aria-pressed="true"] {
+  background: var(--marca, var(--tinta));
+  border-color: var(--marca, var(--tinta));
+  color: var(--papel);
+}
+.cmp-pago { display: flex; border: 0; }
+.cmp-pago button { flex: 1; }
+
+/* ---------- tarjetas ---------- */
+
+.pr-panel, .ga-aviso, .st-bloque {
+  background: var(--ticket);
+  border: 1px solid var(--line-sutil);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+}
+.ga-aviso { border-color: var(--accent); }
+.pr-cab { border-bottom: 1px dashed var(--perforado); }
+
+.aj-bloque {
+  margin: 12px var(--pad-x) 0;
+  padding: 1.3rem 1.2rem;
+  background: var(--ticket);
+  border: 1px solid var(--line-sutil);
+  border-radius: var(--r-lg);
+}
+.aj-dato { border-bottom: 1px dashed var(--perforado); }
+.aj-dato:last-child { border-bottom: 0; }
+
+/* ---------- la rejilla de productos ---------- */
+
+.seccion { border-bottom: 0; }
+.grid {
+  gap: 8px;
+  padding: 8px var(--pad-x) 12px;
+  background: transparent;
+  border-top: 0;
+}
+.prod {
+  background: var(--ticket);
+  border: 1px solid var(--line-sutil);
+  border-radius: var(--r-md);
+  aspect-ratio: 1 / 0.98;
+}
+.prod[aria-pressed="true"] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--sobre-acento);
+}
+.prod[aria-pressed="true"]::before { display: none; }
+.prod-cant {
+  background: var(--sobre-acento);
+  color: var(--accent);
+  border-radius: var(--r-pill);
+  min-width: 18px; height: 18px;
+  display: grid; place-items: center;
+  bottom: 6px; right: 6px;
+  font-size: 0.64rem;
+}
+.prod-nombre { font-size: 0.7rem; }
+
+/* ---------- lista ---------- */
+
+.res-linea { border-bottom: 1px dashed var(--perforado); }
+
+/* ---------- conmutador y navegación ---------- */
+
+.conmutador { border-top: 0; padding: 0 var(--pad-x) 8px; gap: 6px; }
+.conmutador button {
+  min-height: 40px;
+  border-radius: var(--r-pill);
+  background: transparent;
+  font-size: 0.66rem;
+}
+.conmutador button[aria-pressed="true"] {
+  background: var(--tinta);
+  color: var(--papel);
+}
+.conmutador button[aria-pressed="true"]::after { display: none; }
+
+.nav-btn { min-height: 48px; }
+.nav-btn span { font-size: 0.58rem; letter-spacing: 0.04em; text-transform: none; font-family: var(--f-texto); font-weight: 500; }
+.nav-btn[aria-current="page"] { color: var(--accent); }
+.nav-btn[aria-current="page"]::before {
+  top: 4px; width: 28px; height: 3px; border-radius: var(--r-pill);
+}
+.nav-contador {
+  background: var(--accent);
+  color: var(--sobre-acento);
+  border-radius: var(--r-pill);
+}
+
+/* ---------- hoja inferior ---------- */
+
+.hoja {
+  background: var(--papel);
+  border-radius: var(--r-lg) var(--r-lg) 0 0;
+}
+.hoja-fondo { background: rgba(21,23,28,0.45); }
+.hoja-opcion { border-bottom: 1px dashed var(--perforado); min-height: 52px; }
+
+/* ---------- editor de compras ---------- */
+
+.ga-linea { border-bottom: 1px dashed var(--perforado); }
+.ga-linea .res-icono { border-radius: var(--r-sm); }
+.ga-sugerido { border-radius: var(--r-pill); }
+
+/* ---------- foco visible ---------- */
+
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: var(--r-sm);
+}
+
+/* ---------- campos compuestos (sin doble borde) ---------- */
+
+.ga-buscador, .res-anadir {
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--ticket);
+  overflow: hidden;
+  gap: 0;
+}
+.ga-buscador > input, .res-anadir input {
+  border: 0; border-radius: 0; background: transparent; min-height: 48px;
+}
+.ga-buscador:focus-within, .res-anadir:focus-within { border-color: var(--accent); }
+.res-anadir button {
+  background: var(--accent);
+  color: var(--sobre-acento);
+  min-width: 88px;
+  font-family: var(--f-texto);
+  font-size: 0.85rem;
+  letter-spacing: 0;
+  text-transform: none;
+}
+#ga-sugerencias .ga-sug { border-top: 1px dashed var(--perforado); }
+
+/* ---------- contador +/- ---------- */
+
+.res-pasos {
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  background: var(--ticket);
+  overflow: hidden;
+}
+.res-pasos button { width: 38px; height: 36px; }
+.res-pasos span { font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
+.res-quitar { width: 40px; height: 40px; }

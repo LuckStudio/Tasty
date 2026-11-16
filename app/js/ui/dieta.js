@@ -9,11 +9,11 @@ import { COMIDAS, PLANES, COMIDA_POR_ID, PLAN_POR_ID, recetas,
          cambiarIngrediente, nombreIngrediente, cuentaPorComida,
          faltaPorAnadir, recetasCubiertas, productosDe, textosDe,
          buscarParaReceta, resumenDieta, exportarRecetas, recetasTexto,
-         validarRecetas, importarRecetas } from '../recetas.js?v=19';
-import { POR_ID, cantidad, alternar, sumar, anadirLibre } from '../estado.js?v=19';
-import { iconoHTML } from '../iconos.js?v=19';
-import { DIETA } from '../../datos/recetas-dieta.js?v=19';
-import { $, tap } from '../util.js?v=19';
+         validarRecetas, importarRecetas } from '../recetas.js?v=20';
+import { POR_ID, cantidad, alternar, sumar, anadirLibre } from '../estado.js?v=20';
+import { iconoHTML } from '../iconos.js?v=20';
+import { DIETA } from '../../datos/recetas-dieta.js?v=20';
+import { $, tap } from '../util.js?v=20';
 
 let raiz;
 let pantalla = 'inicio';       // inicio | receta | falta

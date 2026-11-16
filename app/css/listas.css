@@ -35,7 +35,7 @@
   font-size: 1.1rem;
   flex: 0 0 auto;
 }
-.ls-usar span { flex: 1; min-width: 0; font-size: 0.95rem; font-weight: 300; }
+.ls-usar span { flex: 1; min-width: 0; font-size: 0.95rem; font-weight: 400; }
 .ls-usar em {
   display: block;
   font-style: normal;
@@ -95,7 +95,7 @@
 }
 .barra-lista b {
   font-size: 0.55rem;
-  font-weight: 300;
+  font-weight: 400;
   color: var(--muted);
   flex: 0 0 auto;
 }
@@ -139,7 +139,7 @@
   width: 100%;
   text-align: left;
   font-size: 0.95rem;
-  font-weight: 300;
+  font-weight: 400;
 }
 
 .cmp-icono {
@@ -193,7 +193,7 @@
   display: block;
   font-style: normal;
   font-size: 0.55rem;
-  font-weight: 300;
+  font-weight: 400;
   letter-spacing: 0.16em;
   color: var(--muted);
   margin-top: 3px;

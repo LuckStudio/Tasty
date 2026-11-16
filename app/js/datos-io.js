@@ -16,10 +16,10 @@
               haber puesto delante el botón de exportar.
    ============================================================ */
 
-import { datos, guardar, borrarTodo } from './almacen.js?v=19';
-import { reconstruirCatalogo, POR_ID } from './estado.js?v=19';
-import { reconstruirTiendas, TIENDA_POR_ID } from './tiendas.js?v=19';
-import { CATALOGO_VERSION } from '../datos/catalogo.js?v=19';
+import { datos, guardar, borrarTodo } from './almacen.js?v=20';
+import { reconstruirCatalogo, POR_ID } from './estado.js?v=20';
+import { reconstruirTiendas, TIENDA_POR_ID } from './tiendas.js?v=20';
+import { CATALOGO_VERSION } from '../datos/catalogo.js?v=20';
 
 export const FORMATO = 'lista-compra-luckstudio-copia';
 

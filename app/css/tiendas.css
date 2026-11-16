@@ -28,7 +28,7 @@
   min-width: 0;
   text-align: left;
   font-size: 0.9rem;
-  font-weight: 300;
+  font-weight: 400;
 }
 .tn-n em {
   display: block;
@@ -126,7 +126,7 @@
   font-weight: 800;
   flex: 0 0 auto;
 }
-.pp-tiendas span { font-size: 0.92rem; font-weight: 300; }
+.pp-tiendas span { font-size: 0.92rem; font-weight: 400; }
 .pp-tiendas em {
   display: block;
   font-style: normal;
@@ -194,7 +194,7 @@
 
 .pp-datos { flex: 1; min-width: 0; }
 
-.pp-nombre { font-size: 0.9rem; font-weight: 300; display: block; }
+.pp-nombre { font-size: 0.9rem; font-weight: 400; display: block; }
 .pp-nombre em {
   display: block;
   font-style: normal;
@@ -332,7 +332,7 @@
   min-width: 0;
   text-align: left;
   font-size: 0.92rem;
-  font-weight: 300;
+  font-weight: 400;
 }
 .rc-n em {
   display: block;

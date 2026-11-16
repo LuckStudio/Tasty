@@ -13,7 +13,7 @@
 <meta http-equiv="Pragma" content="no-cache">
 
 <!-- Comportamiento de app al añadir a la pantalla de inicio -->
-<meta name="theme-color" content="#ffffff">
+<meta name="theme-color" content="#F3F2EE">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -23,9 +23,8 @@
 <link rel="icon" type="image/svg+xml" href="iconos/favicon.svg">
 <link rel="icon" type="image/png" sizes="192x192" href="iconos/app-192.png">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Host+Grotesk:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+<link rel="preload" href="fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/space-grotesk.woff2" as="font" type="font/woff2" crossorigin>
 
 <!-- Se aplica el tema antes de pintar nada para que abrir en
      oscuro no dé un fogonazo blanco -->
@@ -37,23 +36,24 @@
     var oscuro = t === 'oscuro' ||
       (t === 'auto' && matchMedia('(prefers-color-scheme: dark)').matches);
     document.querySelector('meta[name="theme-color"]').content =
-      oscuro ? '#0a0a0a' : '#ffffff';
+      oscuro ? '#121418' : '#F3F2EE';
   } catch (e) {}
 })();
 </script>
 
-<link rel="stylesheet" href="css/base.css?v=19">
-<link rel="stylesheet" href="css/shell.css?v=19">
-<link rel="stylesheet" href="css/grid.css?v=19">
-<link rel="stylesheet" href="css/comprador.css?v=19">
-<link rel="stylesheet" href="css/ficha.css?v=19">
-<link rel="stylesheet" href="css/gastos.css?v=19">
-<link rel="stylesheet" href="css/stats.css?v=19">
-<link rel="stylesheet" href="css/admin.css?v=19">
-<link rel="stylesheet" href="css/tiendas.css?v=19">
-<link rel="stylesheet" href="css/listas.css?v=19">
-<link rel="stylesheet" href="css/cesta.css?v=19">
-<link rel="stylesheet" href="css/dieta.css?v=19">
+<link rel="stylesheet" href="css/base.css?v=20">
+<link rel="stylesheet" href="css/shell.css?v=20">
+<link rel="stylesheet" href="css/grid.css?v=20">
+<link rel="stylesheet" href="css/comprador.css?v=20">
+<link rel="stylesheet" href="css/ficha.css?v=20">
+<link rel="stylesheet" href="css/gastos.css?v=20">
+<link rel="stylesheet" href="css/stats.css?v=20">
+<link rel="stylesheet" href="css/admin.css?v=20">
+<link rel="stylesheet" href="css/tiendas.css?v=20">
+<link rel="stylesheet" href="css/listas.css?v=20">
+<link rel="stylesheet" href="css/cesta.css?v=20">
+<link rel="stylesheet" href="css/dieta.css?v=20">
+<link rel="stylesheet" href="css/tasty.css?v=20">
 </head>
 
 <body>
@@ -193,47 +193,48 @@
      momento. Es la diferencia entre arrancar en medio segundo o
      en cinco.
      ============================================================ -->
-<link rel="modulepreload" href="js/app.js?v=19">
-<link rel="modulepreload" href="js/almacen.js?v=19">
-<link rel="modulepreload" href="js/catalogo-edit.js?v=19">
-<link rel="modulepreload" href="js/compra.js?v=19">
-<link rel="modulepreload" href="js/datos-io.js?v=19">
-<link rel="modulepreload" href="js/escaner.js?v=19">
-<link rel="modulepreload" href="js/estado.js?v=19">
-<link rel="modulepreload" href="js/gastos.js?v=19">
-<link rel="modulepreload" href="js/gemini.js?v=19">
-<link rel="modulepreload" href="js/iconos.js?v=19">
-<link rel="modulepreload" href="js/listas.js?v=19">
-<link rel="modulepreload" href="js/precios.js?v=19">
-<link rel="modulepreload" href="js/recetas.js?v=19">
-<link rel="modulepreload" href="js/recordatorios.js?v=19">
-<link rel="modulepreload" href="js/reposicion.js?v=19">
-<link rel="modulepreload" href="js/stats.js?v=19">
-<link rel="modulepreload" href="js/tema.js?v=19">
-<link rel="modulepreload" href="js/tiendas.js?v=19">
-<link rel="modulepreload" href="js/ui/admin.js?v=19">
-<link rel="modulepreload" href="js/ui/cesta.js?v=19">
-<link rel="modulepreload" href="js/ui/comprador.js?v=19">
-<link rel="modulepreload" href="js/ui/dieta.js?v=19">
-<link rel="modulepreload" href="js/ui/escaner.js?v=19">
-<link rel="modulepreload" href="js/ui/ficha.js?v=19">
-<link rel="modulepreload" href="js/ui/gastos.js?v=19">
-<link rel="modulepreload" href="js/ui/grid.js?v=19">
-<link rel="modulepreload" href="js/ui/importar.js?v=19">
-<link rel="modulepreload" href="js/ui/listas.js?v=19">
-<link rel="modulepreload" href="js/ui/precios-panel.js?v=19">
-<link rel="modulepreload" href="js/ui/recordatorios.js?v=19">
-<link rel="modulepreload" href="js/ui/resumen.js?v=19">
-<link rel="modulepreload" href="js/ui/stats.js?v=19">
-<link rel="modulepreload" href="js/ui/ticket.js?v=19">
-<link rel="modulepreload" href="js/ui/tiendas.js?v=19">
-<link rel="modulepreload" href="js/url.js?v=19">
-<link rel="modulepreload" href="js/util.js?v=19">
-<link rel="modulepreload" href="datos/catalogo.js?v=19">
-<link rel="modulepreload" href="datos/categorias.js?v=19">
-<link rel="modulepreload" href="datos/iconos.js?v=19">
-<link rel="modulepreload" href="datos/recetas-dieta.js?v=19">
-<link rel="modulepreload" href="datos/tiendas.js?v=19">
+<link rel="modulepreload" href="js/app.js?v=20">
+<link rel="modulepreload" href="js/almacen.js?v=20">
+<link rel="modulepreload" href="js/catalogo-edit.js?v=20">
+<link rel="modulepreload" href="js/color.js?v=20">
+<link rel="modulepreload" href="js/compra.js?v=20">
+<link rel="modulepreload" href="js/datos-io.js?v=20">
+<link rel="modulepreload" href="js/escaner.js?v=20">
+<link rel="modulepreload" href="js/estado.js?v=20">
+<link rel="modulepreload" href="js/gastos.js?v=20">
+<link rel="modulepreload" href="js/gemini.js?v=20">
+<link rel="modulepreload" href="js/iconos.js?v=20">
+<link rel="modulepreload" href="js/listas.js?v=20">
+<link rel="modulepreload" href="js/precios.js?v=20">
+<link rel="modulepreload" href="js/recetas.js?v=20">
+<link rel="modulepreload" href="js/recordatorios.js?v=20">
+<link rel="modulepreload" href="js/reposicion.js?v=20">
+<link rel="modulepreload" href="js/stats.js?v=20">
+<link rel="modulepreload" href="js/tema.js?v=20">
+<link rel="modulepreload" href="js/tiendas.js?v=20">
+<link rel="modulepreload" href="js/ui/admin.js?v=20">
+<link rel="modulepreload" href="js/ui/cesta.js?v=20">
+<link rel="modulepreload" href="js/ui/comprador.js?v=20">
+<link rel="modulepreload" href="js/ui/dieta.js?v=20">
+<link rel="modulepreload" href="js/ui/escaner.js?v=20">
+<link rel="modulepreload" href="js/ui/ficha.js?v=20">
+<link rel="modulepreload" href="js/ui/gastos.js?v=20">
+<link rel="modulepreload" href="js/ui/grid.js?v=20">
+<link rel="modulepreload" href="js/ui/importar.js?v=20">
+<link rel="modulepreload" href="js/ui/listas.js?v=20">
+<link rel="modulepreload" href="js/ui/precios-panel.js?v=20">
+<link rel="modulepreload" href="js/ui/recordatorios.js?v=20">
+<link rel="modulepreload" href="js/ui/resumen.js?v=20">
+<link rel="modulepreload" href="js/ui/stats.js?v=20">
+<link rel="modulepreload" href="js/ui/ticket.js?v=20">
+<link rel="modulepreload" href="js/ui/tiendas.js?v=20">
+<link rel="modulepreload" href="js/url.js?v=20">
+<link rel="modulepreload" href="js/util.js?v=20">
+<link rel="modulepreload" href="datos/catalogo.js?v=20">
+<link rel="modulepreload" href="datos/categorias.js?v=20">
+<link rel="modulepreload" href="datos/iconos.js?v=20">
+<link rel="modulepreload" href="datos/recetas-dieta.js?v=20">
+<link rel="modulepreload" href="datos/tiendas.js?v=20">
 
 <!-- ============================================================
      RED DE SEGURIDAD
@@ -336,6 +337,6 @@
 })();
 </script>
 
-<script type="module" src="js/app.js?v=19"></script>
+<script type="module" src="js/app.js?v=20"></script>
 </body>
 </html>

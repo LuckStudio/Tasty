@@ -168,7 +168,7 @@
 
 .fi-label {
   font-size: 0.58rem;
-  font-weight: 300;
+  font-weight: 400;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--muted);
@@ -201,7 +201,7 @@
   letter-spacing: -0.02em;
 }
 .fi-campo input:focus { outline: none; }
-.fi-campo input::placeholder { color: var(--muted); font-weight: 300; }
+.fi-campo input::placeholder { color: var(--muted); font-weight: 400; }
 .fi-campo b { font-size: 0.85rem; font-weight: 400; color: var(--muted); }
 
 .fi-campo-select { flex: 0 0 auto; padding: 0; }
@@ -303,7 +303,7 @@
   flex: 1;
   padding: 0.7rem 0;
   font-size: 0.58rem;
-  font-weight: 300;
+  font-weight: 400;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--muted);
@@ -355,7 +355,7 @@
   flex: 1;
   min-width: 0;
   font-size: 0.88rem;
-  font-weight: 300;
+  font-weight: 400;
 }
 .fi-orden li span em {
   display: block;
@@ -446,7 +446,7 @@
   gap: 0.8rem;
   padding: 0.3rem 0;
   font-size: 0.85rem;
-  font-weight: 300;
+  font-weight: 400;
 }
 .res-urgente em {
   font-style: normal;

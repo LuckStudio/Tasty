@@ -105,6 +105,7 @@ css/tiendas.css     supermercados y panel de precios
 css/listas.css      listas múltiples y comprador
 css/cesta.css       dónde comprar, marcas y equivalentes
 css/dieta.css       recetas y comidas del día
+css/tasty.css       capa de componentes del sistema visual (se carga la última)
 
 js/app.js           arranque y navegación
 js/estado.js        estado central de la lista
@@ -120,7 +121,10 @@ js/recordatorios.js avisos programados
 js/listas.js        listas por ubicación
 js/recetas.js       dieta, recetas e ingredientes
 js/almacen.js       guardado en el navegador
-js/tema.js          claro, oscuro o automático
+js/tema.js          claro, oscuro o automático, y acento por tienda
+js/color.js         contraste WCAG y acento accesible
+js/gemini.js        acceso a Gemini con el modelo más reciente
+js/escaner.js       foto de ticket a borrador de compra
 js/url.js           enlaces compartibles
 js/iconos.js        SVG con reserva a emoji
 js/util.js          utilidades
@@ -146,6 +150,7 @@ datos/tiendas.js    supermercados
 datos/iconos.js     registro opcional de iconos subidos
 
 iconos/             SVG por categoría + icono de la app
+fonts/              Space Grotesk, Inter y JetBrains Mono (licencia OFL, funcionan sin conexión)
 ```
 
 ## Qué editar y dónde
@@ -156,7 +161,7 @@ iconos/             SVG por categoría + icono de la app
 | Añadir un supermercado | `datos/tiendas.js` |
 | Añadir una categoría | `datos/categorias.js` |
 | Subir un icono | `iconos/<categoría>/` |
-| Cambiar colores o tipografía | `css/base.css` |
+| Cambiar colores o tipografía | `css/base.css` (tokens) y `css/tasty.css` (componentes) |
 
 ## Iconos
 

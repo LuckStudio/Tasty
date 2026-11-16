@@ -27,7 +27,7 @@
   flex: 1;
   min-width: 0;
   font-size: 0.88rem;
-  font-weight: 300;
+  font-weight: 400;
 }
 .ad-fila-n em {
   display: block;
@@ -64,7 +64,7 @@
 
 .ad-ruta {
   display: block;
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-family: var(--f-mono);
   font-size: 0.75rem;
   padding: 0.7rem 0.8rem;
   background: var(--off);
@@ -80,7 +80,7 @@
   border-bottom: 0.5px solid var(--line-sutil);
 }
 .ad-ruta-fila code {
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-family: var(--f-mono);
   font-size: 0.68rem;
   color: var(--muted-2);
   word-break: break-all;

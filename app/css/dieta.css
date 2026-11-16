@@ -7,7 +7,7 @@
 .di-plan {
   padding: 0.9rem var(--pad-x) 0.3rem;
   font-size: 0.56rem;
-  font-weight: 300;
+  font-weight: 400;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--muted);
@@ -37,7 +37,7 @@
   padding: 0.7rem 0;
   text-align: left;
   font-size: 0.9rem;
-  font-weight: 300;
+  font-weight: 400;
 }
 .di-n em {
   display: block;
@@ -105,7 +105,7 @@
   flex: 1;
   min-width: 0;
   font-size: 0.86rem;
-  font-weight: 300;
+  font-weight: 400;
 }
 .di-ing-n em {
   display: block;

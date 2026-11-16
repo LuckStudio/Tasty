@@ -11,9 +11,9 @@
    vean los cambios sin recargar la página.
    ============================================================ */
 
-import { datos, guardar } from './almacen.js?v=19';
-import { TIENDAS_BASE, TIENDA_LIBRE, COLORES_TIENDA } from '../datos/tiendas.js?v=19';
-import { slug } from './util.js?v=19';
+import { datos, guardar } from './almacen.js?v=20';
+import { TIENDAS_BASE, TIENDA_LIBRE, COLORES_TIENDA } from '../datos/tiendas.js?v=20';
+import { slug } from './util.js?v=20';
 
 export { TIENDA_LIBRE, COLORES_TIENDA };
 

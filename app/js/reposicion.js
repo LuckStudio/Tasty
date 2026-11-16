@@ -18,8 +18,8 @@
    dice de dónde viene cada cifra.
    ============================================================ */
 
-import { datos, guardar } from './almacen.js?v=19';
-import { POR_ID, PRODUCTOS } from './estado.js?v=19';
+import { datos, guardar } from './almacen.js?v=20';
+import { POR_ID, PRODUCTOS } from './estado.js?v=20';
 
 /* Días por defecto según con qué frecuencia se compra algo.
    3 = compra usual, 2 = puntual, 1 = rara vez */

@@ -11,64 +11,72 @@
    ============================================================ */
 
 import { estado, suscribir, totalArticulos, cargarLista, vaciar,
-         fijarVista, seleccionados } from './estado.js?v=19';
+         fijarVista, seleccionados } from './estado.js?v=20';
 import { compraActual, crearCompra, descartarCompra,
-         suscribirCompra } from './compra.js?v=19';
+         suscribirCompra } from './compra.js?v=20';
 import { suscribirPrecios, cuantosPreciosHay, aprenderDeTicket }
-  from './precios.js?v=19';
-import { CATALOGO_VERSION } from '../datos/catalogo.js?v=19';
-import { leerHash, enlace, codificar } from './url.js?v=19';
-import { vigilarIconos } from './iconos.js?v=19';
-import { iniciarTema, fijarTema, temaActual, TEMAS } from './tema.js?v=19';
-import { iniciarGrid, pintarGrid, fijarBusqueda } from './ui/grid.js?v=19';
-import { iniciarResumen, pintarResumen } from './ui/resumen.js?v=19';
+  from './precios.js?v=20';
+import { CATALOGO_VERSION } from '../datos/catalogo.js?v=20';
+import { leerHash, enlace, codificar } from './url.js?v=20';
+import { vigilarIconos } from './iconos.js?v=20';
+import { iniciarTema, fijarTema, temaActual, TEMAS, fijarAcentoTienda } from './tema.js?v=20';
+import { iniciarGrid, pintarGrid, fijarBusqueda } from './ui/grid.js?v=20';
+import { iniciarResumen, pintarResumen } from './ui/resumen.js?v=20';
 import { iniciarComprador, pintarComprador, pintarTicket,
-         fijarTicketVisible } from './ui/comprador.js?v=19';
-import { iniciarFicha, cerrarFicha } from './ui/ficha.js?v=19';
-import { iniciarGastos, pintarGastos, reiniciarGastos } from './ui/gastos.js?v=19';
-import { iniciarAdmin, pintarAdmin, reiniciarAdmin } from './ui/admin.js?v=19';
+         fijarTicketVisible } from './ui/comprador.js?v=20';
+import { iniciarFicha, cerrarFicha } from './ui/ficha.js?v=20';
+import { iniciarGastos, pintarGastos, reiniciarGastos } from './ui/gastos.js?v=20';
+import { iniciarAdmin, pintarAdmin, reiniciarAdmin } from './ui/admin.js?v=20';
 import { iniciarPanelPrecios, pintarPanel, reiniciarPanelPrecios }
-  from './ui/precios-panel.js?v=19';
+  from './ui/precios-panel.js?v=20';
 import { iniciarVistaTiendas, pintarTiendas, reiniciarTiendas }
-  from './ui/tiendas.js?v=19';
-import { suscribirTiendas, TIENDAS } from './tiendas.js?v=19';
-import { abrirEdicionTicket } from './ui/gastos.js?v=19';
+  from './ui/tiendas.js?v=20';
+import { suscribirTiendas, TIENDAS, TIENDA_POR_ID } from './tiendas.js?v=20';
+import { abrirEdicionTicket } from './ui/gastos.js?v=20';
 import { iniciarImportar, pintarImportar, reiniciarImportar }
-  from './ui/importar.js?v=19';
+  from './ui/importar.js?v=20';
 import { iniciarRecordatorios, pintarRecordatorios, reiniciarRecordatorios }
-  from './ui/recordatorios.js?v=19';
+  from './ui/recordatorios.js?v=20';
 import { programar, avisosPerdidos, recordatorios, estadoPermiso }
-  from './recordatorios.js?v=19';
+  from './recordatorios.js?v=20';
 import { suscribirReposicion, limpiarUrgenciasHuerfanas, sugerencias }
-  from './reposicion.js?v=19';
+  from './reposicion.js?v=20';
 import { iniciarVistaListas, pintarListas, reiniciarListas }
-  from './ui/listas.js?v=19';
+  from './ui/listas.js?v=20';
 import { listaActiva, listas, cambiarA, otrasConCosas, suscribirListas }
-  from './listas.js?v=19';
-import { iniciarCesta, pintarCesta, reiniciarCesta } from './ui/cesta.js?v=19';
-import { iniciarDieta, pintarDieta, reiniciarDieta } from './ui/dieta.js?v=19';
-import { suscribirRecetas, resumenDieta } from './recetas.js?v=19';
+  from './listas.js?v=20';
+import { iniciarCesta, pintarCesta, reiniciarCesta } from './ui/cesta.js?v=20';
+import { iniciarDieta, pintarDieta, reiniciarDieta } from './ui/dieta.js?v=20';
+import { suscribirRecetas, resumenDieta } from './recetas.js?v=20';
 import { copiaTexto, csvTickets, csvPrecios, descargar, nombreArchivo,
          validarCopia, fusionar, limpiarTodo, cuantoHay, suscribirDatos }
-  from './datos-io.js?v=19';
-import { suscribirCatalogo, estadoCatalogo } from './catalogo-edit.js?v=19';
+  from './datos-io.js?v=20';
+import { suscribirCatalogo, estadoCatalogo } from './catalogo-edit.js?v=20';
 import { suscribirGastos, ticketPorId, resumenGasto,
-         pendientesSugeridos } from './gastos.js?v=19';
-import { iniciarAjustesGemini, pintarBloqueGemini } from './ui/escaner.js?v=19';
-import { $, euros, tap } from './util.js?v=19';
+         pendientesSugeridos } from './gastos.js?v=20';
+import { iniciarAjustesGemini, pintarBloqueGemini } from './ui/escaner.js?v=20';
+import { $, euros, tap } from './util.js?v=20';
 
 /* Sello de versión. Lo cambia versionar.py junto con las rutas,
    así que ver aquí un número viejo significa que el navegador está
    usando archivos antiguos. */
-export const VERSION_APP = '19';
+export const VERSION_APP = '20';
 
 let vistaActual = 'grid';
 let modo = 'editor';
 
 /* ---------- navegación ---------- */
 
+/* En el supermercado, la app toma el color de la tienda elegida:
+   solo cambia el acento, el resto del sistema visual no se toca. */
+function aplicarTemaTienda() {
+  const c = vistaActual === 'comprador' ? compraActual() : null;
+  fijarAcentoTienda(c?.tienda ? TIENDA_POR_ID[c.tienda]?.color : null);
+}
+
 function ir(vista) {
   vistaActual = vista;
+  aplicarTemaTienda();
   cerrarFicha();
 
   for (const nodo of document.querySelectorAll('.vista')) {
@@ -664,7 +672,7 @@ function refrescar() {
 }
 
 suscribir(refrescar);
-suscribirCompra(() => { if (vistaActual === 'comprador') pintarComprador(); });
+suscribirCompra(() => { aplicarTemaTienda(); if (vistaActual === 'comprador') pintarComprador(); });
 
 /* Un precio nuevo cambia el presupuesto del resumen y la
    agrupación por tienda, así que hay que repintar */
@@ -745,6 +753,10 @@ function arrancar() {
   iniciarVistaTiendas($('#v-tiendas'));
   iniciarImportar($('#v-importar'));
   iniciarAjustesGemini();
+
+  /* Pide al navegador que no borre los datos si el móvil se queda sin
+     espacio (en la PWA instalada suele concederlo sin preguntar). */
+  try { navigator.storage?.persist?.(); } catch { /* sin soporte */ }
   document.addEventListener('ir-vista', e => ir(e.detail));
   iniciarRecordatorios($('#v-recordatorios'));
   iniciarVistaListas($('#v-listas'));

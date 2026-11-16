@@ -13,7 +13,7 @@
   flex: 1;
   padding: 0.75rem 0;
   font-size: 0.58rem;
-  font-weight: 300;
+  font-weight: 400;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--muted);
@@ -132,7 +132,7 @@
 }
 .st-fila-cab span {
   font-size: 0.85rem;
-  font-weight: 300;
+  font-weight: 400;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -178,7 +178,7 @@
 }
 .st-prod:last-child { border-bottom: none; }
 .st-prod .res-icono { width: 20px; height: 20px; font-size: 17px; }
-.st-prod-n { flex: 1; min-width: 0; font-size: 0.85rem; font-weight: 300; }
+.st-prod-n { flex: 1; min-width: 0; font-size: 0.85rem; font-weight: 400; }
 .st-prod-n em {
   display: block;
   font-style: normal;

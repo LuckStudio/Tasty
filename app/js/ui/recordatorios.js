@@ -5,8 +5,8 @@
 import { DIAS, recordatorios, crearRecordatorio, editarRecordatorio,
          borrarRecordatorio, textoProxima, textoDias, estadoPermiso,
          pedirPermiso, necesitaInstalarse, enPantallaDeInicio,
-         soportaNotificaciones } from '../recordatorios.js?v=19';
-import { $, tap } from '../util.js?v=19';
+         soportaNotificaciones } from '../recordatorios.js?v=20';
+import { $, tap } from '../util.js?v=20';
 
 let raiz;
 let editando = null;              // id, 'nuevo' o null

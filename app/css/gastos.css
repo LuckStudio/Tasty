@@ -49,7 +49,7 @@
   transition: opacity 0.22s var(--curva);
 }
 .ga-fila > button:first-child:active { opacity: 0.5; }
-.ga-fila span { font-size: 0.88rem; font-weight: 300; }
+.ga-fila span { font-size: 0.88rem; font-weight: 400; }
 .ga-fila span em {
   display: block;
   font-style: normal;
@@ -81,7 +81,7 @@
   padding: 0.7rem 0;
   border-bottom: 0.5px solid var(--line-sutil);
 }
-.ga-pend span { flex: 1; font-size: 0.88rem; font-weight: 300; min-width: 0; }
+.ga-pend span { flex: 1; font-size: 0.88rem; font-weight: 400; min-width: 0; }
 .ga-pend span em {
   display: block;
   font-style: normal;
@@ -116,7 +116,7 @@
   width: 100%;
   padding: 0.85rem;
   border: 0.5px solid var(--line);
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-family: var(--f-mono);
   font-size: 0.75rem;
   line-height: 1.5;
   resize: vertical;
@@ -155,7 +155,7 @@
   padding: 0.65rem 0.85rem;
   text-align: left;
   font-size: 0.85rem;
-  font-weight: 300;
+  font-weight: 400;
   border-top: 0.5px solid var(--line-sutil);
   transition: background 0.18s var(--curva);
 }
@@ -174,7 +174,7 @@
   flex: 1;
   min-width: 0;
   font-size: 0.88rem;
-  font-weight: 300;
+  font-weight: 400;
 }
 .ga-linea-n em {
   display: block;
@@ -247,7 +247,7 @@
   display: block;
   font-style: normal;
   font-size: 0.55rem;
-  font-weight: 300;
+  font-weight: 400;
   letter-spacing: 0.14em;
   color: var(--muted);
   margin-top: 3px;
@@ -286,7 +286,7 @@
 .ga-orig {
   display: block;
   margin-top: 0.2rem;
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-family: var(--f-mono);
   font-size: 0.62rem;
   font-weight: 400;
   letter-spacing: 0.02em;

@@ -7,6 +7,8 @@
    abrir en oscuro.
    ============================================================ */
 
+import { acentoAccesible } from './color.js?v=20';
+
 const CLAVE = 'luckstudio_tema';
 
 export const TEMAS = [
@@ -34,13 +36,38 @@ export function temaEfectivo() {
 
 function pintarBarraDelSistema() {
   const meta = document.querySelector('meta[name="theme-color"]');
-  if (meta) meta.content = temaEfectivo() === 'oscuro' ? '#0a0a0a' : '#ffffff';
+  if (!meta) return;
+  const oscuro = temaEfectivo() === 'oscuro';
+  /* Con tienda elegida, la barra del móvil toma su color */
+  meta.content = tiendaColor
+    ? (acentoAccesible(tiendaColor, oscuro)?.acento || '#F3F2EE')
+    : (oscuro ? '#121418' : '#F3F2EE');
+}
+
+/* ---------- acento por tienda ----------
+   Solo cambia el acento (cabeceras, botones, progreso, selección).
+   Lo demás del sistema visual no se toca. */
+
+let tiendaColor = null;
+
+export function fijarAcentoTienda(hex) {
+  tiendaColor = hex || null;
+  const raiz = document.documentElement;
+  const r = tiendaColor ? acentoAccesible(tiendaColor, temaEfectivo() === 'oscuro') : null;
+  if (r) {
+    raiz.style.setProperty('--acento', r.acento);
+    raiz.style.setProperty('--sobre-acento', r.texto);
+  } else {
+    raiz.style.removeProperty('--acento');
+    raiz.style.removeProperty('--sobre-acento');
+  }
+  pintarBarraDelSistema();
 }
 
 export function fijarTema(id) {
   localStorage.setItem(CLAVE, id);
   document.documentElement.dataset.tema = id;
-  pintarBarraDelSistema();
+  fijarAcentoTienda(tiendaColor);      // recalcula el contraste para el tema nuevo
 }
 
 export function iniciarTema() {
@@ -51,7 +78,7 @@ export function iniciarTema() {
      anochecer, la barra de estado se actualiza sola */
   if (window.matchMedia) {
     window.matchMedia(CONSULTA).addEventListener('change', () => {
-      if (temaActual() === 'auto') pintarBarraDelSistema();
+      if (temaActual() === 'auto') fijarAcentoTienda(tiendaColor);
     });
   }
 }
