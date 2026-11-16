@@ -16,7 +16,7 @@ Y abrir http://localhost:8000
 
 ## Pruebas
 ```bash
-for t in gemini-escaner diseno datos; do node tests/$t.test.mjs; done
+for t in tests/*.test.mjs; do node "$t" || break; done
 ```
 
 ## Documentación

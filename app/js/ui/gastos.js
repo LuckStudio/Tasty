@@ -8,22 +8,22 @@ import { listaTickets, ticketPorId, borrarTicket, validarTicket,
          importarTicket, crearTicketManual, actualizarTicket,
          buscarProductos, pendientes, pendientesSugeridos,
          descartarPendiente, resumenGasto, UMBRAL_SUGERENCIA }
-  from '../gastos.js?v=25';
-import { tiendasActivas, TIENDA_POR_ID } from '../tiendas.js?v=25';
-import { POR_ID } from '../estado.js?v=25';
-import { aNumero } from '../precios.js?v=25';
-import { iconoHTML } from '../iconos.js?v=25';
-import { pintarStats, fijarPeriodo } from './stats.js?v=25';
-import { escanear } from '../escaner.js?v=25';
-import { hayClave } from '../gemini.js?v=25';
-import { buscarAlias, aprenderAlias } from '../alias.js?v=25';
-import { abrirCantidad } from './cantidad.js?v=25';
-import { preciosDe } from '../precios.js?v=25';
-import { formatearCantidad } from '../unidades.js?v=25';
+  from '../gastos.js?v=26';
+import { tiendasActivas, TIENDA_POR_ID } from '../tiendas.js?v=26';
+import { POR_ID } from '../estado.js?v=26';
+import { aNumero } from '../precios.js?v=26';
+import { iconoHTML } from '../iconos.js?v=26';
+import { pintarStats, fijarPeriodo } from './stats.js?v=26';
+import { escanear } from '../escaner.js?v=26';
+import { hayClave } from '../gemini.js?v=26';
+import { buscarAlias, aprenderAlias } from '../alias.js?v=26';
+import { abrirCantidad } from './cantidad.js?v=26';
+import { preciosDe } from '../precios.js?v=26';
+import { formatearCantidad } from '../unidades.js?v=26';
 import { abrirRevision, cerrarRevision, pintarRevision, clicRevision, entradaRevision }
-  from './revision.js?v=25';
-import { PRODUCTOS } from '../estado.js?v=25';
-import { euros, tap, esc, $ } from '../util.js?v=25';
+  from './revision.js?v=26';
+import { PRODUCTOS } from '../estado.js?v=26';
+import { euros, tap, esc, $ } from '../util.js?v=26';
 
 let raiz;
 let pantalla = 'lista';        // lista | importar | editor | stats | escaneo | revision

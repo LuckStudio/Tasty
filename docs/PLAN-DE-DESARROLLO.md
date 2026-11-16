@@ -1,6 +1,6 @@
 # Tasty · Plan de desarrollo por fases
 
-> **Estado (16 nov 2026):** Fase 0 hecha. Fase 1 en curso: hecho M9 (Gemini automático) y la primera versión del escáner de tickets. Hecho el sistema de diseño (tokens, tipografías, componentes, claro/oscuro y acento por tienda). Hecho el modelo de datos ampliado (esquema 9: secciones, rutas, unidades, memoria de textos de ticket). La navegación nueva llegará con sus módulos (Hoy y Menú en la fase 4). **Fase 1 completa.** Siguiente: fase 2 (pantallas de unidades, enlace de tickets, fichas y precios). Ver `docs/app-base.md`.
+> **Estado (16 nov 2026):** Fase 0 hecha. Fase 1 en curso: hecho M9 (Gemini automático) y la primera versión del escáner de tickets. Hecho el sistema de diseño (tokens, tipografías, componentes, claro/oscuro y acento por tienda). Hecho el modelo de datos ampliado (esquema 9: secciones, rutas, unidades, memoria de textos de ticket). La navegación nueva llegará con sus módulos (Hoy y Menú en la fase 4). **Fase 1 completa.** Fase 2 casi completa: hecha la revisión y enlace de tickets, el histórico de precios, la ficha de ingrediente, el teclado de cantidad, la búsqueda de productos y la fusión de duplicados. Falta el resumen de compra con cambios de precio. **Decisión pendiente:** la app base no tiene inventario (stock); hay que crearlo en la fase 4. Ver `docs/app-base.md`.
 
 16 nov 2026 · Versión 1 · Basado en `docs/brief.md` y `docs/diseno/propuesta-pantallas-v1.pdf`
 

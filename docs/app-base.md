@@ -90,7 +90,25 @@ Módulos: `js/secciones.js` (rutas y agrupación), `js/unidades.js` (conversión
 ## Pruebas
 
 ```bash
-node tests/gemini-escaner.test.mjs   # Gemini y escáner (sin red)
-node tests/diseno.test.mjs           # contraste AA y acento por tienda
-node tests/datos.test.mjs            # secciones, unidades, memoria, migración y fusión
+for t in tests/*.test.mjs; do node "$t" || break; done
 ```
+
+| Archivo | Qué comprueba |
+| --- | --- |
+| `gemini-escaner` | Modelo automático, caché, plan B, lectura de tickets, enlace con el catálogo, candidatos |
+| `diseno` | Contraste AA de todos los colores en claro y oscuro; acento por tienda |
+| `datos` | Secciones y rutas, unidades, memoria de textos, migración 8→9, fusión de copias |
+| `historial` | Precio normalizado, tendencia, periodos; tickets con cantidad y €/kg |
+| `cantidad` | Teclado de cantidad, equivalencias y precio por cantidad |
+| `fusion` | Fusión de productos duplicados en todos los datos |
+| `busqueda` | Filtros y orden del buscador de productos |
+
+Los tests importan los módulos con la misma URL que la app (`tests/_app.mjs`); sin eso Node carga dos copias y alguna prueba comprobaría una copia distinta de la que modifica.
+
+## Fase 2: estado
+
+Hecho: revisión del ticket línea a línea y enlace (pantallas 15 y 16), memoria de equivalencias, precios normalizados e histórico (18), ficha de ingrediente ampliada (17), teclado de cantidad (19), búsqueda de productos (20) y fusión de duplicados.
+
+Pendiente de la fase 2: el resumen de compra con «cambios de precio» y comparación con la estimación (13), y la navegación nueva (Hoy · Menú · Compra · Despensa · Ticket) que llega con la fase 4.
+
+**Aviso:** el brief habla de «stock actual» e «inventario», pero la app base no tiene control de stock (solo lista, precios y tickets). «En casa: n» (pantallas 5, 17 y 20) y los avisos de faltas necesitan un inventario nuevo. Se propone construirlo en la fase 4 junto a «Qué toca hoy».
