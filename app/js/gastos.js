@@ -14,10 +14,10 @@
    veces, la app lo señala para que lo añadas.
    ============================================================ */
 
-import { datos, guardar } from './almacen.js?v=18';
-import { POR_ID, PRODUCTOS } from './estado.js?v=18';
-import { aprenderDeTicket } from './precios.js?v=18';
-import { nuevoId, normalizar } from './util.js?v=18';
+import { datos, guardar } from './almacen.js?v=19';
+import { POR_ID, PRODUCTOS } from './estado.js?v=19';
+import { aprenderDeTicket } from './precios.js?v=19';
+import { nuevoId, normalizar } from './util.js?v=19';
 
 /* A partir de cuántas apariciones se sugiere catalogar */
 export const UMBRAL_SUGERENCIA = 3;

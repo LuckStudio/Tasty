@@ -30,6 +30,13 @@ export function normalizar(txt) {
   return txt.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 }
 
+/* Escapa texto para meterlo en HTML o en un atributo. Imprescindible
+   con lo que viene de fuera (fotos de tickets leídas por IA). */
+export function esc(t) {
+  return String(t ?? '').replace(/[&<>"'`]/g, c =>
+    ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;', '`': '&#96;' }[c]));
+}
+
 /* Formato de moneda español */
 export function euros(n) {
   return new Intl.NumberFormat('es-ES', {

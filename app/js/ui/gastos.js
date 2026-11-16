@@ -8,16 +8,20 @@ import { listaTickets, ticketPorId, borrarTicket, validarTicket,
          importarTicket, crearTicketManual, actualizarTicket,
          buscarProductos, pendientes, pendientesSugeridos,
          descartarPendiente, resumenGasto, UMBRAL_SUGERENCIA }
-  from '../gastos.js?v=18';
-import { tiendasActivas, TIENDA_POR_ID } from '../tiendas.js?v=18';
-import { POR_ID } from '../estado.js?v=18';
-import { aNumero } from '../precios.js?v=18';
-import { iconoHTML } from '../iconos.js?v=18';
-import { pintarStats, fijarPeriodo } from './stats.js?v=18';
-import { euros, tap, $ } from '../util.js?v=18';
+  from '../gastos.js?v=19';
+import { tiendasActivas, TIENDA_POR_ID } from '../tiendas.js?v=19';
+import { POR_ID } from '../estado.js?v=19';
+import { aNumero } from '../precios.js?v=19';
+import { iconoHTML } from '../iconos.js?v=19';
+import { pintarStats, fijarPeriodo } from './stats.js?v=19';
+import { escanear } from '../escaner.js?v=19';
+import { hayClave } from '../gemini.js?v=19';
+import { PRODUCTOS } from '../estado.js?v=19';
+import { euros, tap, esc, $ } from '../util.js?v=19';
 
 let raiz;
-let pantalla = 'lista';        // lista | importar | editor | stats
+let pantalla = 'lista';        // lista | importar | editor | stats | escaneo
+let escaneo = null;            // { fase: 'leyendo' | 'error', texto, codigo }
 const mesesCerrados = new Set();   // meses plegados en el historial
 let borrador = null;
 let sugerencias = [];
@@ -60,6 +64,20 @@ export function iniciarGastos(nodo) {
 
   raiz.addEventListener('click', e => {
     const t = e.target;
+
+    if (t.closest('#ga-escanear')) { empezarEscaneo(); return; }
+    if (t.closest('#ga-esc-ajustes')) {
+      document.dispatchEvent(new CustomEvent('ir-vista', { detail: 'ajustes' })); return;
+    }
+    if (t.closest('#ga-esc-reintentar')) { pantalla = 'lista'; escaneo = null; pintarGastos(); return; }
+
+    const acepta = t.closest('[data-ed-aceptar]');
+    if (acepta) {
+      const l = borrador.lineas[+acepta.dataset.edAceptar];
+      const p = l?.sugerido && POR_ID[l.sugerido.id];
+      if (p) { tap(); l.id = p.id; l.n = p.n; l.c = p.c; l.sugerido = null; pintarGastos(); }
+      return;
+    }
 
     if (t.closest('#ga-importar')) { pantalla = 'importar'; pintarGastos(); return; }
     if (t.closest('#ga-stats'))    { pantalla = 'stats';    pintarGastos(); return; }
@@ -135,6 +153,12 @@ export function iniciarGastos(nodo) {
   });
 
   raiz.addEventListener('change', e => {
+    if (e.target.id === 'ga-foto') {
+      const fotos = [...e.target.files];
+      e.target.value = '';                 // permite volver a elegir la misma
+      if (fotos.length) hacerEscaneo(fotos);
+      return;
+    }
     if (!borrador) return;
     if (e.target.id === 'ga-fecha') { borrador.fecha = e.target.value; return; }
     const precio = e.target.closest('[data-ed-precio]');
@@ -212,6 +236,83 @@ function mensajeDeAlta(r, editando = false) {
 
 function aviso(texto) {
   document.dispatchEvent(new CustomEvent('aviso', { detail: texto }));
+}
+
+/* ---------- escanear ticket ---------- */
+
+function empezarEscaneo() {
+  if (!hayClave()) {
+    escaneo = { fase: 'error', codigo: 'sin-clave',
+      texto: 'Para leer tickets con una foto hace falta la clave gratuita de Gemini. Se pone una sola vez en Ajustes.' };
+    pantalla = 'escaneo';
+    pintarGastos();
+    return;
+  }
+  $('#ga-foto', raiz)?.click();
+}
+
+async function hacerEscaneo(fotos) {
+  escaneo = { fase: 'leyendo', texto: fotos.length > 1 ? `Leyendo ${fotos.length} fotos…` : 'Leyendo el ticket…' };
+  pantalla = 'escaneo';
+  pintarGastos();
+
+  let r;
+  try {
+    r = await escanear(fotos, { productos: PRODUCTOS, tiendas: tiendasActivas() });
+  } catch (e) {
+    r = { ok: false, codigo: e.codigo, error: e.message || 'No he podido leer el ticket.' };
+  }
+
+  /* Si mientras tanto el usuario salió de esta pantalla, no se le
+     arrastra de vuelta. */
+  if (pantalla !== 'escaneo') return;
+
+  if (!r.ok) {
+    escaneo = { fase: 'error', codigo: r.codigo, texto: r.error };
+    pintarGastos();
+    return;
+  }
+  escaneo = null;
+  borrador = { ...r.borrador, modelo: r.modelo };
+  pantalla = 'editor';
+  pintarGastos();
+}
+
+function pintarEscaneo() {
+  const e = escaneo || { fase: 'error', texto: 'Algo ha ido mal.' };
+  const leyendo = e.fase === 'leyendo';
+  raiz.innerHTML = `
+    <div class="res-cab">
+      <h1>${leyendo ? 'Leyendo ticket' : 'No he podido leerlo'}</h1>
+      <p>${leyendo ? 'Gemini está leyendo los artículos' : 'Escanear ticket'}</p>
+    </div>
+    <p class="ga-nota" role="status" style="padding:1.4rem var(--pad-x)">${esc(e.texto)}</p>
+    ${leyendo ? '' : `
+      <div class="res-acciones">
+        ${e.codigo === 'sin-clave' || e.codigo === 'clave'
+          ? '<button class="btn-principal" id="ga-esc-ajustes">Ir a Ajustes</button>'
+          : '<button class="btn-principal" id="ga-esc-reintentar">Volver</button>'}
+        <button class="btn-secundario" id="ga-nuevo">Apuntarlo a mano</button>
+      </div>`}`;
+}
+
+/* Resumen de lo leído, encima del editor: lo que no cuadra se ve
+   antes de guardar. */
+function avisoEscaneoHTML() {
+  const x = borrador.escaneado;
+  if (!x) return '';
+  const sinEnlazar = borrador.lineas.filter(l => !l.id).length;
+  return `
+    <div class="ga-aviso" role="status">
+      <b>Leído con Gemini · revisa antes de guardar</b>
+      <p>${borrador.lineas.length} artículos, suma ${euros(x.suma)}${
+        x.totalLeido != null ? ` · el ticket dice ${euros(x.totalLeido)}` : ''}.
+      ${x.cuadra === false
+        ? '<br><strong>No cuadra con el total del ticket:</strong> puede faltar o sobrar alguna línea.'
+        : x.cuadra ? ' Cuadra con el total.' : ''}
+      ${sinEnlazar ? `<br>${sinEnlazar} sin enlazar con un producto de tu catálogo.` : ''}
+      ${x.fechaLeida ? '' : '<br>No he podido leer la fecha: pon la correcta.'}</p>
+    </div>`;
 }
 
 /* ---------- importar ---------- */
@@ -292,6 +393,7 @@ export function pintarGastos() {
   if (pantalla === 'importar') return pintarImportar();
   if (pantalla === 'editor')   return pintarEditor();
   if (pantalla === 'stats')    return pintarStats(raiz);
+  if (pantalla === 'escaneo')  return pintarEscaneo();
 
   const tickets = listaTickets();
   const res = resumenGasto();
@@ -318,6 +420,10 @@ export function pintarGastos() {
     </div>
 
     <div class="ga-acciones">
+      <button class="btn-principal" id="ga-escanear">Escanear ticket</button>
+      <input type="file" id="ga-foto" accept="image/*" multiple hidden>
+    </div>
+    <div class="ga-acciones" style="margin-top:0.5px">
       <button class="btn-secundario" id="ga-nuevo">Nueva compra</button>
       <button class="btn-secundario" id="ga-importar">Importar ticket</button>
     </div>
@@ -440,9 +546,11 @@ function pintarEditor() {
 
   raiz.innerHTML = `
     <div class="res-cab">
-      <h1>${borrador.id ? 'Editar compra' : 'Nueva compra'}</h1>
-      <p>${borrador.id ? 'Se recalculan el total y los precios' : 'Apuntar lo comprado'}</p>
+      <h1>${borrador.id ? 'Editar compra' : borrador.escaneado ? 'Revisa la compra' : 'Nueva compra'}</h1>
+      <p>${borrador.id ? 'Se recalculan el total y los precios' : borrador.escaneado ? 'Comprueba cada línea antes de guardar' : 'Apuntar lo comprado'}</p>
     </div>
+
+    ${avisoEscaneoHTML()}
 
     <div class="aj-bloque">
       <h2>Supermercado</h2>
@@ -473,20 +581,22 @@ function pintarEditor() {
     ${borrador.lineas.length ? borrador.lineas.map((l, i) => `
       <div class="ga-linea">
         <span class="res-icono">${l.id ? iconoHTML(POR_ID[l.id]) : '<span aria-hidden="true">＋</span>'}</span>
-        <span class="ga-linea-n">${l.n}${l.id ? '' : '<em>Nuevo</em>'}</span>
+        <span class="ga-linea-n">${esc(l.n)}${l.id ? '' : '<em>Nuevo</em>'}${
+          l.textoTicket && l.id ? `<small class="ga-orig">ticket: ${esc(l.textoTicket)}</small>` : ''}${
+          l.sugerido ? `<button class="ga-sugerido" data-ed-aceptar="${i}">¿Es ${esc(l.sugerido.nombre)}? Enlazar</button>` : ''}</span>
         <label class="ga-mini">
-          <span class="sr">Cantidad de ${l.n}</span>
+          <span class="sr">Cantidad de ${esc(l.n)}</span>
           <input type="text" inputmode="numeric" data-ed-cant="${i}" value="${l.cant}">
         </label>
         <label class="cmp-precio">
-          <span class="sr">Precio de ${l.n}</span>
+          <span class="sr">Precio de ${esc(l.n)}</span>
           <input type="text" inputmode="decimal" data-ed-precio="${i}"
                  value="${l.precio != null ? String(l.precio).replace('.', ',') : ''}"
                  placeholder="0,00">
           <span aria-hidden="true">€</span>
         </label>
         <button class="ga-borrar" data-ed-quitar="${i}"
-                aria-label="Quitar ${l.n}">×</button>
+                aria-label="Quitar ${esc(l.n)}">×</button>
       </div>`).join('')
     : '<p class="ga-nota" style="padding:1.4rem var(--pad-x)">Busca productos arriba y ve añadiéndolos. Lo que no esté en el catálogo se puede escribir igual.</p>'}
 
@@ -507,6 +617,7 @@ function pintarEditor() {
 /* Permite volver a la lista desde fuera (al cambiar de pestaña) */
 export function reiniciarGastos() {
   pantalla = 'lista';
+  escaneo = null;
   borrador = null;
   sugerencias = [];
 }

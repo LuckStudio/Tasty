@@ -6,8 +6,8 @@
    porque están suscritas.
    ============================================================ */
 
-import { CATALOGO } from '../datos/catalogo.js?v=18';
-import { datos, guardar } from './almacen.js?v=18';
+import { CATALOGO } from '../datos/catalogo.js?v=19';
+import { datos, guardar } from './almacen.js?v=19';
 
 /* ------------------------------------------------------------
    EL CATÁLOGO ES VIVO

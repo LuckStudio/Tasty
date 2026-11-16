@@ -15,14 +15,14 @@
    repartir ids nuevos, no para clasificar.
    ============================================================ */
 
-import { datos, guardar } from './almacen.js?v=18';
-import { reconstruirCatalogo, catalogoCompleto, POR_ID } from './estado.js?v=18';
-import { CATALOGO, CATALOGO_VERSION } from '../datos/catalogo.js?v=18';
-import { CATEGORIAS, CAT_POR_ID } from '../datos/categorias.js?v=18';
-import { TIENDAS } from './tiendas.js?v=18';
-import { preferencias } from './precios.js?v=18';
-import { reconstruirTiendas } from './tiendas.js?v=18';
-import { slug, rutaIcono, normalizar } from './util.js?v=18';
+import { datos, guardar } from './almacen.js?v=19';
+import { reconstruirCatalogo, catalogoCompleto, POR_ID } from './estado.js?v=19';
+import { CATALOGO, CATALOGO_VERSION } from '../datos/catalogo.js?v=19';
+import { CATEGORIAS, CAT_POR_ID } from '../datos/categorias.js?v=19';
+import { TIENDAS } from './tiendas.js?v=19';
+import { preferencias } from './precios.js?v=19';
+import { reconstruirTiendas } from './tiendas.js?v=19';
+import { slug, rutaIcono, normalizar } from './util.js?v=19';
 
 const oyentes = new Set();
 export function suscribirCatalogo(fn) {

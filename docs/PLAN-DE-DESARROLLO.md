@@ -1,5 +1,7 @@
 # Tasty · Plan de desarrollo por fases
 
+> **Estado (16 nov 2026):** Fase 0 hecha. Fase 1 en curso: hecho M9 (Gemini automático) y la primera versión del escáner de tickets. Falta el sistema de diseño y el modelo de datos ampliado. Ver `docs/app-base.md`.
+
 16 nov 2026 · Versión 1 · Basado en `docs/brief.md` y `docs/diseno/propuesta-pantallas-v1.pdf`
 
 > Estado: **propuesta pendiente de aprobar**. Algunas decisiones técnicas dependen de ver el código de la app base («Lista de compra»); están marcadas como **[Confirmar con la app base]**.
@@ -33,21 +35,20 @@
 
 ---
 
-## 1. Arquitectura propuesta
+## 1. Arquitectura (decisión actualizada: sin servidor ni cuentas por ahora)
 
-**[Confirmar con la app base]** Si la app actual ya es web, se mantiene su tecnología y se amplía. Si no lo es o está muy limitada, propongo esta base, que encaja con todos los requisitos del brief:
+Se mantiene la tecnología de la app base: **PWA estática en JavaScript puro, sin compilación, con los datos en el propio dispositivo**. Servidor, cuentas y sincronización entre personas quedan **aplazados** a una fase futura.
 
-| Necesidad del brief | Propuesta |
-| --- | --- |
-| Móvil y tablet en la encimera, sin tiendas de apps | **PWA** instalable (React + TypeScript + Vite) |
-| Lista compartida entre los miembros del hogar, casi en tiempo real | **Supabase**: base de datos Postgres, cuentas, tiempo real |
-| Funcionar con mala cobertura en el súper | Copia local en el dispositivo (IndexedDB) con cola de cambios y sincronización al recuperar conexión |
-| Clave de Gemini nunca en el cliente | Llamadas a Gemini desde una **función de servidor** (Supabase Edge Function) |
-| Imágenes optimizadas y en caché | Supabase Storage + tamaños generados (miniatura, tarjeta, cabecera) en WebP |
-| Pantalla siempre encendida en modo cocina | API Wake Lock del navegador |
-| Temporizadores en paralelo | Temporizadores en el cliente + aviso sonoro/vibración |
+| Necesidad del brief | Solución ahora | Cuando haya servidor |
+| --- | --- | --- |
+| Móvil y tablet en la encimera | PWA instalable (ya existe) | — |
+| Lista compartida | Enlaces y exportar/importar por fusión (ya existe) | Sincronización en tiempo real |
+| Mala cobertura en el súper | Todo es local; funciona sin conexión (ya existe) | Cola de cambios |
+| Clave de Gemini | La pone el usuario en Ajustes y vive **solo en el dispositivo** (nunca en el repositorio ni en las copias). Llamada directa a Google | Pasar la llamada a una función de servidor |
+| Pantalla encendida en cocina | API Wake Lock | — |
+| Imágenes | Archivos en `app/` optimizados | Almacenamiento propio |
 
-Todo ello cabe en los planes gratuitos para uso de un hogar.
+**Riesgo asumido:** una clave en el dispositivo es aceptable para uso privado del hogar, pero no si la app se hiciera pública. Es el primer motivo para añadir servidor más adelante.
 
 ---
 
@@ -102,12 +103,10 @@ El orden sigue la lógica del brief: primero datos fiables (productos sin duplic
 - Compra y línea de compra con precio normalizado.
 - Receta con pasos estructurados; plan de menú; bloque de cocina; elementos de lista con origen.
 
-**1.3 Hogar y sincronización**
-- Cuentas y «hogar» compartido (invitar a otra persona).
-- Sincronización en tiempo real de la lista y modo sin conexión.
+**1.3 Hogar y sincronización** — *aplazado*: sin cuentas ni servidor por ahora. Se sigue compartiendo con enlaces y exportar/importar.
 
-**1.4 M9 · Gemini siempre en el modelo más reciente**
-- Al arrancar, la función de servidor consulta el listado de modelos, filtra los que admiten imagen y están en la capa gratuita, elige el más reciente y lo guarda 24 h.
+**1.4 M9 · Gemini siempre en el modelo más reciente** — *hecho (ver estado)*
+- La app consulta el listado de modelos, filtra los que admiten imagen y están en la capa gratuita, elige el más reciente y lo guarda 24 h.
 - Plan B automático: si falla por disponibilidad o cuota, prueba el siguiente.
 - En Ajustes: modelo en uso y opción de forzar uno a mano.
 
@@ -193,7 +192,7 @@ El orden sigue la lógica del brief: primero datos fiables (productos sin duplic
 | # | Pregunta | Mi recomendación |
 | --- | --- | --- |
 | 1 | ¿Tecnología de la app base y dónde guarda los datos? | Lo veré al subir el código |
-| 2 | ¿Varias personas a la vez? | Sí: cuentas + hogar compartido (Supabase) |
+| 2 | ¿Varias personas a la vez? | **Decidido: no por ahora.** Sin cuentas ni servidor |
 | 3 | ¿Bloque siempre cena + desayuno + comida? | Ese por defecto, editable por día y con plantillas para fin de semana |
 | 4 | ¿Cocina simultánea con reglas o con Gemini? | Reglas propias; Gemini como mejora opcional |
 | 5 | ¿Imágenes de Mercadona? | Empezar con fotos propias + Open Food Facts; la ficha admite imagen por cadena, así que se puede añadir después |

@@ -6,8 +6,8 @@
 import { TIENDAS, TIENDA_POR_ID, COLORES_TIENDA, crearTienda,
          editarTienda, activarTienda, borrarTienda, seUsaTienda,
          moverTienda, inicialesTienda, alternarFavorita,
-         hayFavoritas } from '../tiendas.js?v=18';
-import { $, tap } from '../util.js?v=18';
+         hayFavoritas } from '../tiendas.js?v=19';
+import { $, tap } from '../util.js?v=19';
 
 let raiz;
 let editando = null;        // id, 'nueva' o null

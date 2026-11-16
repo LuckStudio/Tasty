@@ -280,3 +280,30 @@
 /* Acción destructiva en ajustes */
 .aj-peligro { color: #c0392b; border-color: rgba(192,57,43,0.4); }
 .aj-peligro:hover { color: #c0392b; border-color: #c0392b; }
+
+/* ---------- lectura de tickets por foto ---------- */
+
+.ga-orig {
+  display: block;
+  margin-top: 0.2rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.62rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+.ga-sugerido {
+  display: block;
+  margin-top: 0.35rem;
+  padding: 0.5rem 0.7rem;
+  min-height: 44px;
+  border: 0.5px solid var(--accent);
+  background: transparent;
+  color: var(--accent);
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+}

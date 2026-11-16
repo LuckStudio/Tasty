@@ -24,6 +24,10 @@
 
 **Conclusión: no había ninguna clave que eliminar.** Se añade `.gitignore` que bloquea `.env`, claves y secretos a partir de ahora.
 
+## Actualización: el escáner se desarrolla desde cero
+
+Confirmado con el autor: el escáner debía existir pero no estaba en el código recibido, así que se construye aquí. Sin servidor ni cuentas (decisión actual), la clave de Gemini la introduce el usuario en **Ajustes → Escáner de tickets** y se guarda solo en ese dispositivo.
+
 ## Diferencia importante con el brief
 
 El brief describe un **escáner de tickets por foto con Gemini**, pero **ese código no está en este zip**: la app no tiene ninguna llamada a Gemini ni a ningún servidor. Lo que sí existe es la importación de tickets pegando texto, el alta manual y el registro al terminar una compra.
