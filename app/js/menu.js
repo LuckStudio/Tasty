@@ -17,12 +17,12 @@
    día concreto (datos.bloques[D] = { franjas: [{f, s}] }).
    ============================================================ */
 
-import { datos, guardar } from './almacen.js?v=36';
-import { POR_ID } from './estado.js?v=36';
-import { sumar as sumarALista, cantidad as enLista } from './estado.js?v=36';
-import { recetaPorId } from './recetas.js?v=36';
-import { disponibilidad, esFalta } from './despensa.js?v=36';
-import { convertir, unidadNormal } from './unidades.js?v=36';
+import { datos, guardar } from './almacen.js?v=37';
+import { POR_ID } from './estado.js?v=37';
+import { sumar as sumarALista, cantidad as enLista } from './estado.js?v=37';
+import { recetaPorId } from './recetas.js?v=37';
+import { disponibilidad, esFalta } from './despensa.js?v=37';
+import { convertir, unidadNormal } from './unidades.js?v=37';
 
 export const FRANJAS = [
   { id: 'desayuno', nombre: 'Desayuno', corto: 'DESAYUNO' },
@@ -30,6 +30,24 @@ export const FRANJAS = [
   { id: 'cena',     nombre: 'Cena',     corto: 'CENA' }
 ];
 export const FRANJA_POR_ID = Object.fromEntries(FRANJAS.map(f => [f.id, f]));
+
+/* ---------- qué receta cabe en qué momento del día ----------
+   Cada receta es de un momento: un desayuno solo va en desayunos, una
+   comida en comidas y una cena en cenas. Las meriendas y los almuerzos
+   no tienen franja en el menú (de momento solo hay tres), así que no se
+   pueden asignar. */
+export function franjaDeReceta(comida) { return FRANJA_POR_ID[comida] ? comida : null; }
+export function cabeEnFranja(receta, franja) { return !!receta && franjaDeReceta(receta.comida) === franja; }
+
+const ARTICULO = { desayuno: 'un desayuno', comida: 'una comida', cena: 'una cena', merienda: 'una merienda', almuerzo: 'un almuerzo' };
+const EN_FRANJA = { desayuno: 'el desayuno', comida: 'la comida', cena: 'la cena' };
+
+export function mensajeNoCabe(receta, franja) {
+  const es = ARTICULO[receta.comida] || 'otro tipo de plato';
+  return franjaDeReceta(receta.comida)
+    ? `«${receta.nombre}» es ${es}: no se puede poner en ${EN_FRANJA[franja] || 'esa franja'}.`
+    : `«${receta.nombre}» es ${es}, y el menú solo tiene desayuno, comida y cena.`;
+}
 
 const oyentes = new Set();
 export function suscribirMenu(fn) { oyentes.add(fn); return () => oyentes.delete(fn); }
@@ -90,6 +108,7 @@ export function anadirReceta(fecha, franja, idReceta, raciones = null) {
   if (!FECHA.test(fecha) || !FRANJA_POR_ID[franja]) return { ok: false, error: 'Día o franja no válidos.' };
   const r = recetaPorId(idReceta);
   if (!r) return { ok: false, error: 'Esa receta ya no existe.' };
+  if (!cabeEnFranja(r, franja)) return { ok: false, error: mensajeNoCabe(r, franja) };
   const d = dia(fecha);
   const n = Math.max(1, Math.min(20, Math.round(raciones ?? r.raciones ?? 1)));
   const ya = d[franja].find(x => x.r === idReceta);

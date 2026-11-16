@@ -5,13 +5,13 @@
    añadir a la lista con un toque.
    ============================================================ */
 
-import { PRODUCTOS, cantidad, sumar } from '../estado.js?v=36';
-import { preciosDe, SUFIJO_BASE } from '../precios.js?v=36';
-import { tiendasActivas, TIENDA_POR_ID } from '../tiendas.js?v=36';
-import { SECCIONES, seccionDe } from '../secciones.js?v=36';
-import { buscarProductos, textoFormato } from '../busqueda.js?v=36';
-import { iconoHTML } from '../iconos.js?v=36';
-import { esc, tap } from '../util.js?v=36';
+import { PRODUCTOS, cantidad, sumar } from '../estado.js?v=37';
+import { preciosDe, SUFIJO_BASE } from '../precios.js?v=37';
+import { tiendasActivas, TIENDA_POR_ID } from '../tiendas.js?v=37';
+import { SECCIONES, seccionDe } from '../secciones.js?v=37';
+import { buscarProductos, textoFormato } from '../busqueda.js?v=37';
+import { iconoHTML } from '../iconos.js?v=37';
+import { esc, tap } from '../util.js?v=37';
 
 let raiz = null;
 const f = { texto: '', tienda: null, seccion: null, orden: 'nombre' };

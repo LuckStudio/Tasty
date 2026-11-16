@@ -178,3 +178,6 @@ body[data-modo="comprador"] .fab-acaba { display: none; }
 /* El botón flotante no tapa lo último de la pantalla ni los avisos */
 body.con-fab .vista { padding-bottom: 6.5rem; }
 body.con-fab .aviso { bottom: calc(var(--nav-alto) + var(--safe-bottom) + 80px); }
+
+.sl-solo { padding: 0.6rem var(--pad-x) 0; font-family: var(--f-mono); font-size: 0.66rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.sl-solo + .sl-grid { padding-top: 6px; }

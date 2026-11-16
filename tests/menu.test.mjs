@@ -50,6 +50,39 @@ test('añadir recetas a una franja; la misma receta no se repite, se actualizan 
   M.anadirReceta(LUN, 'cena', 'extra', 2);
   assert.equal(M.diaDe(LUN).cena.length, 2);                  // plato y acompañamiento
 });
+test('cada receta solo cabe en su momento del día: desayuno en desayuno, comida en comida, cena en cena', () => {
+  assert.equal(M.cabeEnFranja(R.recetaPorId('tostadas'), 'desayuno'), true);
+  assert.equal(M.cabeEnFranja(R.recetaPorId('tostadas'), 'comida'), false);
+  assert.equal(M.cabeEnFranja(R.recetaPorId('lentejas'), 'comida'), true);
+  assert.equal(M.cabeEnFranja(R.recetaPorId('lentejas'), 'cena'), false);
+  assert.equal(M.cabeEnFranja(R.recetaPorId('salmon'), 'cena'), true);
+  assert.equal(M.cabeEnFranja(R.recetaPorId('salmon'), 'desayuno'), false);
+  assert.equal(M.cabeEnFranja(null, 'cena'), false);
+});
+test('el menú rechaza una receta en el momento equivocado, con un mensaje claro, y no la guarda', () => {
+  const dia = '2026-12-07';
+  const r = M.anadirReceta(dia, 'desayuno', 'salmon', 2);
+  assert.equal(r.ok, false);
+  assert.equal(r.error, '«Salmón al horno» es una cena: no se puede poner en el desayuno.');
+  assert.equal(M.anadirReceta(dia, 'cena', 'tostadas').error, '«Tostadas de aguacate y huevo» es un desayuno: no se puede poner en la cena.');
+  assert.equal(M.anadirReceta(dia, 'comida', 'extra').ok, false);
+  assert.equal(datos.menu[dia], undefined);                       // y no deja un día vacío a medias
+  assert.equal(M.anadirReceta(dia, 'cena', 'salmon', 2).ok, true); // en su sitio, sí
+  M.vaciarDia(dia);
+});
+test('las meriendas y los almuerzos no tienen franja: no se pueden asignar, y se explica por qué', () => {
+  R.importarRecetas({ recetas: [
+    { id: 'merienda-x', nombre: 'Yogur con fruta', comida: 'merienda', plan: 'dieta', raciones: 1, ingredientes: [{ id: 503, cant: 1, unidad: 'ud' }] },
+    { id: 'almuerzo-x', nombre: 'Bocadillo', comida: 'almuerzo', plan: 'dieta', raciones: 1, ingredientes: [{ id: 601, cant: 1, unidad: 'ud' }] }] });
+  assert.equal(M.franjaDeReceta('merienda'), null);
+  assert.equal(M.franjaDeReceta('almuerzo'), null);
+  for (const f of ['desayuno', 'comida', 'cena']) {
+    assert.equal(M.cabeEnFranja(R.recetaPorId('merienda-x'), f), false);
+    assert.equal(M.anadirReceta('2026-12-07', f, 'almuerzo-x').ok, false);
+  }
+  assert.equal(M.anadirReceta('2026-12-07', 'comida', 'merienda-x').error,
+    '«Yogur con fruta» es una merienda, y el menú solo tiene desayuno, comida y cena.');
+});
 test('datos no válidos se rechazan sin romper nada', () => {
   assert.equal(M.anadirReceta('mañana', 'cena', 'salmon').ok, false);
   assert.equal(M.anadirReceta(LUN, 'merienda', 'salmon').ok, false);

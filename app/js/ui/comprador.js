@@ -7,21 +7,21 @@ import { compraActual, alternarHecho, fijarPrecio, cambiarCantidad,
          anadirExtra, quitarLinea, fijarTienda, fijarPago, progreso,
          total, previsto, sinPrecio, cuantosEstimados, fijarDescuento,
          totalDescuento, fijarTiendaSuelta, finalizar, ticketJSON,
-         ticketTexto } from '../compra.js?v=36';
-import { CAT_POR_ID } from '../../datos/categorias.js?v=36';
-import { tiendasActivas, TIENDA_POR_ID } from '../tiendas.js?v=36';
-import { POR_ID } from '../estado.js?v=36';
-import { iconoHTML } from '../iconos.js?v=36';
-import { preciosDe, formatoBase, NOMBRE_BASE, marcaDe } from '../precios.js?v=36';
+         ticketTexto } from '../compra.js?v=37';
+import { CAT_POR_ID } from '../../datos/categorias.js?v=37';
+import { tiendasActivas, TIENDA_POR_ID } from '../tiendas.js?v=37';
+import { POR_ID } from '../estado.js?v=37';
+import { iconoHTML } from '../iconos.js?v=37';
+import { preciosDe, formatoBase, NOMBRE_BASE, marcaDe } from '../precios.js?v=37';
 import { periodicidad, ultimaCompra, diasDesde, textoUrgencia,
-         nivelUrgencia } from '../reposicion.js?v=36';
-import { tiendaPreferida } from '../precios.js?v=36';
-import { ticketHTML } from './ticket.js?v=36';
-import { gruposDeCompra, seccionActual } from '../ruta.js?v=36';
-import { rutaDe, SECCIONES, SECCION_POR_ID } from '../secciones.js?v=36';
-import { editarProducto } from '../catalogo-edit.js?v=36';
-import { inicialesTienda } from '../tiendas.js?v=36';
-import { euros, esc, tap } from '../util.js?v=36';
+         nivelUrgencia } from '../reposicion.js?v=37';
+import { tiendaPreferida } from '../precios.js?v=37';
+import { ticketHTML } from './ticket.js?v=37';
+import { gruposDeCompra, seccionActual } from '../ruta.js?v=37';
+import { rutaDe, SECCIONES, SECCION_POR_ID } from '../secciones.js?v=37';
+import { editarProducto } from '../catalogo-edit.js?v=37';
+import { inicialesTienda } from '../tiendas.js?v=37';
+import { euros, esc, tap } from '../util.js?v=37';
 
 let raiz, pie, ticketFinal = null;
 let pasillo = false, idxSec = 0;       // modo pasillo: una sección cada vez

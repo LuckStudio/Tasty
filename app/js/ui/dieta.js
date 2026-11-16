@@ -9,12 +9,12 @@ import { COMIDAS, PLANES, COMIDA_POR_ID, PLAN_POR_ID, recetas,
          cambiarIngrediente, nombreIngrediente, cuentaPorComida,
          faltaPorAnadir, recetasCubiertas, productosDe, textosDe,
          buscarParaReceta, resumenDieta, exportarRecetas, recetasTexto,
-         validarRecetas, importarRecetas, textoCantidad } from '../recetas.js?v=36';
-import { POR_ID, cantidad, alternar, sumar, anadirLibre } from '../estado.js?v=36';
-import { iconoHTML } from '../iconos.js?v=36';
-import { DIETA } from '../../datos/recetas-dieta.js?v=36';
-import { RECETAS_NOVIEMBRE } from '../../datos/recetas-noviembre.js?v=36';
-import { $, tap } from '../util.js?v=36';
+         validarRecetas, importarRecetas, textoCantidad } from '../recetas.js?v=37';
+import { POR_ID, cantidad, alternar, sumar, anadirLibre } from '../estado.js?v=37';
+import { iconoHTML } from '../iconos.js?v=37';
+import { DIETA } from '../../datos/recetas-dieta.js?v=37';
+import { RECETAS_NOVIEMBRE } from '../../datos/recetas-noviembre.js?v=37';
+import { $, tap } from '../util.js?v=37';
 
 let raiz;
 let pantalla = 'inicio';       // inicio | receta | falta

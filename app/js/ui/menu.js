@@ -6,14 +6,15 @@
    varias recetas y un número de raciones.
    ============================================================ */
 
-import { recetas as todasLasRecetas, recetaPorId } from '../recetas.js?v=36';
+import { recetas as todasLasRecetas, recetaPorId } from '../recetas.js?v=37';
 import { FRANJAS, diaDe, recetasDeFranja, anadirReceta, quitarReceta, fijarRaciones,
          marcarFuera, copiarDia, copiarSemana, vaciarDia, semana, lunesDe, sumarDias, fechaISO,
-         bloqueDe, consolidarSemana, faltasALaLista, disponibilidadReceta, FRANJA_POR_ID }
-  from '../menu.js?v=36';
+         bloqueDe, consolidarSemana, faltasALaLista, disponibilidadReceta, FRANJA_POR_ID, cabeEnFranja }
+  from '../menu.js?v=37';
 import { imagenReceta, puntoReceta, diaCorto, diaLargo, diaNumero, mesCorto, nombreFranja,
-         pregunta, etiquetaDisponibilidad } from './receta-comun.js?v=36';
-import { normalizar, esc, tap } from '../util.js?v=36';
+         pregunta, etiquetaDisponibilidad } from './receta-comun.js?v=37';
+import { mostrarAcaba } from './acaba.js?v=37';
+import { normalizar, esc, tap } from '../util.js?v=37';
 
 let raiz = null, ancla = fechaISO(), cb = {};
 let sel = null;     // selector abierto: { fecha, franja, filtro, q, elegida, raciones }
@@ -188,29 +189,30 @@ function generarLista() {
 
 function abrirSelector(fecha, franja) {
   sel = { fecha, franja, filtro: 'todas', q: '', elegida: null, raciones: 2 };
+  mostrarAcaba(false);               // el botón flotante taparía el pie del selector
   pintarSelector();
   document.querySelector('.vista:not([hidden])')?.scrollTo?.(0, 0);
 }
-function cerrarSelector() { sel = null; pintarMenu(); }
+function cerrarSelector() { sel = null; mostrarAcaba(true); pintarMenu(); }
 
 function recetasDelSelector() {
   const q = normalizar(sel.q.trim());
-  let lista = todasLasRecetas();
+  /* Solo lo que se puede asignar en este momento del día */
+  let lista = todasLasRecetas().filter(r => cabeEnFranja(r, sel.franja));
   if (q) lista = lista.filter(r => normalizar(r.nombre).includes(q)
     || r.ingredientes.some(i => normalizar(String(i.nombre || i.texto || '')).includes(q)));
   if (sel.filtro === 'fav') lista = lista.filter(r => r.favorita);
   if (sel.filtro === 'tengo') lista = lista.filter(r => disponibilidadReceta(r).todo);
-  /* Primero las de esta franja, después el resto */
-  return [...lista].sort((a, b) => (b.comida === sel.franja) - (a.comida === sel.franja)
-    || (b.activa - a.activa) || a.nombre.localeCompare(b.nombre, 'es'));
+  return [...lista].sort((a, b) => (b.activa - a.activa) || a.nombre.localeCompare(b.nombre, 'es'));
 }
 
 function gridSelector() {
   const lista = recetasDelSelector();
   if (!lista.length) return `<p class="ga-nota" style="padding:1.4rem 0;grid-column:1/-1">${
     sel.filtro === 'tengo' ? 'Ninguna receta se puede hacer del todo con lo que sé que hay en casa.'
-    : sel.filtro === 'fav' ? 'Todavía no has marcado ninguna con el corazón.'
-    : 'No hay recetas con ese nombre.'}</p>`;
+    : sel.filtro === 'fav' ? `Todavía no has marcado ninguna ${nombreFranja(sel.franja).toLowerCase()} con el corazón.`
+    : sel.q.trim() ? `No hay ninguna receta de ${nombreFranja(sel.franja).toLowerCase()} con ese nombre.`
+    : `Todavía no hay recetas de ${nombreFranja(sel.franja).toLowerCase()}. Puedes crearlas en «Ver todas las recetas».`}</p>`;
   return lista.map(r => {
     const e = etiquetaDisponibilidad(disponibilidadReceta(r));
     return `<button class="sl-card" data-sl-r="${r.id}" aria-pressed="${sel.elegida === r.id}">
@@ -234,6 +236,7 @@ function pintarSelector() {
       ${[['todas', 'Todas'], ['tengo', 'Con lo que tengo'], ['fav', 'Favoritas']].map(([id, t]) =>
         `<button data-sl-filtro="${id}" aria-pressed="${sel.filtro === id}">${t}</button>`).join('')}
     </div>
+    <p class="sl-solo">Solo recetas de ${nombreFranja(franja).toLowerCase()}</p>
     <div class="sl-grid" id="sl-grid">${gridSelector()}</div>
     <div class="rv-pie sl-pie-fijo">
       <div class="sl-raciones"><div><b>Raciones</b><small>Las cantidades se ajustan solas</small></div>
