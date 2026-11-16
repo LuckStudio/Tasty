@@ -8,20 +8,22 @@ import { listaTickets, ticketPorId, borrarTicket, validarTicket,
          importarTicket, crearTicketManual, actualizarTicket,
          buscarProductos, pendientes, pendientesSugeridos,
          descartarPendiente, resumenGasto, UMBRAL_SUGERENCIA }
-  from '../gastos.js?v=21';
-import { tiendasActivas, TIENDA_POR_ID } from '../tiendas.js?v=21';
-import { POR_ID } from '../estado.js?v=21';
-import { aNumero } from '../precios.js?v=21';
-import { iconoHTML } from '../iconos.js?v=21';
-import { pintarStats, fijarPeriodo } from './stats.js?v=21';
-import { escanear } from '../escaner.js?v=21';
-import { hayClave } from '../gemini.js?v=21';
-import { buscarAlias, aprenderAlias } from '../alias.js?v=21';
-import { PRODUCTOS } from '../estado.js?v=21';
-import { euros, tap, esc, $ } from '../util.js?v=21';
+  from '../gastos.js?v=22';
+import { tiendasActivas, TIENDA_POR_ID } from '../tiendas.js?v=22';
+import { POR_ID } from '../estado.js?v=22';
+import { aNumero } from '../precios.js?v=22';
+import { iconoHTML } from '../iconos.js?v=22';
+import { pintarStats, fijarPeriodo } from './stats.js?v=22';
+import { escanear } from '../escaner.js?v=22';
+import { hayClave } from '../gemini.js?v=22';
+import { buscarAlias, aprenderAlias } from '../alias.js?v=22';
+import { abrirRevision, cerrarRevision, pintarRevision, clicRevision, entradaRevision }
+  from './revision.js?v=22';
+import { PRODUCTOS } from '../estado.js?v=22';
+import { euros, tap, esc, $ } from '../util.js?v=22';
 
 let raiz;
-let pantalla = 'lista';        // lista | importar | editor | stats | escaneo
+let pantalla = 'lista';        // lista | importar | editor | stats | escaneo | revision
 let escaneo = null;            // { fase: 'leyendo' | 'error', texto, codigo }
 const mesesCerrados = new Set();   // meses plegados en el historial
 let borrador = null;
@@ -64,6 +66,7 @@ export function iniciarGastos(nodo) {
   raiz = nodo;
 
   raiz.addEventListener('click', e => {
+    if (pantalla === 'revision' && clicRevision(e, raiz)) return;
     const t = e.target;
 
     if (t.closest('#ga-escanear')) { empezarEscaneo(); return; }
@@ -147,6 +150,7 @@ export function iniciarGastos(nodo) {
   });
 
   raiz.addEventListener('input', e => {
+    if (pantalla === 'revision' && entradaRevision(e, raiz)) return;
     if (e.target.id === 'ga-buscar') {
       sugerencias = buscarProductos(e.target.value);
       pintarSugerencias(e.target.value);
@@ -154,6 +158,7 @@ export function iniciarGastos(nodo) {
   });
 
   raiz.addEventListener('change', e => {
+    if (pantalla === 'revision' && entradaRevision(e, raiz)) return;
     if (e.target.id === 'ga-foto') {
       const fotos = [...e.target.files];
       e.target.value = '';                 // permite volver a elegir la misma
@@ -224,10 +229,12 @@ function guardarBorrador() {
   let aprendidos = 0;
   if (borrador.tienda) {
     for (const l of borrador.lineas) {
-      if (l.id && l.textoTicket && aprenderAlias(borrador.tienda, l.textoTicket, l.id)) aprendidos++;
+      if (l.id && l.textoTicket && l.recordar !== false
+          && aprenderAlias(borrador.tienda, l.textoTicket, l.id)) aprendidos++;
     }
   }
 
+  cerrarRevision();
   pantalla = 'lista';
   borrador = null;
   aviso(mensajeDeAlta(r, editando) + (aprendidos ? ` · ${aprendidos} enlaces recordados` : ''));
@@ -285,7 +292,12 @@ async function hacerEscaneo(fotos) {
   }
   escaneo = null;
   borrador = { ...r.borrador, modelo: r.modelo };
-  pantalla = 'editor';
+  pantalla = 'revision';
+  abrirRevision(borrador, {
+    alGuardar: () => { guardarBorrador(); },
+    alEditar: () => { cerrarRevision(); pantalla = 'editor'; pintarGastos(); },
+    alCancelar: () => { cerrarRevision(); pantalla = 'lista'; borrador = null; pintarGastos(); }
+  });
   pintarGastos();
 }
 
@@ -405,6 +417,7 @@ export function pintarGastos() {
   if (pantalla === 'editor')   return pintarEditor();
   if (pantalla === 'stats')    return pintarStats(raiz);
   if (pantalla === 'escaneo')  return pintarEscaneo();
+  if (pantalla === 'revision') return pintarRevision(raiz);
 
   const tickets = listaTickets();
   const res = resumenGasto();
@@ -627,6 +640,7 @@ function pintarEditor() {
 
 /* Permite volver a la lista desde fuera (al cambiar de pestaña) */
 export function reiniciarGastos() {
+  cerrarRevision();
   pantalla = 'lista';
   escaneo = null;
   borrador = null;

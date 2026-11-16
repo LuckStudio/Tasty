@@ -17,9 +17,9 @@
    para poder cocinar lo que tienes planeado.
    ============================================================ */
 
-import { datos, guardar } from './almacen.js?v=21';
-import { POR_ID, PRODUCTOS } from './estado.js?v=21';
-import { nuevoId, normalizar } from './util.js?v=21';
+import { datos, guardar } from './almacen.js?v=22';
+import { POR_ID, PRODUCTOS } from './estado.js?v=22';
+import { nuevoId, normalizar } from './util.js?v=22';
 
 export const COMIDAS = [
   { id: 'desayuno', nombre: 'Desayuno', orden: 1 },

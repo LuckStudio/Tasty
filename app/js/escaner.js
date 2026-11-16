@@ -15,8 +15,8 @@
      escanear()            todo el recorrido
    ============================================================ */
 
-import { generar } from './gemini.js?v=21';
-import { normalizar } from './util.js?v=21';
+import { generar } from './gemini.js?v=22';
+import { normalizar } from './util.js?v=22';
 
 /* ---------- lo que se le pide a Gemini ---------- */
 
@@ -173,6 +173,49 @@ export function proponerProducto(texto, productos) {
   };
 }
 
+/* Productos PARECIDOS (no exactos) para ofrecer en la revisión.
+   Cuenta palabras en común, también por comienzo de palabra (el
+   ticket abrevia: «BATID» ~ «batido»). Ordenados de más a menos
+   parecido. excluir: ids que no se quieren repetir. */
+export function buscarCandidatos(texto, productos, { excluir = [], max = 3 } = {}) {
+  const tk = [...new Set(palabras(texto))];
+  if (!tk.length) return [];
+  const fuera = new Set(excluir);
+
+  /* 1 punto: misma palabra o comienzo de 3+ letras. Medio punto: una
+     abreviatura de 2 letras («FR» ~ «fresco»): útil pero poco fiable. */
+  const valor = (a, b) => {
+    if (a === b) return 1;
+    if (a.length >= 3 && b.startsWith(a)) return 1;
+    if (b.length >= 3 && a.startsWith(b)) return 1;
+    if (a.length === 2 && b.length > 3 && b.startsWith(a)) return 0.5;
+    return 0;
+  };
+
+  const puntuados = [];
+  for (const p of productos) {
+    if (fuera.has(p.id)) continue;
+    const pw = palabras(p.n);
+    if (!pw.length) continue;
+    let comunes = 0, fuertes = 0;
+    for (const w of pw) {
+      const v = Math.max(0, ...tk.map(t => valor(t, w)));
+      comunes += v;
+      if (v === 1) fuertes++;
+    }
+    if (!comunes) continue;
+    /* Más importante cubrir el nombre entero que tener muchas en común */
+    puntuados.push({ p, fuertes, puntos: comunes / pw.length + comunes * 0.15 });
+  }
+  /* Una abreviatura de 2 letras solo sirve cuando no hay nada mejor:
+     si existe algún parecido fuerte, los débiles son ruido. */
+  if (puntuados.some(x => x.fuertes > 0)) {
+    for (let i = puntuados.length - 1; i >= 0; i--) if (!puntuados[i].fuertes) puntuados.splice(i, 1);
+  }
+  puntuados.sort((a, b) => b.puntos - a.puntos || a.p.n.length - b.p.n.length);
+  return puntuados.slice(0, max).map(x => x.p);
+}
+
 export function proponerTienda(texto, tiendas) {
   const t = normalizar(texto || '');
   if (!t) return null;
@@ -223,6 +266,7 @@ export function aBorrador(lectura, { productos, tiendas, buscarAlias: memoria })
         precio: l.importe,
         textoTicket: l.texto,
         porMemoria: !!deMemoria,
+        autoEnlazada: !!enlazado && !deMemoria,
         sugerido: m && !enlazado ? { id: m.id, nombre: m.nombre } : null,
         pesoKg: l.pesoKg,
         precioKg: l.precioKg

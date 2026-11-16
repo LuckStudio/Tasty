@@ -235,4 +235,19 @@ await test('un enlace recordado a un producto que ya no existe se ignora', () =>
   assert.equal(b.lineas[0].porMemoria, false);
 });
 
+await test('candidatos parecidos: por palabra, por abreviatura y sin repetir lo excluido', () => {
+  const cat = [...CAT, { id: 8, n: 'Mezcla de lechugas', c: 'verduras' }, { id: 9, n: 'Frutos secos mix', c: 'despensa' },
+    { id: 10, n: 'Queso rallado 4 quesos', c: 'lacteos' }, { id: 11, n: 'Batido de chocolate', c: 'lacteos' }];
+  assert.equal(E.buscarCandidatos('HACENDADO MEZCLA 4', cat)[0].n, 'Mezcla de lechugas');
+  assert.equal(E.buscarCandidatos('BATID CHOC', cat)[0].n, 'Batido de chocolate');
+  /* con un parecido fuerte (batido) las abreviaturas de 2 letras son ruido */
+  assert.deepEqual(E.buscarCandidatos('Q. FR. BATIDO 0%', cat).map(p => p.n), ['Batido de chocolate']);
+  /* sin nada fuerte, la abreviatura sí orienta */
+  assert.equal(E.buscarCandidatos('Q. FR.', cat).some(p => p.n === 'Queso fresco'), true);
+  assert.equal(E.buscarCandidatos('MEZCLA', cat, { excluir: [8] }).some(p => p.id === 8), false);
+  assert.deepEqual(E.buscarCandidatos('ZZZ QQQ', cat), []);
+  assert.deepEqual(E.buscarCandidatos('', cat), []);
+  assert.ok(E.buscarCandidatos('QUESO', cat, { max: 2 }).length <= 2);
+});
+
 console.log(`\n${n} pruebas correctas${process.exitCode ? ' (hay fallos)' : ''}`);
