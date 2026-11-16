@@ -104,6 +104,7 @@ for t in tests/*.test.mjs; do node "$t" || break; done
 | `busqueda` | Filtros y orden del buscador de productos |
 | `ruta` | Compra agrupada por el recorrido de la tienda, estimado por tienda, última tienda |
 | `recetas` | Las 14 recetas de noviembre, importación, sumas de ingredientes, privacidad |
+| `incluidas` | Carga automática de las recetas que vienen con la app (sin duplicar, sin pisar ediciones, sin resucitar borradas) |
 | `despensa` | Existencias, «se acaba», compras y cocina que suman y restan, copias |
 | `menu` | Menú semanal, bloque de cocina, ingredientes consolidados, «qué toca hoy» |
 
@@ -135,7 +136,7 @@ Ajustes → Tus datos → «Borrar historial de tickets». Quita solo los ticket
 ## Fase 4: estado
 
 Hecho:
-- **Recetas de noviembre:** 14 recetas (3 desayunos, 4 comidas, 3 meriendas, 4 cenas) cargables desde Menú → «Ver todas las recetas». Solo se tomaron las recetas del documento original; nada personal ni de salud.
+- **Recetas de noviembre:** 14 recetas (3 desayunos, 4 comidas, 3 meriendas, 4 cenas) que **vienen dentro de la app**: se cargan solas la primera vez que se abre, con todos sus ingredientes ya en el catálogo (incluidos los 6 productos nuevos). Solo se añaden las que faltan: nunca se pisa una receta propia ni vuelve una que se haya borrado. Menú → Recetas → «Restaurar las recetas de noviembre» las devuelve a su versión original. Solo se tomaron las recetas del documento original; nada personal ni de salud.
 - **Despensa:** existencias en g / ml / ud. Se llena al guardar una compra y se descuenta al cocinar; «se está acabando / se ha acabado» con un toque; si no se sabe, la app dice «sin comprobar».
 - **Menú semanal (02) y selector de receta (03):** desayuno, comida y cena, varias recetas por franja, raciones, «cena fuera», copiar día y semana, «Generar lista».
 - **Qué toca hoy (01):** el bloque de esta tarde (cena de hoy + desayuno y comida de mañana, configurable), lo que falta y «mañana por la tarde».

@@ -13,6 +13,11 @@ dirección `https://luckstudio.github.io/Tasty/` abre la app directamente
 Ojo: la página del repositorio en github.com (`github.com/LuckStudio/Tasty`)
 siempre enseña este README; eso es normal y no es la app.
 
+## Recetas incluidas
+
+Las 14 recetas de noviembre vienen dentro de la app (`app/datos/recetas-noviembre.js`) y se
+cargan solas la primera vez que se abre. Sus ingredientes están en el catálogo de productos.
+
 ## Estructura
 - `app/`: la aplicación (PWA estática, se sirve tal cual; ver `app/LEEME.md`).
 - `docs/`: brief, plan, informe técnico y diseño.

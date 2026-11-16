@@ -18,7 +18,7 @@
    Funciones puras: se prueban sin navegador.
    ============================================================ */
 
-import { precioBaseDeCompra } from './unidades.js?v=35';
+import { precioBaseDeCompra } from './unidades.js?v=36';
 
 const redondear = n => Math.round(n * 100) / 100;
 const DIA = 86400000;

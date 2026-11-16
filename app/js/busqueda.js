@@ -5,7 +5,7 @@
    últimos al ordenar por precio.
    ============================================================ */
 
-import { normalizar } from './util.js?v=35';
+import { normalizar } from './util.js?v=36';
 
 /* filasDe(id) -> filas de precio (como preciosDe)
    seccionDe(p) -> id de sección

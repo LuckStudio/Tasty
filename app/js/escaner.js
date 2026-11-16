@@ -15,8 +15,8 @@
      escanear()            todo el recorrido
    ============================================================ */
 
-import { generar } from './gemini.js?v=35';
-import { normalizar } from './util.js?v=35';
+import { generar } from './gemini.js?v=36';
+import { normalizar } from './util.js?v=36';
 
 /* ---------- lo que se le pide a Gemini ---------- */
 

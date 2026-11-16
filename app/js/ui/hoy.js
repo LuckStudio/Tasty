@@ -7,14 +7,14 @@
    ============================================================ */
 
 import { tocaHoy, fechaISO, sumarDias, franjasPorDefecto, franjasDeBloque, configurarBloque,
-         restablecerBloque, faltasALaLista, resumenConsolidado, FRANJAS } from '../menu.js?v=35';
+         restablecerBloque, faltasALaLista, resumenConsolidado, FRANJAS } from '../menu.js?v=36';
 import { imagenReceta, puntoReceta, diaLargo, diaNumero, mesCorto, relativo, nombreFranja }
-  from './receta-comun.js?v=35';
-import { nombreIngrediente } from '../recetas.js?v=35';
-import { colorDeReceta } from '../menu.js?v=35';
-import { formatearCantidad } from '../unidades.js?v=35';
-import { esFalta } from '../despensa.js?v=35';
-import { esc, tap } from '../util.js?v=35';
+  from './receta-comun.js?v=36';
+import { nombreIngrediente } from '../recetas.js?v=36';
+import { colorDeReceta } from '../menu.js?v=36';
+import { formatearCantidad } from '../unidades.js?v=36';
+import { esFalta } from '../despensa.js?v=36';
+import { esc, tap } from '../util.js?v=36';
 
 let raiz = null, cb = {};
 let pantalla = 'hoy';       // hoy | bloque

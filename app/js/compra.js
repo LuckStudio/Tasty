@@ -11,13 +11,13 @@
    donde se dejó (cerrar la app en mitad del súper no borra nada).
    ============================================================ */
 
-import { nuevoId } from './util.js?v=35';
-import { POR_ID } from './estado.js?v=35';
-import { aprenderDeTicket, preciosDe } from './precios.js?v=35';
-import { recordarTienda } from './ruta.js?v=35';
-import { desdeTicket } from './despensa.js?v=35';
-import { registrarPendientes } from './gastos.js?v=35';
-import { datos, guardar } from './almacen.js?v=35';
+import { nuevoId } from './util.js?v=36';
+import { POR_ID } from './estado.js?v=36';
+import { aprenderDeTicket, preciosDe } from './precios.js?v=36';
+import { recordarTienda } from './ruta.js?v=36';
+import { desdeTicket } from './despensa.js?v=36';
+import { registrarPendientes } from './gastos.js?v=36';
+import { datos, guardar } from './almacen.js?v=36';
 const oyentes = new Set();
 
 export function suscribirCompra(fn) {
