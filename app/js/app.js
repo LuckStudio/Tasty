@@ -11,58 +11,59 @@
    ============================================================ */
 
 import { estado, suscribir, totalArticulos, cargarLista, vaciar,
-         fijarVista, seleccionados } from './estado.js?v=26';
+         fijarVista, seleccionados } from './estado.js?v=27';
 import { compraActual, crearCompra, descartarCompra,
-         suscribirCompra } from './compra.js?v=26';
+         suscribirCompra } from './compra.js?v=27';
 import { suscribirPrecios, cuantosPreciosHay, aprenderDeTicket }
-  from './precios.js?v=26';
-import { CATALOGO_VERSION } from '../datos/catalogo.js?v=26';
-import { leerHash, enlace, codificar } from './url.js?v=26';
-import { vigilarIconos } from './iconos.js?v=26';
-import { iniciarTema, fijarTema, temaActual, TEMAS, fijarAcentoTienda } from './tema.js?v=26';
-import { iniciarGrid, pintarGrid, fijarBusqueda } from './ui/grid.js?v=26';
-import { iniciarResumen, pintarResumen } from './ui/resumen.js?v=26';
+  from './precios.js?v=27';
+import { CATALOGO_VERSION } from '../datos/catalogo.js?v=27';
+import { leerHash, enlace, codificar } from './url.js?v=27';
+import { vigilarIconos } from './iconos.js?v=27';
+import { iniciarTema, fijarTema, temaActual, TEMAS, fijarAcentoTienda } from './tema.js?v=27';
+import { iniciarGrid, pintarGrid, fijarBusqueda } from './ui/grid.js?v=27';
+import { iniciarResumen, pintarResumen } from './ui/resumen.js?v=27';
 import { iniciarComprador, pintarComprador, pintarTicket,
-         fijarTicketVisible } from './ui/comprador.js?v=26';
-import { iniciarFicha, cerrarFicha } from './ui/ficha.js?v=26';
-import { iniciarGastos, pintarGastos, reiniciarGastos } from './ui/gastos.js?v=26';
-import { iniciarAdmin, pintarAdmin, reiniciarAdmin } from './ui/admin.js?v=26';
+         fijarTicketVisible } from './ui/comprador.js?v=27';
+import { iniciarFicha, cerrarFicha } from './ui/ficha.js?v=27';
+import { iniciarGastos, pintarGastos, reiniciarGastos } from './ui/gastos.js?v=27';
+import { iniciarAdmin, pintarAdmin, reiniciarAdmin } from './ui/admin.js?v=27';
 import { iniciarPanelPrecios, pintarPanel, reiniciarPanelPrecios }
-  from './ui/precios-panel.js?v=26';
+  from './ui/precios-panel.js?v=27';
 import { iniciarVistaTiendas, pintarTiendas, reiniciarTiendas }
-  from './ui/tiendas.js?v=26';
-import { suscribirTiendas, TIENDAS, TIENDA_POR_ID } from './tiendas.js?v=26';
-import { abrirEdicionTicket } from './ui/gastos.js?v=26';
+  from './ui/tiendas.js?v=27';
+import { suscribirTiendas, TIENDAS, TIENDA_POR_ID } from './tiendas.js?v=27';
+import { abrirEdicionTicket } from './ui/gastos.js?v=27';
 import { iniciarImportar, pintarImportar, reiniciarImportar }
-  from './ui/importar.js?v=26';
+  from './ui/importar.js?v=27';
 import { iniciarRecordatorios, pintarRecordatorios, reiniciarRecordatorios }
-  from './ui/recordatorios.js?v=26';
+  from './ui/recordatorios.js?v=27';
 import { programar, avisosPerdidos, recordatorios, estadoPermiso }
-  from './recordatorios.js?v=26';
+  from './recordatorios.js?v=27';
 import { suscribirReposicion, limpiarUrgenciasHuerfanas, sugerencias }
-  from './reposicion.js?v=26';
+  from './reposicion.js?v=27';
 import { iniciarVistaListas, pintarListas, reiniciarListas }
-  from './ui/listas.js?v=26';
+  from './ui/listas.js?v=27';
 import { listaActiva, listas, cambiarA, otrasConCosas, suscribirListas }
-  from './listas.js?v=26';
-import { iniciarCesta, pintarCesta, reiniciarCesta } from './ui/cesta.js?v=26';
-import { iniciarDieta, pintarDieta, reiniciarDieta } from './ui/dieta.js?v=26';
-import { suscribirRecetas, resumenDieta } from './recetas.js?v=26';
+  from './listas.js?v=27';
+import { iniciarCesta, pintarCesta, reiniciarCesta } from './ui/cesta.js?v=27';
+import { iniciarDieta, pintarDieta, reiniciarDieta } from './ui/dieta.js?v=27';
+import { suscribirRecetas, resumenDieta } from './recetas.js?v=27';
 import { copiaTexto, csvTickets, csvPrecios, descargar, nombreArchivo,
-         validarCopia, fusionar, limpiarTodo, cuantoHay, suscribirDatos }
-  from './datos-io.js?v=26';
-import { suscribirCatalogo, estadoCatalogo } from './catalogo-edit.js?v=26';
+         validarCopia, fusionar, limpiarTodo, cuantoHay, suscribirDatos,
+         borrarHistorialTickets }
+  from './datos-io.js?v=27';
+import { suscribirCatalogo, estadoCatalogo } from './catalogo-edit.js?v=27';
 import { suscribirGastos, ticketPorId, resumenGasto,
-         pendientesSugeridos } from './gastos.js?v=26';
-import { iniciarAjustesGemini, pintarBloqueGemini } from './ui/escaner.js?v=26';
-import { abrirHistorial, iniciarHistorial, pintarHistorial } from './ui/historial.js?v=26';
-import { iniciarProductos, pintarProductos } from './ui/productos.js?v=26';
-import { $, euros, tap } from './util.js?v=26';
+         pendientesSugeridos } from './gastos.js?v=27';
+import { iniciarAjustesGemini, pintarBloqueGemini } from './ui/escaner.js?v=27';
+import { abrirHistorial, iniciarHistorial, pintarHistorial } from './ui/historial.js?v=27';
+import { iniciarProductos, pintarProductos } from './ui/productos.js?v=27';
+import { $, euros, tap } from './util.js?v=27';
 
 /* Sello de versión. Lo cambia versionar.py junto con las rutas,
    así que ver aquí un número viejo significa que el navegador está
    usando archivos antiguos. */
-export const VERSION_APP = '26';
+export const VERSION_APP = '27';
 
 let vistaActual = 'grid';
 let modo = 'editor';
@@ -462,6 +463,8 @@ function pintarAjustes() {
               style="margin-bottom:0.5px">Descargar en Excel o CSV</button>
       <button class="btn-secundario" id="aj-importar"
               style="margin-bottom:0.5px">Importar y fusionar</button>
+      <button class="btn-secundario aj-peligro" id="aj-borrar-tickets"
+              style="margin-bottom:0.5px">Borrar historial de tickets</button>
       <button class="btn-secundario aj-peligro" id="aj-limpiar">Borrar todo</button>
     </div>
 
@@ -493,6 +496,7 @@ $('#v-ajustes').addEventListener('click', e => {
   if (e.target.closest('#aj-exportar')) { exportarTodo(); return; }
   if (e.target.closest('#aj-csv'))      { menuCSV(); return; }
   if (e.target.closest('#aj-importar')) { ir('importar'); return; }
+  if (e.target.closest('#aj-borrar-tickets')) { confirmarBorradoTickets(); return; }
   if (e.target.closest('#aj-limpiar'))  { confirmarBorrado(); return; }
   if (e.target.closest('#aj-reparar'))  { repararCache(); return; }
 
@@ -538,6 +542,28 @@ function menuCSV() {
 }
 
 /* Nunca se ofrece borrar sin poner delante el botón de exportar */
+function confirmarBorradoTickets() {
+  const hay = cuantoHay();
+  if (!hay.tickets) { aviso('No hay tickets que borrar'); return; }
+
+  abrirHoja('Borrar el historial de tickets', [
+    { texto: 'Exportar una copia primero',
+      nota: `${hay.tickets} compras · ${euros(hay.gasto)}`,
+      accion: () => {
+        descargar(nombreArchivo('json'), copiaTexto());
+        aviso('Copia descargada · ya puedes borrar el historial');
+      } },
+    { texto: `Borrar ${hay.tickets} ${hay.tickets === 1 ? 'ticket' : 'tickets'}`,
+      nota: 'No hay vuelta atrás. Se conservan los precios actuales, las listas, las recetas y los enlaces recordados.',
+      peligro: true,
+      accion: () => {
+        const r = borrarHistorialTickets();
+        aviso(`Historial borrado · ${r.tickets} ${r.tickets === 1 ? 'ticket' : 'tickets'}`);
+      } },
+    { texto: 'Cancelar' }
+  ]);
+}
+
 function confirmarBorrado() {
   const hay = cuantoHay();
 

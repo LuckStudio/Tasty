@@ -25,8 +25,8 @@
    superior). Desde Safari normal, no. En Android van siempre.
    ============================================================ */
 
-import { nuevoId } from './util.js?v=26';
-import { datos, guardar } from './almacen.js?v=26';
+import { nuevoId } from './util.js?v=27';
+import { datos, guardar } from './almacen.js?v=27';
 
 export const DIAS = [
   { id: 0, corto: 'D', nombre: 'Domingo' },

@@ -230,4 +230,28 @@ test('SEGURIDAD: una copia maliciosa con __proto__ no altera los objetos de la a
   assert.equal(L.buscarAlias('mercadona', 'ok'), 7);          // lo legítimo sí entra
 });
 
+console.log('Borrar el historial de tickets');
+test('borra solo los tickets y la bandeja de pendientes; todo lo demás se conserva', () => {
+  datos.pendientes.push({ clave: 'x', nombre: 'X', veces: 1, tiendas: [] });
+  datos.preciosLocal[101] = { mercadona: { f: 1.6, b: 1.6, d: '2026-11-01' } };
+  datos.lista[101] = 2;
+  L.aprenderAlias('mercadona', 'TEXTO RECORDADO', 101);
+  S.colocarSeccion('lidl', 'bebidas', 0);
+  const antes = datos.tickets.length;
+  assert.ok(antes >= 1);
+  const r = IO.borrarHistorialTickets();
+  assert.equal(r.tickets, antes);
+  assert.equal(r.pendientes, 1);
+  assert.equal(datos.tickets.length, 0);
+  assert.equal(datos.pendientes.length, 0);
+  assert.equal(datos.preciosLocal[101].mercadona.f, 1.6);      // el precio actual se queda
+  assert.equal(datos.lista[101], 2);
+  assert.equal(L.buscarAlias('mercadona', 'TEXTO RECORDADO'), 101);
+  assert.equal(S.rutaDe('lidl').orden[0], 'bebidas');
+});
+test('con el historial ya vacío no falla ni inventa nada', () => {
+  const r = IO.borrarHistorialTickets();
+  assert.deepEqual([r.tickets, r.gasto, r.pendientes], [0, 0, 0]);
+});
+
 console.log(`\n${n} pruebas${process.exitCode ? ' (hay fallos)' : ' correctas'}`);

@@ -16,10 +16,10 @@
               haber puesto delante el botón de exportar.
    ============================================================ */
 
-import { datos, guardar, borrarTodo } from './almacen.js?v=26';
-import { reconstruirCatalogo, POR_ID } from './estado.js?v=26';
-import { reconstruirTiendas, TIENDA_POR_ID } from './tiendas.js?v=26';
-import { CATALOGO_VERSION } from '../datos/catalogo.js?v=26';
+import { datos, guardar, borrarTodo } from './almacen.js?v=27';
+import { reconstruirCatalogo, POR_ID } from './estado.js?v=27';
+import { reconstruirTiendas, TIENDA_POR_ID } from './tiendas.js?v=27';
+import { CATALOGO_VERSION } from '../datos/catalogo.js?v=27';
 
 export const FORMATO = 'lista-compra-luckstudio-copia';
 
@@ -293,6 +293,19 @@ export function limpiarTodo() {
   borrarTodo();
   /* Se recarga para arrancar de cero sin estados a medias */
   location.reload();
+}
+
+/* Borra SOLO el historial de compras (tickets) y la bandeja de productos
+   por catalogar, que sale de ellos. Se conserva todo lo demás: precios
+   actuales, listas, recetas, catálogo, rutas y enlaces recordados. */
+export function borrarHistorialTickets() {
+  const tickets = datos.tickets.length;
+  const gasto = Math.round(datos.tickets.reduce((a, t) => a + (t.total || 0), 0) * 100) / 100;
+  const pendientes = datos.pendientes.length;
+  datos.tickets.splice(0);
+  datos.pendientes.splice(0);
+  avisar();
+  return { tickets, gasto, pendientes };
 }
 
 /* Cuántos datos hay ahora mismo, para el aviso de borrado */
