@@ -15,8 +15,8 @@
      escanear()            todo el recorrido
    ============================================================ */
 
-import { generar } from './gemini.js?v=20';
-import { normalizar } from './util.js?v=20';
+import { generar } from './gemini.js?v=21';
+import { normalizar } from './util.js?v=21';
 
 /* ---------- lo que se le pide a Gemini ---------- */
 
@@ -182,12 +182,17 @@ export function proponerTienda(texto, tiendas) {
   return encontrada ? encontrada.id : null;
 }
 
-/* Del resultado limpio al borrador que entiende el editor */
-export function aBorrador(lectura, { productos, tiendas }) {
+/* Del resultado limpio al borrador que entiende el editor.
+   contexto.buscarAlias(tienda, texto) -> id | null es la memoria de
+   equivalencias: lo que el usuario ya enlazó en esa cadena. */
+export function aBorrador(lectura, { productos, tiendas, buscarAlias: memoria }) {
   const hoy = new Date().toISOString().slice(0, 10);
+  const tienda = proponerTienda(lectura.tiendaTexto, tiendas);
+  const porId = new Map(productos.map(p => [p.id, p]));
+
   return {
     id: null,
-    tienda: proponerTienda(lectura.tiendaTexto, tiendas),
+    tienda,
     fecha: lectura.fecha || hoy,
     pago: 'tarjeta',
     escaneado: {
@@ -198,8 +203,16 @@ export function aBorrador(lectura, { productos, tiendas }) {
       fechaLeida: !!lectura.fecha
     },
     lineas: lectura.lineas.map(l => {
-      const m = proponerProducto(l.texto, productos);
-      /* Solo se enlaza solo si hay seguridad alta; si no, queda como
+      /* 1º la memoria: es lo que el usuario ya decidió. Si apunta a un
+         producto que ya no existe (archivado), se ignora. */
+      const idMemoria = tienda && memoria ? memoria(tienda, l.texto) : null;
+      const deMemoria = idMemoria != null ? porId.get(idMemoria) : null;
+
+      const m = deMemoria
+        ? { id: deMemoria.id, nombre: deMemoria.n, c: deMemoria.c, seguridad: 'alta' }
+        : proponerProducto(l.texto, productos);
+
+      /* Solo se enlaza solo con seguridad alta; si no, queda como
          texto del ticket para que lo decida el usuario. */
       const enlazado = m && m.seguridad === 'alta' ? m : null;
       return {
@@ -209,6 +222,7 @@ export function aBorrador(lectura, { productos, tiendas }) {
         cant: l.cant,
         precio: l.importe,
         textoTicket: l.texto,
+        porMemoria: !!deMemoria,
         sugerido: m && !enlazado ? { id: m.id, nombre: m.nombre } : null,
         pesoKg: l.pesoKg,
         precioKg: l.precioKg

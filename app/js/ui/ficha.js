@@ -3,20 +3,20 @@
    Precios por supermercado, comparativa y preferencia
    ============================================================ */
 
-import { POR_ID, cantidad, sumar, alternar } from '../estado.js?v=20';
+import { POR_ID, cantidad, sumar, alternar } from '../estado.js?v=21';
 import { preciosDe, guardarPrecio, borrarPrecio, preferencias,
          alternarPreferencia, moverPreferencia, calcularBase, aNumero,
          formatoBase, FORMATOS, NOMBRE_BASE, DIAS_VIEJO,
          equivalentes, enlazarEquivalente, desenlazarEquivalente,
-         masBaratoQue, marcaDe, fijarMarca } from '../precios.js?v=20';
-import { tiendasActivas, TIENDA_POR_ID } from '../tiendas.js?v=20';
-import { CAT_POR_ID } from '../../datos/categorias.js?v=20';
-import { PRODUCTOS } from '../estado.js?v=20';
-import { historialHTML } from './stats.js?v=20';
+         masBaratoQue, marcaDe, fijarMarca } from '../precios.js?v=21';
+import { tiendasActivas, TIENDA_POR_ID } from '../tiendas.js?v=21';
+import { CAT_POR_ID } from '../../datos/categorias.js?v=21';
+import { PRODUCTOS } from '../estado.js?v=21';
+import { historialHTML } from './stats.js?v=21';
 import { periodicidad, fijarPeriodicidad, textoOrigen, ultimaCompra,
-         diasDesde } from '../reposicion.js?v=20';
-import { iconoHTML } from '../iconos.js?v=20';
-import { euros, $, tap } from '../util.js?v=20';
+         diasDesde } from '../reposicion.js?v=21';
+import { iconoHTML } from '../iconos.js?v=21';
+import { euros, $, tap } from '../util.js?v=21';
 
 let fondo, cuerpo, idActual = null, formAbierto = false, tiendaForm = null;
 

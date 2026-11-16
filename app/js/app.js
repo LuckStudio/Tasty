@@ -11,56 +11,56 @@
    ============================================================ */
 
 import { estado, suscribir, totalArticulos, cargarLista, vaciar,
-         fijarVista, seleccionados } from './estado.js?v=20';
+         fijarVista, seleccionados } from './estado.js?v=21';
 import { compraActual, crearCompra, descartarCompra,
-         suscribirCompra } from './compra.js?v=20';
+         suscribirCompra } from './compra.js?v=21';
 import { suscribirPrecios, cuantosPreciosHay, aprenderDeTicket }
-  from './precios.js?v=20';
-import { CATALOGO_VERSION } from '../datos/catalogo.js?v=20';
-import { leerHash, enlace, codificar } from './url.js?v=20';
-import { vigilarIconos } from './iconos.js?v=20';
-import { iniciarTema, fijarTema, temaActual, TEMAS, fijarAcentoTienda } from './tema.js?v=20';
-import { iniciarGrid, pintarGrid, fijarBusqueda } from './ui/grid.js?v=20';
-import { iniciarResumen, pintarResumen } from './ui/resumen.js?v=20';
+  from './precios.js?v=21';
+import { CATALOGO_VERSION } from '../datos/catalogo.js?v=21';
+import { leerHash, enlace, codificar } from './url.js?v=21';
+import { vigilarIconos } from './iconos.js?v=21';
+import { iniciarTema, fijarTema, temaActual, TEMAS, fijarAcentoTienda } from './tema.js?v=21';
+import { iniciarGrid, pintarGrid, fijarBusqueda } from './ui/grid.js?v=21';
+import { iniciarResumen, pintarResumen } from './ui/resumen.js?v=21';
 import { iniciarComprador, pintarComprador, pintarTicket,
-         fijarTicketVisible } from './ui/comprador.js?v=20';
-import { iniciarFicha, cerrarFicha } from './ui/ficha.js?v=20';
-import { iniciarGastos, pintarGastos, reiniciarGastos } from './ui/gastos.js?v=20';
-import { iniciarAdmin, pintarAdmin, reiniciarAdmin } from './ui/admin.js?v=20';
+         fijarTicketVisible } from './ui/comprador.js?v=21';
+import { iniciarFicha, cerrarFicha } from './ui/ficha.js?v=21';
+import { iniciarGastos, pintarGastos, reiniciarGastos } from './ui/gastos.js?v=21';
+import { iniciarAdmin, pintarAdmin, reiniciarAdmin } from './ui/admin.js?v=21';
 import { iniciarPanelPrecios, pintarPanel, reiniciarPanelPrecios }
-  from './ui/precios-panel.js?v=20';
+  from './ui/precios-panel.js?v=21';
 import { iniciarVistaTiendas, pintarTiendas, reiniciarTiendas }
-  from './ui/tiendas.js?v=20';
-import { suscribirTiendas, TIENDAS, TIENDA_POR_ID } from './tiendas.js?v=20';
-import { abrirEdicionTicket } from './ui/gastos.js?v=20';
+  from './ui/tiendas.js?v=21';
+import { suscribirTiendas, TIENDAS, TIENDA_POR_ID } from './tiendas.js?v=21';
+import { abrirEdicionTicket } from './ui/gastos.js?v=21';
 import { iniciarImportar, pintarImportar, reiniciarImportar }
-  from './ui/importar.js?v=20';
+  from './ui/importar.js?v=21';
 import { iniciarRecordatorios, pintarRecordatorios, reiniciarRecordatorios }
-  from './ui/recordatorios.js?v=20';
+  from './ui/recordatorios.js?v=21';
 import { programar, avisosPerdidos, recordatorios, estadoPermiso }
-  from './recordatorios.js?v=20';
+  from './recordatorios.js?v=21';
 import { suscribirReposicion, limpiarUrgenciasHuerfanas, sugerencias }
-  from './reposicion.js?v=20';
+  from './reposicion.js?v=21';
 import { iniciarVistaListas, pintarListas, reiniciarListas }
-  from './ui/listas.js?v=20';
+  from './ui/listas.js?v=21';
 import { listaActiva, listas, cambiarA, otrasConCosas, suscribirListas }
-  from './listas.js?v=20';
-import { iniciarCesta, pintarCesta, reiniciarCesta } from './ui/cesta.js?v=20';
-import { iniciarDieta, pintarDieta, reiniciarDieta } from './ui/dieta.js?v=20';
-import { suscribirRecetas, resumenDieta } from './recetas.js?v=20';
+  from './listas.js?v=21';
+import { iniciarCesta, pintarCesta, reiniciarCesta } from './ui/cesta.js?v=21';
+import { iniciarDieta, pintarDieta, reiniciarDieta } from './ui/dieta.js?v=21';
+import { suscribirRecetas, resumenDieta } from './recetas.js?v=21';
 import { copiaTexto, csvTickets, csvPrecios, descargar, nombreArchivo,
          validarCopia, fusionar, limpiarTodo, cuantoHay, suscribirDatos }
-  from './datos-io.js?v=20';
-import { suscribirCatalogo, estadoCatalogo } from './catalogo-edit.js?v=20';
+  from './datos-io.js?v=21';
+import { suscribirCatalogo, estadoCatalogo } from './catalogo-edit.js?v=21';
 import { suscribirGastos, ticketPorId, resumenGasto,
-         pendientesSugeridos } from './gastos.js?v=20';
-import { iniciarAjustesGemini, pintarBloqueGemini } from './ui/escaner.js?v=20';
-import { $, euros, tap } from './util.js?v=20';
+         pendientesSugeridos } from './gastos.js?v=21';
+import { iniciarAjustesGemini, pintarBloqueGemini } from './ui/escaner.js?v=21';
+import { $, euros, tap } from './util.js?v=21';
 
 /* Sello de versión. Lo cambia versionar.py junto con las rutas,
    así que ver aquí un número viejo significa que el navegador está
    usando archivos antiguos. */
-export const VERSION_APP = '20';
+export const VERSION_APP = '21';
 
 let vistaActual = 'grid';
 let modo = 'editor';

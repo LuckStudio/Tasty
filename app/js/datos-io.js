@@ -16,10 +16,10 @@
               haber puesto delante el botón de exportar.
    ============================================================ */
 
-import { datos, guardar, borrarTodo } from './almacen.js?v=20';
-import { reconstruirCatalogo, POR_ID } from './estado.js?v=20';
-import { reconstruirTiendas, TIENDA_POR_ID } from './tiendas.js?v=20';
-import { CATALOGO_VERSION } from '../datos/catalogo.js?v=20';
+import { datos, guardar, borrarTodo } from './almacen.js?v=21';
+import { reconstruirCatalogo, POR_ID } from './estado.js?v=21';
+import { reconstruirTiendas, TIENDA_POR_ID } from './tiendas.js?v=21';
+import { CATALOGO_VERSION } from '../datos/catalogo.js?v=21';
 
 export const FORMATO = 'lista-compra-luckstudio-copia';
 
@@ -54,7 +54,9 @@ export function copiaCompleta() {
       productosConPrecio: Object.keys(datos.preciosLocal).length,
       productosPropios: datos.catalogoLocal?.nuevos?.length || 0,
       tiendasPropias: datos.tiendasLocal?.propias?.length || 0,
-      pendientes: datos.pendientes.length
+      pendientes: datos.pendientes.length,
+      rutas: Object.keys(datos.rutas || {}).length,
+      textosDeTicket: Object.values(datos.alias || {}).reduce((a, t) => a + Object.keys(t).length, 0)
     },
 
     tickets: datos.tickets,
@@ -63,6 +65,8 @@ export function copiaCompleta() {
     catalogoLocal: datos.catalogoLocal,
     tiendasLocal: datos.tiendasLocal,
     pendientes: datos.pendientes,
+    rutas: datos.rutas,
+    alias: datos.alias,
     ajustes: datos.ajustes
   };
 }
@@ -178,6 +182,12 @@ export function validarCopia(texto) {
   return { ok: true, copia: c, tipo: esCopia ? 'copia' : 'snapshot' };
 }
 
+/* Las copias vienen de fuera: una clave como «__proto__» usada para
+   indexar un objeto alteraría los objetos internos de la app. */
+const PELIGROSAS = new Set(['__proto__', 'constructor', 'prototype']);
+const segura = k => typeof k === 'string' && k && !PELIGROSAS.has(k);
+const propio = (o, k) => Object.prototype.hasOwnProperty.call(o, k);
+
 export function fusionar(copia) {
   const informe = {
     ticketsNuevos: 0, ticketsActualizados: 0,
@@ -221,8 +231,10 @@ export function fusionar(copia) {
 
   /* --- precios: gana el dato más reciente, no el que llega --- */
   for (const [id, porTienda] of Object.entries(copia.preciosLocal || {})) {
-    if (!datos.preciosLocal[id]) datos.preciosLocal[id] = {};
+    if (!segura(id)) continue;
+    if (!propio(datos.preciosLocal, id)) datos.preciosLocal[id] = {};
     for (const [tienda, dato] of Object.entries(porTienda || {})) {
+      if (!segura(tienda)) continue;
       const actual = datos.preciosLocal[id][tienda];
       const masNuevo = !actual || !actual.d || (dato.d && dato.d >= actual.d);
       if (masNuevo) { datos.preciosLocal[id][tienda] = dato; informe.precios++; }
@@ -231,7 +243,31 @@ export function fusionar(copia) {
 
   /* --- preferencias: se sobrescriben --- */
   for (const [id, pref] of Object.entries(copia.prefTienda || {})) {
+    if (!segura(id)) continue;
     datos.prefTienda[id] = Array.isArray(pref) ? pref : [pref].filter(Boolean);
+  }
+
+  /* --- rutas de tienda: la de la copia sustituye a la propia --- */
+  for (const [tienda, ruta] of Object.entries(copia.rutas || {})) {
+    if (!segura(tienda) || !Array.isArray(ruta?.orden)) continue;
+    datos.rutas ??= {};
+    datos.rutas[tienda] = {
+      orden: ruta.orden.filter(x => typeof x === 'string'),
+      ocultas: (ruta.ocultas || []).filter(x => typeof x === 'string')
+    };
+    informe.rutas = (informe.rutas || 0) + 1;
+  }
+
+  /* --- textos de ticket: se suman; si chocan, gana la copia --- */
+  for (const [cadena, tabla] of Object.entries(copia.alias || {})) {
+    if (!segura(cadena) || !tabla || typeof tabla !== 'object') continue;
+    datos.alias ??= {};
+    if (!propio(datos.alias, cadena)) datos.alias[cadena] = {};
+    for (const [texto, id] of Object.entries(tabla)) {
+      if (!segura(texto) || !Number.isFinite(id)) continue;
+      datos.alias[cadena][texto] = id;
+      informe.alias = (informe.alias || 0) + 1;
+    }
   }
 
   /* --- pendientes: se suman las apariciones --- */

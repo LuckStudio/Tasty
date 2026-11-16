@@ -14,6 +14,11 @@ cd app && python3 -m http.server 8000
 ```
 Y abrir http://localhost:8000
 
+## Pruebas
+```bash
+for t in gemini-escaner diseno datos; do node tests/$t.test.mjs; done
+```
+
 ## Documentación
 - [Plan de desarrollo por fases](docs/PLAN-DE-DESARROLLO.md)
 - [Informe técnico de la app base](docs/app-base.md)

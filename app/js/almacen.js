@@ -29,7 +29,7 @@
    ============================================================ */
 
 const CLAVE  = 'luckstudio_compra';
-const SCHEMA = 8;
+const SCHEMA = 9;
 
 /* Toda instalación arranca con una lista, aunque nunca se
    creen más. Así el resto del código no tiene que distinguir
@@ -59,6 +59,8 @@ const INICIAL = {
   urgencia: {},
   sugerenciasFuera: {},
   recordatorios: [],
+  rutas: {},
+  alias: {},
   ajustes: { vista: 'frecuencia', agrupar: 'categoria' }
 };
 
@@ -119,6 +121,15 @@ function migrar(datos) {
     /* v8: dieta y recetas */
     datos.recetas ??= [];
     datos.schema = 8;
+  }
+  if (datos.schema < 9) {
+    /* v9: secciones de supermercado y memoria de equivalencias de
+       ticket. Los productos no necesitan migración: su sección sale
+       de su categoría hasta que el usuario la cambie (campo `s` en
+       la capa editable) y el peso medio (`pu`) es opcional. */
+    datos.rutas ??= {};
+    datos.alias ??= {};
+    datos.schema = 9;
   }
   datos.schema = SCHEMA;
   return datos;

@@ -217,4 +217,22 @@ await test('el borrador solo enlaza solo con seguridad alta y guarda el texto or
   assert.equal(b.escaneado.cuadra, true);
 });
 
+await test('la memoria de equivalencias enlaza sola, aunque el nombre no se parezca', () => {
+  const lectura = E.normalizarLectura(JSON.stringify({
+    tienda: 'Mercadona', lineas: [{ texto: 'HACENDADO MEZCLA 4', importe: 1.85 }, { texto: 'Q. FR. BATIDO 0%', importe: 1.39 }]
+  }));
+  const memoria = (tienda, texto) => (tienda === 'mercadona' && texto === 'HACENDADO MEZCLA 4' ? 7 : null);
+  const b = E.aBorrador(lectura, { productos: CAT, tiendas: [{ id: 'mercadona', nombre: 'Mercadona' }], buscarAlias: memoria });
+  assert.equal(b.lineas[0].id, 7);
+  assert.equal(b.lineas[0].n, 'Queso fresco');
+  assert.equal(b.lineas[0].porMemoria, true);
+  assert.equal(b.lineas[1].id, null);
+});
+await test('un enlace recordado a un producto que ya no existe se ignora', () => {
+  const lectura = E.normalizarLectura(JSON.stringify({ tienda: 'Mercadona', lineas: [{ texto: 'COSA RARA', importe: 1 }] }));
+  const b = E.aBorrador(lectura, { productos: CAT, tiendas: [{ id: 'mercadona', nombre: 'Mercadona' }], buscarAlias: () => 12345 });
+  assert.equal(b.lineas[0].id, null);
+  assert.equal(b.lineas[0].porMemoria, false);
+});
+
 console.log(`\n${n} pruebas correctas${process.exitCode ? ' (hay fallos)' : ''}`);

@@ -8,16 +8,17 @@ import { listaTickets, ticketPorId, borrarTicket, validarTicket,
          importarTicket, crearTicketManual, actualizarTicket,
          buscarProductos, pendientes, pendientesSugeridos,
          descartarPendiente, resumenGasto, UMBRAL_SUGERENCIA }
-  from '../gastos.js?v=20';
-import { tiendasActivas, TIENDA_POR_ID } from '../tiendas.js?v=20';
-import { POR_ID } from '../estado.js?v=20';
-import { aNumero } from '../precios.js?v=20';
-import { iconoHTML } from '../iconos.js?v=20';
-import { pintarStats, fijarPeriodo } from './stats.js?v=20';
-import { escanear } from '../escaner.js?v=20';
-import { hayClave } from '../gemini.js?v=20';
-import { PRODUCTOS } from '../estado.js?v=20';
-import { euros, tap, esc, $ } from '../util.js?v=20';
+  from '../gastos.js?v=21';
+import { tiendasActivas, TIENDA_POR_ID } from '../tiendas.js?v=21';
+import { POR_ID } from '../estado.js?v=21';
+import { aNumero } from '../precios.js?v=21';
+import { iconoHTML } from '../iconos.js?v=21';
+import { pintarStats, fijarPeriodo } from './stats.js?v=21';
+import { escanear } from '../escaner.js?v=21';
+import { hayClave } from '../gemini.js?v=21';
+import { buscarAlias, aprenderAlias } from '../alias.js?v=21';
+import { PRODUCTOS } from '../estado.js?v=21';
+import { euros, tap, esc, $ } from '../util.js?v=21';
 
 let raiz;
 let pantalla = 'lista';        // lista | importar | editor | stats | escaneo
@@ -217,9 +218,19 @@ function guardarBorrador() {
     : crearTicketManual(borrador);
 
   if (!r.ok) { aviso(r.error); return; }
+
+  /* Memoria de equivalencias: lo enlazado (a mano o aceptando una
+     sugerencia) se recuerda para los próximos tickets de esa cadena. */
+  let aprendidos = 0;
+  if (borrador.tienda) {
+    for (const l of borrador.lineas) {
+      if (l.id && l.textoTicket && aprenderAlias(borrador.tienda, l.textoTicket, l.id)) aprendidos++;
+    }
+  }
+
   pantalla = 'lista';
   borrador = null;
-  aviso(mensajeDeAlta(r, editando));
+  aviso(mensajeDeAlta(r, editando) + (aprendidos ? ` · ${aprendidos} enlaces recordados` : ''));
   pintarGastos();
 }
 
@@ -258,7 +269,7 @@ async function hacerEscaneo(fotos) {
 
   let r;
   try {
-    r = await escanear(fotos, { productos: PRODUCTOS, tiendas: tiendasActivas() });
+    r = await escanear(fotos, { productos: PRODUCTOS, tiendas: tiendasActivas(), buscarAlias });
   } catch (e) {
     r = { ok: false, codigo: e.codigo, error: e.message || 'No he podido leer el ticket.' };
   }
@@ -582,7 +593,7 @@ function pintarEditor() {
       <div class="ga-linea">
         <span class="res-icono">${l.id ? iconoHTML(POR_ID[l.id]) : '<span aria-hidden="true">＋</span>'}</span>
         <span class="ga-linea-n">${esc(l.n)}${l.id ? '' : '<em>Nuevo</em>'}${
-          l.textoTicket && l.id ? `<small class="ga-orig">ticket: ${esc(l.textoTicket)}</small>` : ''}${
+          l.textoTicket && l.id ? `<small class="ga-orig">${l.porMemoria ? 'recordado · ' : ''}ticket: ${esc(l.textoTicket)}</small>` : ''}${
           l.sugerido ? `<button class="ga-sugerido" data-ed-aceptar="${i}">¿Es ${esc(l.sugerido.nombre)}? Enlazar</button>` : ''}</span>
         <label class="ga-mini">
           <span class="sr">Cantidad de ${esc(l.n)}</span>

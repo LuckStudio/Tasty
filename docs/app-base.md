@@ -70,3 +70,27 @@ Navegación inferior: Lista · Dieta · Resumen · Gastos · Ajustes.
 - Iconos de la app regenerados desde `assets/icono/tasty-icono-v1.svg` (180, 192, 512 y 512 «maskable» con margen de seguridad) y favicon/SVG sustituidos.
 - Versión subida a 18 con `versionar.py` (comprobación de módulos correcta).
 - Comprobado en navegador: arranca sin errores de consola, 228 botones en el grid, manifest correcto.
+
+## Modelo de datos ampliado (esquema 9)
+
+Añadido en la fase 1, sin migración destructiva (los datos del esquema 8 se leen tal cual):
+
+| Qué | Dónde | Notas |
+| --- | --- | --- |
+| Catálogo de secciones | `datos/secciones.js` | 15 secciones comunes; cada categoría tiene una sección por defecto |
+| Sección de un producto | campo `s` en la capa editable | Si no existe, se deduce de la categoría |
+| Peso medio por unidad | campo `pu` (gramos) | Opcional. Sin él no se convierte unidades ↔ peso |
+| Ruta de cada tienda | `datos.rutas[tienda] = { orden, ocultas }` | Una sección nueva se añade al final; lo oculto va a «Sin sección», nunca desaparece |
+| Textos de ticket | `datos.alias[cadena][texto] = idProducto` | Por cadena; varios textos por producto |
+
+Módulos: `js/secciones.js` (rutas y agrupación), `js/unidades.js` (conversión, precios por cantidad, atajos), `js/alias.js` (memoria de equivalencias). Las copias exportadas y la fusión incluyen rutas y textos.
+
+**Pendiente en interfaz** (fases 2 y 3): editar la sección y el peso medio de un producto, la pantalla de enlazar, el teclado de cantidad y la pantalla de ruta de tienda. El motor ya está probado.
+
+## Pruebas
+
+```bash
+node tests/gemini-escaner.test.mjs   # Gemini y escáner (sin red)
+node tests/diseno.test.mjs           # contraste AA y acento por tienda
+node tests/datos.test.mjs            # secciones, unidades, memoria, migración y fusión
+```
