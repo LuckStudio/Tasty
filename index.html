@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tasty</title>
+<meta name="theme-color" content="#F3F2EE">
+<!-- La app vive en /app/. Esta página solo existe para que el enlace del
+     repositorio publicado (GitHub Pages) abra la app y no el README. -->
+<meta http-equiv="refresh" content="0; url=app/">
+<link rel="canonical" href="app/">
+<style>
+  body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #F3F2EE;
+         color: #15171C; font: 16px/1.5 system-ui, sans-serif; text-align: center; padding: 1rem; }
+  a { color: #2B59C3; font-weight: 600; }
+</style>
+</head>
+<body>
+  <p>Abriendo Tasty… Si no se abre sola, <a href="app/">pulsa aquí</a>.</p>
+  <script>location.replace('app/' + location.search + location.hash);</script>
+</body>
+</html>
