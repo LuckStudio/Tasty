@@ -6,11 +6,11 @@
    a la lista de la compra, sin duplicar si ya estaba.
    ============================================================ */
 
-import { PRODUCTOS, POR_ID } from '../estado.js?v=34';
-import { stockDe, aLaLista } from '../despensa.js?v=34';
-import { tocaHoy } from '../menu.js?v=34';
-import { iconoHTML } from '../iconos.js?v=34';
-import { normalizar, esc, tap } from '../util.js?v=34';
+import { PRODUCTOS, POR_ID } from '../estado.js?v=35';
+import { stockDe, aLaLista } from '../despensa.js?v=35';
+import { tocaHoy } from '../menu.js?v=35';
+import { iconoHTML } from '../iconos.js?v=35';
+import { normalizar, esc, tap } from '../util.js?v=35';
 
 let fab = null, fondo = null;
 let nivel = 'acaba', q = '', elegidos = new Set();

@@ -21,11 +21,11 @@
    y nunca finge que lo tiene ni que no.
    ============================================================ */
 
-import { datos, guardar } from './almacen.js?v=34';
-import { POR_ID } from './estado.js?v=34';
-import { cantidad as enLista, sumar as sumarALista } from './estado.js?v=34';
-import { convertir, unidadNormal } from './unidades.js?v=34';
-import { preciosDe } from './precios.js?v=34';
+import { datos, guardar } from './almacen.js?v=35';
+import { POR_ID } from './estado.js?v=35';
+import { cantidad as enLista, sumar as sumarALista } from './estado.js?v=35';
+import { convertir, unidadNormal } from './unidades.js?v=35';
+import { preciosDe } from './precios.js?v=35';
 
 const oyentes = new Set();
 export function suscribirDespensa(fn) { oyentes.add(fn); return () => oyentes.delete(fn); }

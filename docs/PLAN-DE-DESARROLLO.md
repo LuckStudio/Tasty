@@ -260,3 +260,19 @@ Pasos:
 3. Colocar verduras y salmón en la bandeja, aliñar · 5 min · activo
 4. Hornear · 20 min · espera · horno
 ```
+
+
+---
+
+## 7. Qué falta (revisión del 16 nov 2026)
+
+Hechas: fases 0, 1, 2 (menos un detalle), 3 y 4. La fase 5 (cocina simultánea) queda **aplazada a petición del usuario**.
+
+| Fase | Qué es | Por qué hace falta | Prioridad |
+| --- | --- | --- | --- |
+| **4b · Despensa visible** | Pantalla «En casa» (ver y corregir existencias), tarjeta «En casa» en la ficha y en Productos, y el botón «He terminado de cocinar» que descuenta del inventario | Hoy la despensa se llena sola (compras, «se acaba») pero **no se puede ver ni corregir**; el descuento al cocinar existe pero no tiene botón (M4 del brief) | **Alta** |
+| **2b · Resumen de compra** | Pantalla 13: el ticket tras comprar con «cambios de precio» frente a la última vez y la estimación de la lista | Es lo que cierra el círculo compra → precios | Media |
+| **5 · Cocina simultánea** | Guía paso a paso combinada, temporizadores, modo cocina | Aplazada. Necesita duración, tipo (activo/espera) y recurso en cada paso | Aplazada |
+| **6 · Lanzamiento** | Probar el escáner con tickets reales de Mercadona y Dia y afinar el prompt, fotos de recetas, guía de instalación en el móvil, publicar y fusionar en `main` | Sin esto no está en uso real | **Alta (final)** |
+
+Decisiones pequeñas pendientes: pestañas de la navegación (el PDF propone Hoy · Menú · Compra · Despensa · Ticket; ahora hay Hoy · Menú · Lista · Resumen · Gastos · Ajustes), una cuarta franja de merienda en el calendario, y estimar las duraciones de los pasos de las recetas.

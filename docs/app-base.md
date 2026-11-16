@@ -149,3 +149,9 @@ Decisiones y límites:
 - **Tres franjas** como pide el brief. Las meriendas se pueden asignar a la franja en que se toman.
 - Las **fotos de receta** van en `app/recetas/` (ver `recetas/LEEME.txt`) y se activan listándolas en `datos/fotos-recetas.js`. Sin foto se ve el color de la receta con el icono de su ingrediente principal.
 - «Generar lista» añade lo que falta **y lo que no se sabe si hay en casa**, para que sirva con la despensa vacía; lo que se sabe que hay no se añade.
+
+## Pruebas de la batería completa
+
+Barrido de **200 pantallas** (todas las vistas × 4 tamaños: 320, 390, 768 y 1280 px × claro y oscuro) con datos reales cargados: 0 errores y 0 desbordes horizontales. Se revisaron también los tamaños táctiles: el brief pide botones grandes en supermercado y cocina, así que los controles heredados de la app base (22-28 px) se llevaron a 36-44 px de alto.
+
+**Sin conexión:** el service worker guarda al instalarse los 95 archivos que necesita (generados por `versionar.py` a partir del `index.html`, para que no se desactualicen). Comprobado con la caché del navegador desactivada: tras **una sola visita**, la app arranca y navega sin red. Antes solo se guardaban 3 archivos y el resto se iba guardando a partir de la segunda visita.

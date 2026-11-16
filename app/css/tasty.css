@@ -290,3 +290,49 @@ a { color: var(--accent); }
    (60) siguen por encima de las dos. */
 #hoja-fondo { z-index: 50; }
 .aviso { border-radius: var(--r-pill); background: var(--tinta); color: var(--papel); }
+
+/* ============================================================
+   ZONAS TÁCTILES DE AL MENOS 44 px
+   El brief pide botones grandes en el supermercado y la cocina
+   (una mano, manos sucias). Lo heredado de la app base era de
+   22-28 px. Se agranda sin cambiar el diseño de las filas: los que
+   están pegados a otros crecen de verdad; los aislados amplían solo
+   su zona de toque.
+   ============================================================ */
+
+/* Crecen de verdad (están juntos y se pisarían) */
+.cmp-pasos button { width: 40px; height: 40px; font-size: 1rem; }
+.res-pasos button { width: 44px; height: 44px; }
+.tn-orden { width: 40px; height: 40px; }
+.tn-fav, .tn-off, .res-reloj { width: 40px; height: 40px; }
+.di-check { width: 36px; height: 36px; }
+.di-ed { min-width: 44px; min-height: 44px; }
+
+/* Solo se amplía la zona de toque (se ven igual) */
+.cmp-check { position: relative; width: 28px; height: 28px; }
+.cmp-check svg { width: 16px; height: 16px; }
+.cmp-check::after, .res-nombre::after, .cmp-nombre::after {
+  content: ''; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  width: max(100%, 44px); height: max(100%, 44px);
+}
+.res-nombre, .cmp-nombre { position: relative; min-height: 44px; display: flex; align-items: center; }
+
+/* La fila «Añadir algo no previsto» no se sale en móviles pequeños */
+.cmp-anadir input, .res-anadir input { min-width: 0; flex: 1 1 auto; }
+.cmp-anadir button, .res-anadir button { flex: 0 0 auto; }
+
+/* Lista de supermercados: los botones van juntos y, si no caben al lado del
+   nombre (móvil pequeño), bajan juntos a una segunda línea. */
+.tn-fila { flex-wrap: wrap; gap: 0.1rem 0.5rem; }
+.tn-fila .tn-n { flex: 1 1 6.5rem; }
+.tn-acciones { display: flex; align-items: center; gap: 2px; margin-left: auto; }
+.tn-acciones .tn-fav, .tn-acciones .tn-orden, .tn-acciones .tn-off { width: 38px; height: 40px; }
+.cmp-pasos button { border-radius: var(--r-sm); }
+
+/* Móviles de 320 px: botones igual de altos pero algo más estrechos, para que
+   las filas con contador no se salgan de la pantalla. */
+.res-pasos button { width: 38px; height: 44px; }
+.res-pasos.rc-pasos button { width: 36px; height: 40px; }
+.res-quitar { width: 36px; height: 44px; }
+.res-reloj { width: 36px; height: 40px; }
+.rc-datos { grid-template-columns: minmax(0, 0.8fr) minmax(0, 0.8fr) auto; }

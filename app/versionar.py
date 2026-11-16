@@ -60,7 +60,30 @@ p.write_text(s, encoding='utf-8')
 p = pathlib.Path('sw.js')
 s = p.read_text(encoding='utf-8')
 s = re.sub(r"const VERSION = 'compra-v\d+';", f"const VERSION = 'compra-v{version}';", s)
+
+# Todo lo que la app pide al arrancar se guarda AL INSTALAR el service worker.
+# Si no, solo se guardaría lo que se pida con él ya activo (desde la segunda
+# visita) y quien instale la app y vaya directo al súper sin cobertura la
+# encontraría a medias. La lista sale del propio index.html para que nunca
+# se quede desactualizada.
+html_sw = pathlib.Path('index.html').read_text(encoding='utf-8')
+rutas = ['./', './index.html', './manifest.json']
+for m in re.finditer(r'<link[^>]+?href="([^"]+)"[^>]*>', html_sw):
+    h = m.group(1)
+    if h.startswith(('http', '#', 'data:')): continue
+    if re.search(r'rel="(modulepreload|stylesheet|preload|apple-touch-icon|icon|manifest)"', m.group(0)):
+        rutas.append('./' + h)
+m = re.search(r'<script[^>]+src="([^"]+)"', html_sw)
+if m and not m.group(1).startswith('http'): rutas.append('./' + m.group(1))
+for extra in ['fonts/inter.woff2', 'fonts/space-grotesk.woff2', 'fonts/jetbrains-mono.woff2', 'iconos/app-192.png', 'iconos/app-512.png', 'iconos/app.svg', 'iconos/favicon.svg']:
+    if pathlib.Path(extra).exists(): rutas.append('./' + extra)
+vistas, unicas = set(), []
+for r in rutas:
+    if r not in vistas: vistas.add(r); unicas.append(r)
+bloque = 'const ESENCIALES = [\n  ' + ',\n  '.join("'" + r + "'" for r in unicas) + '\n];'
+s = re.sub(r"const ESENCIALES = \[.*?\];", lambda _: bloque, s, count=1, flags=re.S)
 p.write_text(s, encoding='utf-8')
+print(f'Service worker: {len(unicas)} archivos guardados al instalar')
 
 # ============================================================
 #  COMPROBACIÓN

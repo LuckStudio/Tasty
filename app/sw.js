@@ -24,18 +24,114 @@
    se borra la caché vieja y todos ven lo nuevo.
    ============================================================ */
 
-const VERSION = 'compra-v34';
+const VERSION = 'compra-v35';
 
 const ESENCIALES = [
   './',
   './index.html',
-  './manifest.json'
+  './manifest.json',
+  './iconos/app-180.png',
+  './iconos/favicon.svg',
+  './iconos/app-192.png',
+  './fonts/inter.woff2',
+  './fonts/space-grotesk.woff2',
+  './css/base.css?v=35',
+  './css/shell.css?v=35',
+  './css/grid.css?v=35',
+  './css/comprador.css?v=35',
+  './css/ficha.css?v=35',
+  './css/gastos.css?v=35',
+  './css/stats.css?v=35',
+  './css/admin.css?v=35',
+  './css/tiendas.css?v=35',
+  './css/listas.css?v=35',
+  './css/cesta.css?v=35',
+  './css/dieta.css?v=35',
+  './css/revision.css?v=35',
+  './css/historial.css?v=35',
+  './css/productos.css?v=35',
+  './css/ruta.css?v=35',
+  './css/cocina.css?v=35',
+  './css/tasty.css?v=35',
+  './js/alias.js?v=35',
+  './js/app.js?v=35',
+  './js/almacen.js?v=35',
+  './js/catalogo-edit.js?v=35',
+  './js/cantidad.js?v=35',
+  './js/busqueda.js?v=35',
+  './js/color.js?v=35',
+  './js/compra.js?v=35',
+  './js/datos-io.js?v=35',
+  './js/escaner.js?v=35',
+  './js/despensa.js?v=35',
+  './js/estado.js?v=35',
+  './js/fusion.js?v=35',
+  './js/gastos.js?v=35',
+  './js/gemini.js?v=35',
+  './js/historial.js?v=35',
+  './js/iconos.js?v=35',
+  './js/listas.js?v=35',
+  './js/menu.js?v=35',
+  './js/precios.js?v=35',
+  './js/recetas.js?v=35',
+  './js/recordatorios.js?v=35',
+  './js/reposicion.js?v=35',
+  './js/ruta.js?v=35',
+  './js/secciones.js?v=35',
+  './js/unidades.js?v=35',
+  './js/stats.js?v=35',
+  './js/tema.js?v=35',
+  './js/tiendas.js?v=35',
+  './js/ui/admin.js?v=35',
+  './js/ui/cesta.js?v=35',
+  './js/ui/cantidad.js?v=35',
+  './js/ui/comprador.js?v=35',
+  './js/ui/dieta.js?v=35',
+  './js/ui/escaner.js?v=35',
+  './js/ui/ficha.js?v=35',
+  './js/ui/gastos.js?v=35',
+  './js/ui/historial.js?v=35',
+  './js/ui/grid.js?v=35',
+  './js/ui/importar.js?v=35',
+  './js/ui/listas.js?v=35',
+  './js/ui/productos.js?v=35',
+  './js/ui/acaba.js?v=35',
+  './js/ui/hoy.js?v=35',
+  './js/ui/menu.js?v=35',
+  './js/ui/receta.js?v=35',
+  './js/ui/receta-comun.js?v=35',
+  './js/ui/precios-panel.js?v=35',
+  './js/ui/recordatorios.js?v=35',
+  './js/ui/resumen.js?v=35',
+  './js/ui/ruta.js?v=35',
+  './js/ui/revision.js?v=35',
+  './js/ui/stats.js?v=35',
+  './js/ui/ticket.js?v=35',
+  './js/ui/tienda.js?v=35',
+  './js/ui/tiendas.js?v=35',
+  './js/url.js?v=35',
+  './js/util.js?v=35',
+  './datos/catalogo.js?v=35',
+  './datos/categorias.js?v=35',
+  './datos/fotos-recetas.js?v=35',
+  './datos/iconos.js?v=35',
+  './datos/recetas-dieta.js?v=35',
+  './datos/recetas-noviembre.js?v=35',
+  './datos/secciones.js?v=35',
+  './datos/tiendas.js?v=35',
+  './fonts/jetbrains-mono.woff2',
+  './iconos/app-512.png',
+  './iconos/app.svg'
 ];
 
 self.addEventListener('install', e => {
   e.waitUntil(
     caches.open(VERSION)
-      .then(c => c.addAll(ESENCIALES))
+      /* Uno a uno: si un archivo falla, el resto se guarda igualmente
+         (con addAll, un solo fallo no guardaba nada). Solo se guarda lo
+         que viene bien (regla 1). */
+      .then(c => Promise.allSettled(ESENCIALES.map(url =>
+        fetch(url, { cache: 'reload' }).then(res => { if (guardable(res)) return c.put(url, res); }))))
       .catch(() => {})            /* si algo falla, se instala igual */
       .then(() => self.skipWaiting())
   );

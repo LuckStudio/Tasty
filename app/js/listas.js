@@ -15,7 +15,7 @@
    de contexto, no un modelo de datos nuevo por todas partes.
    ============================================================ */
 
-import { datos, guardar } from './almacen.js?v=34';
+import { datos, guardar } from './almacen.js?v=35';
 
 export const EMOJIS = ['🛒', '🏠', '🏖️', '💼', '🎉', '🐾', '🍳', '🧰', '🌿', '🎁'];
 

@@ -6,14 +6,14 @@
    varias recetas y un número de raciones.
    ============================================================ */
 
-import { recetas as todasLasRecetas, recetaPorId } from '../recetas.js?v=34';
+import { recetas as todasLasRecetas, recetaPorId } from '../recetas.js?v=35';
 import { FRANJAS, diaDe, recetasDeFranja, anadirReceta, quitarReceta, fijarRaciones,
          marcarFuera, copiarDia, copiarSemana, vaciarDia, semana, lunesDe, sumarDias, fechaISO,
          bloqueDe, consolidarSemana, faltasALaLista, disponibilidadReceta, FRANJA_POR_ID }
-  from '../menu.js?v=34';
+  from '../menu.js?v=35';
 import { imagenReceta, puntoReceta, diaCorto, diaLargo, diaNumero, mesCorto, nombreFranja,
-         pregunta, etiquetaDisponibilidad } from './receta-comun.js?v=34';
-import { normalizar, esc, tap } from '../util.js?v=34';
+         pregunta, etiquetaDisponibilidad } from './receta-comun.js?v=35';
+import { normalizar, esc, tap } from '../util.js?v=35';
 
 let raiz = null, ancla = fechaISO(), cb = {};
 let sel = null;     // selector abierto: { fecha, franja, filtro, q, elegida, raciones }

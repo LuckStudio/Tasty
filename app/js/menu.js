@@ -17,12 +17,12 @@
    día concreto (datos.bloques[D] = { franjas: [{f, s}] }).
    ============================================================ */
 
-import { datos, guardar } from './almacen.js?v=34';
-import { POR_ID } from './estado.js?v=34';
-import { sumar as sumarALista, cantidad as enLista } from './estado.js?v=34';
-import { recetaPorId } from './recetas.js?v=34';
-import { disponibilidad, esFalta } from './despensa.js?v=34';
-import { convertir, unidadNormal } from './unidades.js?v=34';
+import { datos, guardar } from './almacen.js?v=35';
+import { POR_ID } from './estado.js?v=35';
+import { sumar as sumarALista, cantidad as enLista } from './estado.js?v=35';
+import { recetaPorId } from './recetas.js?v=35';
+import { disponibilidad, esFalta } from './despensa.js?v=35';
+import { convertir, unidadNormal } from './unidades.js?v=35';
 
 export const FRANJAS = [
   { id: 'desayuno', nombre: 'Desayuno', corto: 'DESAYUNO' },

@@ -4,12 +4,12 @@
    su ingrediente principal), día y franja en texto.
    ============================================================ */
 
-import { POR_ID } from '../estado.js?v=34';
-import { colorDeReceta, aFecha, fechaISO, sumarDias, FRANJA_POR_ID } from '../menu.js?v=34';
-import { sanearFoto, slugReceta } from '../recetas.js?v=34';
-import { FOTOS_RECETAS } from '../../datos/fotos-recetas.js?v=34';
-import { iconoHTML } from '../iconos.js?v=34';
-import { esc } from '../util.js?v=34';
+import { POR_ID } from '../estado.js?v=35';
+import { colorDeReceta, aFecha, fechaISO, sumarDias, FRANJA_POR_ID } from '../menu.js?v=35';
+import { sanearFoto, slugReceta } from '../recetas.js?v=35';
+import { FOTOS_RECETAS } from '../../datos/fotos-recetas.js?v=35';
+import { iconoHTML } from '../iconos.js?v=35';
+import { esc } from '../util.js?v=35';
 
 /* Si una foto no existe (todavía no se ha subido), se quita y se ve el
    color de la receta. Escucha en captura porque «error» no sube. */

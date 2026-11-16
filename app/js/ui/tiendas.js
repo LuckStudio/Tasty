@@ -6,8 +6,8 @@
 import { TIENDAS, TIENDA_POR_ID, COLORES_TIENDA, crearTienda,
          editarTienda, activarTienda, borrarTienda, seUsaTienda,
          moverTienda, inicialesTienda, alternarFavorita,
-         hayFavoritas } from '../tiendas.js?v=34';
-import { $, tap } from '../util.js?v=34';
+         hayFavoritas } from '../tiendas.js?v=35';
+import { $, tap } from '../util.js?v=35';
 
 let raiz;
 let editando = null;        // id, 'nueva' o null
@@ -156,6 +156,7 @@ function filaTienda(t, i, total) {
         <em>${t.corto}${t.propia ? ' · tuya' : ''}${
           seUsaTienda(t.id) ? ' · con datos' : ''}</em>
       </button>
+      <span class="tn-acciones">
       ${t.activa ? `
         <button class="tn-fav" data-tn-fav="${t.id}"
                 data-on="${!!t.favorita}"
@@ -172,6 +173,7 @@ function filaTienda(t, i, total) {
               aria-label="${t.activa ? 'Desactivar' : 'Activar'} ${t.nombre}">
         ${t.activa ? '−' : '+'}
       </button>
+      </span>
     </div>`;
 }
 

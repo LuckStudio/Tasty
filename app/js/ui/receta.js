@@ -4,15 +4,15 @@
    en letra grande y «Añadir al menú».
    ============================================================ */
 
-import { recetaPorId, editarReceta, nombreIngrediente, textoCantidad } from '../recetas.js?v=34';
-import { POR_ID } from '../estado.js?v=34';
-import { cantidadEscalada, anadirReceta, fechaISO, sumarDias, FRANJAS } from '../menu.js?v=34';
-import { disponibilidad, esFalta } from '../despensa.js?v=34';
-import { formatearCantidad } from '../unidades.js?v=34';
+import { recetaPorId, editarReceta, nombreIngrediente, textoCantidad } from '../recetas.js?v=35';
+import { POR_ID } from '../estado.js?v=35';
+import { cantidadEscalada, anadirReceta, fechaISO, sumarDias, FRANJAS } from '../menu.js?v=35';
+import { disponibilidad, esFalta } from '../despensa.js?v=35';
+import { formatearCantidad } from '../unidades.js?v=35';
 import { imagenReceta, puntoReceta, diaCorto, diaLargo, diaNumero, mesCorto, relativo, nombreFranja }
-  from './receta-comun.js?v=34';
-import { COMIDA_POR_ID } from '../recetas.js?v=34';
-import { esc, tap } from '../util.js?v=34';
+  from './receta-comun.js?v=35';
+import { COMIDA_POR_ID } from '../recetas.js?v=35';
+import { esc, tap } from '../util.js?v=35';
 
 let raiz = null, id = null, tab = 'ingredientes', raciones = null, volver = 'menu', cb = {};
 
