@@ -17,9 +17,9 @@
    para poder cocinar lo que tienes planeado.
    ============================================================ */
 
-import { datos, guardar } from './almacen.js?v=29';
-import { POR_ID, PRODUCTOS } from './estado.js?v=29';
-import { nuevoId, normalizar } from './util.js?v=29';
+import { datos, guardar } from './almacen.js?v=34';
+import { POR_ID, PRODUCTOS } from './estado.js?v=34';
+import { nuevoId, normalizar } from './util.js?v=34';
 
 export const COMIDAS = [
   { id: 'desayuno', nombre: 'Desayuno', orden: 1 },
@@ -172,6 +172,31 @@ export function cambiarIngrediente(idReceta, i, cambios) {
   avisar();
 }
 
+/* «150 g» o «al gusto» cuando la receta no da cantidad */
+export function textoCantidad(ing) {
+  return ing.sinCantidad || !(ing.cant > 0) ? 'al gusto' : `${ing.cant}${ing.unidad}`;
+}
+
+/* Los pasos de una receta: { texto, min?, tipo?, recurso? }.
+   Solo el texto es obligatorio. La duración (min), si es tiempo
+   «activo» (manos ocupadas) o de «espera», y el recurso (horno,
+   fuego…) se rellenan cuando se quiera cocinar varias a la vez. */
+export function sanearPasos(pasos) {
+  const out = [];
+  for (const p of Array.isArray(pasos) ? pasos : []) {
+    const texto = String(typeof p === 'string' ? p : p?.texto || '').trim().slice(0, 400);
+    if (!texto) continue;
+    const paso = { texto };
+    const min = Number(p?.min);
+    if (min > 0 && min <= 600) paso.min = Math.round(min);
+    if (p?.tipo === 'activo' || p?.tipo === 'espera') paso.tipo = p.tipo;
+    const recurso = String(p?.recurso || '').trim().slice(0, 30);
+    if (recurso) paso.recurso = recurso;
+    out.push(paso);
+  }
+  return out.slice(0, 40);
+}
+
 export function nombreIngrediente(ing) {
   return ing.id ? (POR_ID[ing.id]?.n || 'Producto retirado') : ing.texto;
 }
@@ -188,13 +213,18 @@ export function ingredientesNecesarios({ comida, plan, soloActivas = true } = {}
       const clave = ing.id ? `p${ing.id}` : `t${normalizar(ing.texto || '')}`;
       const ficha = acumulado.get(clave) || {
         id: ing.id, texto: ing.texto, unidad: ing.unidad,
-        cant: 0, recetas: []
+        cant: 0, recetas: [], sinCantidad: true
       };
-      /* Solo se suman cantidades de la misma unidad; si no
-         coinciden se deja constancia en vez de inventar una
-         conversión que podría estar mal */
-      if (ficha.unidad === ing.unidad) ficha.cant += ing.cant;
-      else ficha.mezcla = true;
+      /* Lo que la receta no cuantifica no suma nada ni «mezcla»
+         unidades: solo cuenta para saber que hay que tenerlo */
+      if (!ing.sinCantidad && ing.cant > 0) {
+        if (ficha.sinCantidad) { ficha.unidad = ing.unidad; ficha.sinCantidad = false; }
+        /* Solo se suman cantidades de la misma unidad; si no
+           coinciden se deja constancia en vez de inventar una
+           conversión que podría estar mal */
+        if (ficha.unidad === ing.unidad) ficha.cant += ing.cant;
+        else ficha.mezcla = true;
+      }
       ficha.recetas.push(r.nombre);
       acumulado.set(clave, ficha);
     }
@@ -365,6 +395,23 @@ function reconectar(ing) {
     : { id: null, texto: nombre };
 }
 
+/* «Ensalada de atún» -> ensalada-de-atun (para ids y nombres de foto) */
+export function slugReceta(nombre) {
+  return String(nombre || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 50) || 'receta';
+}
+
+/* Nombre de archivo de la foto de una receta: solo letras, números y
+   guiones, sin rutas (nunca algo que salga de la carpeta de fotos). */
+export function sanearFoto(f) {
+  const n = String(f || '').toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')          // sin tildes
+    .replace(/\.(jpe?g|png|webp)$/, '')
+    .replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
+    .replace(/-+/g, '-').replace(/^-|-$/g, '');
+  return n ? n.slice(0, 60) : '';
+}
+
 /* Fusiona: lo que coincide por nombre y comida se sobrescribe,
    lo demás se añade. Nunca se pierde lo que ya había. */
 export function importarRecetas(d, { sustituir = false } = {}) {
@@ -385,17 +432,25 @@ export function importarRecetas(d, { sustituir = false } = {}) {
       const enlace = reconectar(i);
       if (!enlace) continue;
       if (!enlace.id) informe.sinEnlazar.push(enlace.texto);
+      const sinCantidad = !!i.sinCantidad;
       ingredientes.push({
         id: enlace.id,
         texto: enlace.texto,
-        cant: Number.isFinite(+i.cant) && +i.cant > 0 ? +i.cant : 1,
-        unidad: i.unidad || 'ud'
+        cant: sinCantidad ? null : (Number.isFinite(+i.cant) && +i.cant > 0 ? +i.cant : 1),
+        unidad: sinCantidad ? null : (i.unidad || 'ud'),
+        ...(sinCantidad ? { sinCantidad: true } : {}),
+        ...(i.alternativa ? { alternativa: String(i.alternativa).slice(0, 60) } : {}),
+        ...(i.nota ? { nota: String(i.nota).slice(0, 60) } : {})
       });
       informe.ingredientes++;
     }
 
-    const existente = datos.recetas.find(
-      x => normalizar(x.nombre) === normalizar(nombre) && x.comida === comida);
+    /* Id estable: así un menú sigue apuntando a la misma receta aunque
+       se restaure una copia o se cargue el paquete en otro dispositivo */
+    const idPropio = /^[a-z0-9_-]{1,60}$/.test(String(r.id || '')) ? r.id : null;
+    const existente = (idPropio && datos.recetas.find(x => x.id === idPropio))
+      || datos.recetas.find(
+        x => normalizar(x.nombre) === normalizar(nombre) && x.comida === comida);
 
     if (existente) {
       existente.plan = plan;
@@ -403,15 +458,23 @@ export function importarRecetas(d, { sustituir = false } = {}) {
       existente.raciones = r.raciones ?? existente.raciones ?? 2;
       existente.notas = String(r.notas || existente.notas || '');
       existente.ingredientes = ingredientes;
+      if (typeof r.favorita === 'boolean') existente.favorita = r.favorita;
+      if (r.pasos) existente.pasos = sanearPasos(r.pasos);
+      if (r.foto) existente.foto = sanearFoto(r.foto);
       informe.actualizadas++;
     } else {
+      let id = idPropio || `r-${slugReceta(nombre)}-${comida}`;
+      if (datos.recetas.some(x => x.id === id)) id = nuevoId('r');
       datos.recetas.push({
-        id: nuevoId('r'),
+        id,
         nombre, comida, plan,
+        ...(r.favorita ? { favorita: true } : {}),
         activa: r.activa !== false,
         raciones: r.raciones ?? 2,
         notas: String(r.notas || ''),
-        ingredientes
+        ingredientes,
+        pasos: sanearPasos(r.pasos),
+        ...(r.foto ? { foto: sanearFoto(r.foto) } : {})
       });
       informe.nuevas++;
     }

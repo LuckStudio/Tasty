@@ -3,27 +3,27 @@
    Precios por supermercado, comparativa y preferencia
    ============================================================ */
 
-import { POR_ID, cantidad, sumar, alternar } from '../estado.js?v=29';
+import { POR_ID, cantidad, sumar, alternar } from '../estado.js?v=34';
 import { preciosDe, guardarPrecio, borrarPrecio, preferencias,
          alternarPreferencia, moverPreferencia, calcularBase, aNumero,
          formatoBase, FORMATOS, NOMBRE_BASE, DIAS_VIEJO,
          equivalentes, enlazarEquivalente, desenlazarEquivalente,
-         masBaratoQue, marcaDe, fijarMarca } from '../precios.js?v=29';
-import { tiendasActivas, TIENDA_POR_ID } from '../tiendas.js?v=29';
-import { CAT_POR_ID } from '../../datos/categorias.js?v=29';
-import { PRODUCTOS } from '../estado.js?v=29';
-import { historialHTML } from './stats.js?v=29';
+         masBaratoQue, marcaDe, fijarMarca } from '../precios.js?v=34';
+import { tiendasActivas, TIENDA_POR_ID } from '../tiendas.js?v=34';
+import { CAT_POR_ID } from '../../datos/categorias.js?v=34';
+import { PRODUCTOS } from '../estado.js?v=34';
+import { historialHTML } from './stats.js?v=34';
 import { periodicidad, fijarPeriodicidad, textoOrigen, ultimaCompra,
-         diasDesde } from '../reposicion.js?v=29';
-import { iconoHTML } from '../iconos.js?v=29';
-import { datos } from '../almacen.js?v=29';
-import { editarProducto } from '../catalogo-edit.js?v=29';
-import { SECCIONES, seccionDe, SECCION_POR_ID } from '../secciones.js?v=29';
-import { textosDe as textosDeTicket } from '../alias.js?v=29';
-import { recetas as todasLasRecetas } from '../recetas.js?v=29';
-import { serie, tendencia } from '../historial.js?v=29';
-import { fusionarProductos } from '../fusion.js?v=29';
-import { euros, esc, normalizar, $, tap } from '../util.js?v=29';
+         diasDesde } from '../reposicion.js?v=34';
+import { iconoHTML } from '../iconos.js?v=34';
+import { datos } from '../almacen.js?v=34';
+import { editarProducto } from '../catalogo-edit.js?v=34';
+import { SECCIONES, seccionDe, SECCION_POR_ID } from '../secciones.js?v=34';
+import { textosDe as textosDeTicket } from '../alias.js?v=34';
+import { recetas as todasLasRecetas } from '../recetas.js?v=34';
+import { serie, tendencia } from '../historial.js?v=34';
+import { fusionarProductos } from '../fusion.js?v=34';
+import { euros, esc, normalizar, $, tap } from '../util.js?v=34';
 
 let fondo, cuerpo, idActual = null, formAbierto = false, tiendaForm = null;
 let fusionando = false, qFusion = '';

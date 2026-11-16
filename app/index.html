@@ -41,23 +41,24 @@
 })();
 </script>
 
-<link rel="stylesheet" href="css/base.css?v=29">
-<link rel="stylesheet" href="css/shell.css?v=29">
-<link rel="stylesheet" href="css/grid.css?v=29">
-<link rel="stylesheet" href="css/comprador.css?v=29">
-<link rel="stylesheet" href="css/ficha.css?v=29">
-<link rel="stylesheet" href="css/gastos.css?v=29">
-<link rel="stylesheet" href="css/stats.css?v=29">
-<link rel="stylesheet" href="css/admin.css?v=29">
-<link rel="stylesheet" href="css/tiendas.css?v=29">
-<link rel="stylesheet" href="css/listas.css?v=29">
-<link rel="stylesheet" href="css/cesta.css?v=29">
-<link rel="stylesheet" href="css/dieta.css?v=29">
-<link rel="stylesheet" href="css/revision.css?v=29">
-<link rel="stylesheet" href="css/historial.css?v=29">
-<link rel="stylesheet" href="css/productos.css?v=29">
-<link rel="stylesheet" href="css/ruta.css?v=29">
-<link rel="stylesheet" href="css/tasty.css?v=29">
+<link rel="stylesheet" href="css/base.css?v=34">
+<link rel="stylesheet" href="css/shell.css?v=34">
+<link rel="stylesheet" href="css/grid.css?v=34">
+<link rel="stylesheet" href="css/comprador.css?v=34">
+<link rel="stylesheet" href="css/ficha.css?v=34">
+<link rel="stylesheet" href="css/gastos.css?v=34">
+<link rel="stylesheet" href="css/stats.css?v=34">
+<link rel="stylesheet" href="css/admin.css?v=34">
+<link rel="stylesheet" href="css/tiendas.css?v=34">
+<link rel="stylesheet" href="css/listas.css?v=34">
+<link rel="stylesheet" href="css/cesta.css?v=34">
+<link rel="stylesheet" href="css/dieta.css?v=34">
+<link rel="stylesheet" href="css/revision.css?v=34">
+<link rel="stylesheet" href="css/historial.css?v=34">
+<link rel="stylesheet" href="css/productos.css?v=34">
+<link rel="stylesheet" href="css/ruta.css?v=34">
+<link rel="stylesheet" href="css/cocina.css?v=34">
+<link rel="stylesheet" href="css/tasty.css?v=34">
 </head>
 
 <body>
@@ -105,6 +106,9 @@
     <div class="vista" data-vista="recordatorios" id="v-recordatorios" hidden></div>
     <div class="vista" data-vista="listas" id="v-listas" hidden></div>
     <div class="vista" data-vista="cesta" id="v-cesta" hidden></div>
+    <div class="vista" data-vista="hoy" id="v-hoy" hidden></div>
+    <div class="vista" data-vista="menu" id="v-menu" hidden></div>
+    <div class="vista" data-vista="receta" id="v-receta" hidden></div>
     <div class="vista" data-vista="dieta" id="v-dieta" hidden></div>
     <div class="vista" data-vista="historial" id="v-historial" hidden></div>
     <div class="vista" data-vista="productos" id="v-productos" hidden></div>
@@ -119,7 +123,24 @@
 
   <!-- ================= NAV INFERIOR ================= -->
   <nav class="nav" aria-label="Secciones">
-    <button class="nav-btn" data-ir="grid" aria-current="page">
+    <button class="nav-btn" data-ir="hoy" aria-current="page">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+           stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 11.5 12 5l8 6.5"/><path d="M6 10v9.5h12V10"/><path d="M10 19.5v-5h4v5"/>
+      </svg>
+      <span>Hoy</span>
+    </button>
+
+    <button class="nav-btn" data-ir="menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+           stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/>
+      </svg>
+      <span class="nav-punto" id="punto-dieta" hidden aria-hidden="true"></span>
+      <span>Menú</span>
+    </button>
+
+    <button class="nav-btn" data-ir="grid">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
            stroke-linecap="round" stroke-linejoin="round">
         <path d="M8 4H6a1 1 0 0 0-1 1v15a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1h-2"/>
@@ -128,17 +149,6 @@
         <path d="M14.5 12.5h3M8 17h3.5M14.5 17h3"/>
       </svg>
       <span>Lista</span>
-    </button>
-
-    <button class="nav-btn" data-ir="dieta">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
-           stroke-linecap="round" stroke-linejoin="round">
-        <path d="M5 3v7a2.5 2.5 0 0 0 5 0V3"/><path d="M7.5 3v7"/>
-        <path d="M7.5 12.5V21"/>
-        <path d="M17 3c-1.5 1.5-2 3.5-2 5.5s.5 3.5 2 4V21"/>
-      </svg>
-      <span class="nav-punto" id="punto-dieta" hidden aria-hidden="true"></span>
-      <span>Dieta</span>
     </button>
 
     <button class="nav-btn" data-ir="resumen">
@@ -201,63 +211,72 @@
      momento. Es la diferencia entre arrancar en medio segundo o
      en cinco.
      ============================================================ -->
-<link rel="modulepreload" href="js/alias.js?v=29">
-<link rel="modulepreload" href="js/app.js?v=29">
-<link rel="modulepreload" href="js/almacen.js?v=29">
-<link rel="modulepreload" href="js/catalogo-edit.js?v=29">
-<link rel="modulepreload" href="js/cantidad.js?v=29">
-<link rel="modulepreload" href="js/busqueda.js?v=29">
-<link rel="modulepreload" href="js/color.js?v=29">
-<link rel="modulepreload" href="js/compra.js?v=29">
-<link rel="modulepreload" href="js/datos-io.js?v=29">
-<link rel="modulepreload" href="js/escaner.js?v=29">
-<link rel="modulepreload" href="js/estado.js?v=29">
-<link rel="modulepreload" href="js/fusion.js?v=29">
-<link rel="modulepreload" href="js/gastos.js?v=29">
-<link rel="modulepreload" href="js/gemini.js?v=29">
-<link rel="modulepreload" href="js/historial.js?v=29">
-<link rel="modulepreload" href="js/iconos.js?v=29">
-<link rel="modulepreload" href="js/listas.js?v=29">
-<link rel="modulepreload" href="js/precios.js?v=29">
-<link rel="modulepreload" href="js/recetas.js?v=29">
-<link rel="modulepreload" href="js/recordatorios.js?v=29">
-<link rel="modulepreload" href="js/reposicion.js?v=29">
-<link rel="modulepreload" href="js/ruta.js?v=29">
-<link rel="modulepreload" href="js/secciones.js?v=29">
-<link rel="modulepreload" href="js/unidades.js?v=29">
-<link rel="modulepreload" href="js/stats.js?v=29">
-<link rel="modulepreload" href="js/tema.js?v=29">
-<link rel="modulepreload" href="js/tiendas.js?v=29">
-<link rel="modulepreload" href="js/ui/admin.js?v=29">
-<link rel="modulepreload" href="js/ui/cesta.js?v=29">
-<link rel="modulepreload" href="js/ui/cantidad.js?v=29">
-<link rel="modulepreload" href="js/ui/comprador.js?v=29">
-<link rel="modulepreload" href="js/ui/dieta.js?v=29">
-<link rel="modulepreload" href="js/ui/escaner.js?v=29">
-<link rel="modulepreload" href="js/ui/ficha.js?v=29">
-<link rel="modulepreload" href="js/ui/gastos.js?v=29">
-<link rel="modulepreload" href="js/ui/historial.js?v=29">
-<link rel="modulepreload" href="js/ui/grid.js?v=29">
-<link rel="modulepreload" href="js/ui/importar.js?v=29">
-<link rel="modulepreload" href="js/ui/listas.js?v=29">
-<link rel="modulepreload" href="js/ui/productos.js?v=29">
-<link rel="modulepreload" href="js/ui/precios-panel.js?v=29">
-<link rel="modulepreload" href="js/ui/recordatorios.js?v=29">
-<link rel="modulepreload" href="js/ui/resumen.js?v=29">
-<link rel="modulepreload" href="js/ui/ruta.js?v=29">
-<link rel="modulepreload" href="js/ui/revision.js?v=29">
-<link rel="modulepreload" href="js/ui/stats.js?v=29">
-<link rel="modulepreload" href="js/ui/ticket.js?v=29">
-<link rel="modulepreload" href="js/ui/tienda.js?v=29">
-<link rel="modulepreload" href="js/ui/tiendas.js?v=29">
-<link rel="modulepreload" href="js/url.js?v=29">
-<link rel="modulepreload" href="js/util.js?v=29">
-<link rel="modulepreload" href="datos/catalogo.js?v=29">
-<link rel="modulepreload" href="datos/categorias.js?v=29">
-<link rel="modulepreload" href="datos/iconos.js?v=29">
-<link rel="modulepreload" href="datos/recetas-dieta.js?v=29">
-<link rel="modulepreload" href="datos/secciones.js?v=29">
-<link rel="modulepreload" href="datos/tiendas.js?v=29">
+<link rel="modulepreload" href="js/alias.js?v=34">
+<link rel="modulepreload" href="js/app.js?v=34">
+<link rel="modulepreload" href="js/almacen.js?v=34">
+<link rel="modulepreload" href="js/catalogo-edit.js?v=34">
+<link rel="modulepreload" href="js/cantidad.js?v=34">
+<link rel="modulepreload" href="js/busqueda.js?v=34">
+<link rel="modulepreload" href="js/color.js?v=34">
+<link rel="modulepreload" href="js/compra.js?v=34">
+<link rel="modulepreload" href="js/datos-io.js?v=34">
+<link rel="modulepreload" href="js/escaner.js?v=34">
+<link rel="modulepreload" href="js/despensa.js?v=34">
+<link rel="modulepreload" href="js/estado.js?v=34">
+<link rel="modulepreload" href="js/fusion.js?v=34">
+<link rel="modulepreload" href="js/gastos.js?v=34">
+<link rel="modulepreload" href="js/gemini.js?v=34">
+<link rel="modulepreload" href="js/historial.js?v=34">
+<link rel="modulepreload" href="js/iconos.js?v=34">
+<link rel="modulepreload" href="js/listas.js?v=34">
+<link rel="modulepreload" href="js/menu.js?v=34">
+<link rel="modulepreload" href="js/precios.js?v=34">
+<link rel="modulepreload" href="js/recetas.js?v=34">
+<link rel="modulepreload" href="js/recordatorios.js?v=34">
+<link rel="modulepreload" href="js/reposicion.js?v=34">
+<link rel="modulepreload" href="js/ruta.js?v=34">
+<link rel="modulepreload" href="js/secciones.js?v=34">
+<link rel="modulepreload" href="js/unidades.js?v=34">
+<link rel="modulepreload" href="js/stats.js?v=34">
+<link rel="modulepreload" href="js/tema.js?v=34">
+<link rel="modulepreload" href="js/tiendas.js?v=34">
+<link rel="modulepreload" href="js/ui/admin.js?v=34">
+<link rel="modulepreload" href="js/ui/cesta.js?v=34">
+<link rel="modulepreload" href="js/ui/cantidad.js?v=34">
+<link rel="modulepreload" href="js/ui/comprador.js?v=34">
+<link rel="modulepreload" href="js/ui/dieta.js?v=34">
+<link rel="modulepreload" href="js/ui/escaner.js?v=34">
+<link rel="modulepreload" href="js/ui/ficha.js?v=34">
+<link rel="modulepreload" href="js/ui/gastos.js?v=34">
+<link rel="modulepreload" href="js/ui/historial.js?v=34">
+<link rel="modulepreload" href="js/ui/grid.js?v=34">
+<link rel="modulepreload" href="js/ui/importar.js?v=34">
+<link rel="modulepreload" href="js/ui/listas.js?v=34">
+<link rel="modulepreload" href="js/ui/productos.js?v=34">
+<link rel="modulepreload" href="js/ui/acaba.js?v=34">
+<link rel="modulepreload" href="js/ui/hoy.js?v=34">
+<link rel="modulepreload" href="js/ui/menu.js?v=34">
+<link rel="modulepreload" href="js/ui/receta.js?v=34">
+<link rel="modulepreload" href="js/ui/receta-comun.js?v=34">
+<link rel="modulepreload" href="js/ui/precios-panel.js?v=34">
+<link rel="modulepreload" href="js/ui/recordatorios.js?v=34">
+<link rel="modulepreload" href="js/ui/resumen.js?v=34">
+<link rel="modulepreload" href="js/ui/ruta.js?v=34">
+<link rel="modulepreload" href="js/ui/revision.js?v=34">
+<link rel="modulepreload" href="js/ui/stats.js?v=34">
+<link rel="modulepreload" href="js/ui/ticket.js?v=34">
+<link rel="modulepreload" href="js/ui/tienda.js?v=34">
+<link rel="modulepreload" href="js/ui/tiendas.js?v=34">
+<link rel="modulepreload" href="js/url.js?v=34">
+<link rel="modulepreload" href="js/util.js?v=34">
+<link rel="modulepreload" href="datos/catalogo.js?v=34">
+<link rel="modulepreload" href="datos/categorias.js?v=34">
+<link rel="modulepreload" href="datos/fotos-recetas.js?v=34">
+<link rel="modulepreload" href="datos/iconos.js?v=34">
+<link rel="modulepreload" href="datos/recetas-dieta.js?v=34">
+<link rel="modulepreload" href="datos/recetas-noviembre.js?v=34">
+<link rel="modulepreload" href="datos/secciones.js?v=34">
+<link rel="modulepreload" href="datos/tiendas.js?v=34">
 
 <!-- ============================================================
      RED DE SEGURIDAD
@@ -360,6 +379,6 @@
 })();
 </script>
 
-<script type="module" src="js/app.js?v=29"></script>
+<script type="module" src="js/app.js?v=34"></script>
 </body>
 </html>

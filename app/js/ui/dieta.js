@@ -9,17 +9,21 @@ import { COMIDAS, PLANES, COMIDA_POR_ID, PLAN_POR_ID, recetas,
          cambiarIngrediente, nombreIngrediente, cuentaPorComida,
          faltaPorAnadir, recetasCubiertas, productosDe, textosDe,
          buscarParaReceta, resumenDieta, exportarRecetas, recetasTexto,
-         validarRecetas, importarRecetas } from '../recetas.js?v=29';
-import { POR_ID, cantidad, alternar, sumar, anadirLibre } from '../estado.js?v=29';
-import { iconoHTML } from '../iconos.js?v=29';
-import { DIETA } from '../../datos/recetas-dieta.js?v=29';
-import { $, tap } from '../util.js?v=29';
+         validarRecetas, importarRecetas, textoCantidad } from '../recetas.js?v=34';
+import { POR_ID, cantidad, alternar, sumar, anadirLibre } from '../estado.js?v=34';
+import { iconoHTML } from '../iconos.js?v=34';
+import { DIETA } from '../../datos/recetas-dieta.js?v=34';
+import { RECETAS_NOVIEMBRE } from '../../datos/recetas-noviembre.js?v=34';
+import { $, tap } from '../util.js?v=34';
 
 let raiz;
 let pantalla = 'inicio';       // inicio | receta | falta
 let abierta = null;            // id de la receta que se edita
 let comidaAbierta = 'comida';
 let sugeridos = [];
+
+/* Para abrir una receta concreta en el editor desde otra pantalla */
+export function abrirEnDieta(id) { abierta = id; pantalla = 'receta'; }
 
 export function reiniciarDieta() {
   pantalla = 'inicio'; abierta = null; sugeridos = [];
@@ -72,7 +76,8 @@ export function iniciarDieta(nodo) {
     if (act) { e.stopPropagation(); tap(); alternarActiva(act.dataset.diActiva); pintarDieta(); return; }
 
     if (t.closest('#di-falta')) { pantalla = 'falta'; pintarDieta(); return; }
-    if (t.closest('#di-cargar-plan')) { cargarPlan(); return; }
+    if (t.closest('#di-cargar-plan')) { cargarPlan(DIETA, 'la dieta estricta'); return; }
+    if (t.closest('#di-cargar-noviembre')) { cargarPlan(RECETAS_NOVIEMBRE, 'las recetas de noviembre'); return; }
     if (t.closest('#di-exportar')) { menuExportar(); return; }
     if (t.closest('#di-importar')) { pantalla = 'importar'; pintarDieta(); return; }
     if (t.closest('#di-pegar')) { pegar(); return; }
@@ -237,7 +242,7 @@ function abrirRapido(id) {
       texto: `${c ? '✓ ' : '＋ '}${p.n}`,
       nota: c
         ? `Ya en la lista${c > 1 ? ` · ×${c}` : ''} · tocar para quitarlo`
-        : `${ing.cant}${ing.unidad} · tocar para añadirlo`,
+        : `${textoCantidad(ing)} · tocar para añadirlo`,
       accion: () => {
         c ? sumar(ing.id, -99) : alternar(ing.id);
         setTimeout(() => abrirRapido(id), 250);
@@ -290,11 +295,11 @@ function abrirRapido(id) {
    coincida en nombre y comida se actualiza, lo demás se añade.
    Así se puede volver a cargar sin miedo a duplicar nada.
    ------------------------------------------------------------ */
-function cargarPlan() {
+function cargarPlan(paquete, nombre) {
   const yaHay = resumenDieta().total;
 
   const hacerlo = () => {
-    const r = importarRecetas(DIETA);
+    const r = importarRecetas(paquete);
     const partes = [];
     if (r.nuevas) partes.push(`${r.nuevas} recetas nuevas`);
     if (r.actualizadas) partes.push(`${r.actualizadas} actualizadas`);
@@ -307,7 +312,7 @@ function cargarPlan() {
 
   document.dispatchEvent(new CustomEvent('abrir-hoja', {
     detail: {
-      titulo: 'Cargar la dieta estricta',
+      titulo: `Cargar ${nombre}`,
       opciones: [
         { texto: 'Fusionar con lo que tengo',
           nota: `Tienes ${yaHay} recetas. Las que coincidan se actualizan, ` +
@@ -438,6 +443,9 @@ function pintarInicio() {
         res.total ? 'Recargar la dieta estricta' : 'Cargar la dieta estricta'}</button>
     </div>
     <div class="ga-acciones" style="margin-top:0.5px">
+      <button class="btn-secundario" id="di-cargar-noviembre">Cargar las recetas de noviembre (14)</button>
+    </div>
+    <div class="ga-acciones" style="margin-top:0.5px">
       <button class="btn-secundario" id="di-exportar">Exportar recetas</button>
       <button class="btn-secundario" id="di-importar">Importar</button>
     </div>
@@ -558,7 +566,7 @@ function pintarReceta() {
           <label class="ga-mini">
             <span class="sr">Cantidad</span>
             <input type="text" inputmode="decimal" data-di-cant="${i}"
-                   value="${String(ing.cant).replace('.', ',')}">
+                   value="${ing.sinCantidad || !ing.cant ? '' : String(ing.cant).replace('.', ',')}" placeholder="${ing.sinCantidad ? 'al gusto' : ''}">
           </label>
           <label class="pp-unidad">
             <span class="sr">Unidad</span>
@@ -661,7 +669,7 @@ function pintarFalta() {
             <span class="res-icono">${ing.id && POR_ID[ing.id]
               ? iconoHTML(POR_ID[ing.id]) : '<span aria-hidden="true">✏️</span>'}</span>
             <span class="di-ing-n">${ing.id ? POR_ID[ing.id]?.n : ing.texto}
-              <em>${ing.cant}${ing.unidad} · ${ing.recetas.length === 1
+              <em>${textoCantidad(ing)} · ${ing.recetas.length === 1
                 ? ing.recetas[0]
                 : `en ${ing.recetas.length} recetas`}${ing.mezcla ? ' · unidades mezcladas' : ''}</em></span>
           </div>`).join('')}

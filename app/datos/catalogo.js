@@ -311,11 +311,19 @@ export const CATALOGO = [
   { id: 1406, n: 'Bisglicinato de magnesio', c: 'gym', f: 2, u: 'ud', e: '⚡' },
   { id: 1407, n: 'Super probiótico', c: 'gym', f: 2, u: 'ud', e: '🦠' },
   { id: 1408, n: 'Bisglicinato de hierro', c: 'gym', f: 2, u: 'ud', e: '🩸' },
-  { id: 1409, n: 'Vitamina D3 + K2', c: 'gym', f: 2, u: 'ud', e: '☀️' }
+  { id: 1409, n: 'Vitamina D3 + K2', c: 'gym', f: 2, u: 'ud', e: '☀️' },
+
+  /* ---- añadidos para las recetas de noviembre ---- */
+  { id: 227,  n: 'Tomate cherry',       c: 'verduras',  f: 2, u: 'kg', e: '🍅' },
+  { id: 414,  n: 'Langostinos',         c: 'pescado',   f: 2, u: 'kg', e: '🦐' },
+  { id: 613,  n: 'Tortillas integrales', c: 'panaderia', f: 2, u: 'ud', e: '🫓' },
+  { id: 743,  n: 'Harina de arroz',     c: 'despensa',  f: 2, u: 'kg', e: '🌾' },
+  { id: 744,  n: 'Canela',              c: 'despensa',  f: 2, u: 'ud', e: '🟤' },
+  { id: 745,  n: 'Orégano',             c: 'despensa',  f: 2, u: 'ud', e: '🌿' }
 
 ];
 
 /* Versión del catálogo. Súbela cada vez que lo regeneremos:
    sirve para que la app detecte que hay datos nuevos y para
    comparar la base anterior con la actual. */
-export const CATALOGO_VERSION = 4;
+export const CATALOGO_VERSION = 5;

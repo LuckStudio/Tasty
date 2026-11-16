@@ -16,8 +16,8 @@
    No codifica nada real.
    ============================================================ */
 
-import { TIENDA_POR_ID, colorTienda, inicialesTienda } from '../tiendas.js?v=29';
-import { euros } from '../util.js?v=29';
+import { TIENDA_POR_ID, colorTienda, inicialesTienda } from '../tiendas.js?v=34';
+import { euros } from '../util.js?v=34';
 
 const MESES = ['enero','febrero','marzo','abril','mayo','junio','julio',
                'agosto','septiembre','octubre','noviembre','diciembre'];

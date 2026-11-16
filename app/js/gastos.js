@@ -14,11 +14,12 @@
    veces, la app lo señala para que lo añadas.
    ============================================================ */
 
-import { datos, guardar } from './almacen.js?v=29';
-import { POR_ID, PRODUCTOS } from './estado.js?v=29';
-import { aprenderDeTicket } from './precios.js?v=29';
-import { nuevoId, normalizar } from './util.js?v=29';
-import { unidadNormal } from './unidades.js?v=29';
+import { datos, guardar } from './almacen.js?v=34';
+import { POR_ID, PRODUCTOS } from './estado.js?v=34';
+import { aprenderDeTicket } from './precios.js?v=34';
+import { nuevoId, normalizar } from './util.js?v=34';
+import { unidadNormal } from './unidades.js?v=34';
+import { desdeTicket } from './despensa.js?v=34';
 
 /* A partir de cuántas apariciones se sugiere catalogar */
 export const UMBRAL_SUGERENCIA = 3;
@@ -194,6 +195,7 @@ export function importarTicket(ticket) {
   datos.tickets.unshift(ticket);
   const aprendidos = aprenderDeTicket(ticket);
   const nuevos = registrarPendientes(ticket);
+  desdeTicket(ticket);                       // lo comprado entra en la despensa
   avisar();
 
   return { ok: true, aprendidos, nuevos, ticket };
@@ -274,6 +276,7 @@ export function crearTicketManual({ tienda, fecha, lineas }) {
   datos.tickets.unshift(ticket);
   const aprendidos = aprenderDeTicket(ticket);
   const nuevos = registrarPendientes(ticket);
+  desdeTicket(ticket);                       // lo comprado entra en la despensa
   avisar();
 
   return { ok: true, ticket, aprendidos, nuevos };

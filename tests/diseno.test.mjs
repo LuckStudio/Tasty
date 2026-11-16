@@ -50,6 +50,24 @@ for (const [tema, t] of [['claro', completo({})], ['oscuro', completo(oscuro)]])
   }
 }
 
+/* Etiquetas «Hay / Se acaba / Falta»: texto de color sobre un fondo teñido de ese
+   mismo color (13-14 % sobre la superficie). Es donde suele fallar el contraste. */
+const mezclar = (a, b, p) => {
+  const [r1, g1, b1] = aRGB(a), [r2, g2, b2] = aRGB(b);
+  const h = v => Math.round(v).toString(16).padStart(2, '0');
+  return '#' + h(r1 * p + r2 * (1 - p)) + h(g1 * p + g2 * (1 - p)) + h(b1 * p + b2 * (1 - p));
+};
+for (const [tema, t] of [['claro', completo({})], ['oscuro', completo(oscuro)]]) {
+  for (const [nombre, color, pct] of [['Hay', t.hay, 0.13], ['Se acaba', t.acaba, 0.14], ['Falta', t.agotado, 0.13]]) {
+    for (const [sup, fondo] of [['ticket', t.ticket], ['papel', t.papel]]) {
+      test(`AA ${tema}: etiqueta «${nombre}» sobre ${sup} teñido`, () => {
+        const c = contraste(color, mezclar(color, fondo, pct));
+        assert.ok(c >= 4.5, `contraste ${c.toFixed(2)} (${color} sobre ${mezclar(color, fondo, pct)})`);
+      });
+    }
+  }
+}
+
 /* colores de las tiendas, tal como están en datos/tiendas.js */
 const tiendas = [...readFileSync(new URL('../app/datos/tiendas.js', import.meta.url), 'utf8')
   .matchAll(/nombre: '([^']+)'.*?color: '(#[0-9A-Fa-f]{6})'/g)].map(m => ({ nombre: m[1], color: m[2] }));

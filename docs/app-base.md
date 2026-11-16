@@ -103,6 +103,9 @@ for t in tests/*.test.mjs; do node "$t" || break; done
 | `fusion` | Fusión de productos duplicados en todos los datos |
 | `busqueda` | Filtros y orden del buscador de productos |
 | `ruta` | Compra agrupada por el recorrido de la tienda, estimado por tienda, última tienda |
+| `recetas` | Las 14 recetas de noviembre, importación, sumas de ingredientes, privacidad |
+| `despensa` | Existencias, «se acaba», compras y cocina que suman y restan, copias |
+| `menu` | Menú semanal, bloque de cocina, ingredientes consolidados, «qué toca hoy» |
 
 Los tests importan los módulos con la misma URL que la app (`tests/_app.mjs`); sin eso Node carga dos copias y alguna prueba comprobaría una copia distinta de la que modifica.
 
@@ -128,3 +131,21 @@ Acceso: Ajustes → «Rutas de supermercado», o «Editar la ruta» desde la pan
 ## Borrar el historial de tickets
 
 Ajustes → Tus datos → «Borrar historial de tickets». Quita solo los tickets y la bandeja de productos por catalogar; conserva precios actuales, listas, recetas, catálogo, rutas y enlaces recordados, y ofrece exportar una copia antes. El historial vive en cada dispositivo (no está en el repositorio), así que hay que hacerlo en cada móvil u ordenador donde se usó la app.
+
+## Fase 4: estado
+
+Hecho:
+- **Recetas de noviembre:** 14 recetas (3 desayunos, 4 comidas, 3 meriendas, 4 cenas) cargables desde Menú → «Ver todas las recetas». Solo se tomaron las recetas del documento original; nada personal ni de salud.
+- **Despensa:** existencias en g / ml / ud. Se llena al guardar una compra y se descuenta al cocinar; «se está acabando / se ha acabado» con un toque; si no se sabe, la app dice «sin comprobar».
+- **Menú semanal (02) y selector de receta (03):** desayuno, comida y cena, varias recetas por franja, raciones, «cena fuera», copiar día y semana, «Generar lista».
+- **Qué toca hoy (01):** el bloque de esta tarde (cena de hoy + desayuno y comida de mañana, configurable), lo que falta y «mañana por la tarde».
+- **Ingredientes consolidados (05):** total por ingrediente con desglose por receta, comparado con la despensa.
+- **Ficha de receta (04):** imagen o color, ingredientes con «Hay / Falta / Se acaba», pasos, raciones, favorita y «Añadir al menú».
+- **Se acaba (08):** botón flotante siempre a mano; pasa a la lista sin duplicar.
+- **Navegación:** Hoy · Menú · Lista · Resumen · Gastos · Ajustes (la pantalla de inicio es «Qué toca hoy»).
+
+Decisiones y límites:
+- Las recetas no traen **duración de los pasos** (el documento original no la da), así que «Empezar a cocinar» abre los pasos de la primera receta. La guía que combina varias recetas en un solo flujo (fase 5) necesita duración, si es tiempo activo o de espera y el recurso (horno, fuego…): se pueden añadir a cada paso (`min`, `tipo`, `recurso`).
+- **Tres franjas** como pide el brief. Las meriendas se pueden asignar a la franja en que se toman.
+- Las **fotos de receta** van en `app/recetas/` (ver `recetas/LEEME.txt`) y se activan listándolas en `datos/fotos-recetas.js`. Sin foto se ve el color de la receta con el icono de su ingrediente principal.
+- «Generar lista» añade lo que falta **y lo que no se sabe si hay en casa**, para que sirva con la despensa vacía; lo que se sabe que hay no se añade.

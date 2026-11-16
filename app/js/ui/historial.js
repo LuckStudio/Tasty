@@ -7,14 +7,14 @@
    Gráfico SVG propio, sin librerías.
    ============================================================ */
 
-import { POR_ID } from '../estado.js?v=29';
-import { datos } from '../almacen.js?v=29';
-import { TIENDA_POR_ID } from '../tiendas.js?v=29';
-import { preciosDe, SUFIJO_BASE } from '../precios.js?v=29';
-import { serie, recortar, tendencia, porTienda, baseAUnidad } from '../historial.js?v=29';
-import { formatearCantidad } from '../unidades.js?v=29';
-import { iconoHTML } from '../iconos.js?v=29';
-import { euros, esc, tap } from '../util.js?v=29';
+import { POR_ID } from '../estado.js?v=34';
+import { datos } from '../almacen.js?v=34';
+import { TIENDA_POR_ID } from '../tiendas.js?v=34';
+import { preciosDe, SUFIJO_BASE } from '../precios.js?v=34';
+import { serie, recortar, tendencia, porTienda, baseAUnidad } from '../historial.js?v=34';
+import { formatearCantidad } from '../unidades.js?v=34';
+import { iconoHTML } from '../iconos.js?v=34';
+import { euros, esc, tap } from '../util.js?v=34';
 
 let id = null, periodo = 6, unidad = 'base', raiz = null, volver = 'grid';
 

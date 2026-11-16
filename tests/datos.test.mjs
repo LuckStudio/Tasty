@@ -27,13 +27,15 @@ const U = await app('js/unidades.js');
 const L = await app('js/alias.js');
 const IO = await app('js/datos-io.js');
 const { datos } = A;
+const { CATEGORIAS } = await app('datos/categorias.js');
 
 let n = 0;
 const test = (nombre, fn) => { try { fn(); n++; console.log('  ok  ', nombre); } catch (e) { console.error('  FALLA', nombre, '\n ', e.message); process.exitCode = 1; } };
 
 console.log('Migración');
-test('un usuario con esquema 8 pasa a 9 sin perder nada', () => {
-  assert.equal(datos.schema, 9);
+test('un usuario con esquema 8 llega al esquema actual (10) sin perder nada', () => {
+  assert.equal(datos.schema, 10);
+  assert.deepEqual([datos.despensa, datos.menu, datos.bloques], [{}, {}, {}]);
   assert.equal(datos.tickets.length, 1);
   assert.equal(datos.tickets[0].lineas[0].n, 'Plátanos');
   assert.equal(datos.preciosLocal[101].mercadona.f, 1.6);
@@ -55,8 +57,7 @@ test('una sección elegida a mano manda; una inventada se ignora', () => {
   assert.equal(S.seccionDe({ c: 'rara' }), S.SIN_SECCION);
   assert.equal(S.seccionDe(null), S.SIN_SECCION);
 });
-test('toda categoría del catálogo tiene sección', async () => {
-  const { CATEGORIAS } = await app('datos/categorias.js');
+test('toda categoría del catálogo tiene sección', () => {
   for (const c of CATEGORIAS) assert.notEqual(S.seccionDe({ c: c.id }), S.SIN_SECCION, c.id);
 });
 test('el orden completo añade al final las secciones que la ruta no conoce y limpia basura', () => {

@@ -16,10 +16,11 @@
               haber puesto delante el botón de exportar.
    ============================================================ */
 
-import { datos, guardar, borrarTodo } from './almacen.js?v=29';
-import { reconstruirCatalogo, POR_ID } from './estado.js?v=29';
-import { reconstruirTiendas, TIENDA_POR_ID } from './tiendas.js?v=29';
-import { CATALOGO_VERSION } from '../datos/catalogo.js?v=29';
+import { datos, guardar, borrarTodo } from './almacen.js?v=34';
+import { reconstruirCatalogo, POR_ID } from './estado.js?v=34';
+import { reconstruirTiendas, TIENDA_POR_ID } from './tiendas.js?v=34';
+import { CATALOGO_VERSION } from '../datos/catalogo.js?v=34';
+import { importarRecetas } from './recetas.js?v=34';
 
 export const FORMATO = 'lista-compra-luckstudio-copia';
 
@@ -55,6 +56,9 @@ export function copiaCompleta() {
       productosPropios: datos.catalogoLocal?.nuevos?.length || 0,
       tiendasPropias: datos.tiendasLocal?.propias?.length || 0,
       pendientes: datos.pendientes.length,
+      recetas: (datos.recetas || []).length,
+      productosEnDespensa: Object.keys(datos.despensa || {}).length,
+      diasDeMenu: Object.keys(datos.menu || {}).length,
       rutas: Object.keys(datos.rutas || {}).length,
       textosDeTicket: Object.values(datos.alias || {}).reduce((a, t) => a + Object.keys(t).length, 0)
     },
@@ -67,6 +71,10 @@ export function copiaCompleta() {
     pendientes: datos.pendientes,
     rutas: datos.rutas,
     alias: datos.alias,
+    despensa: datos.despensa,
+    menu: datos.menu,
+    bloques: datos.bloques,
+    recetas: datos.recetas,
     ajustes: datos.ajustes
   };
 }
@@ -268,6 +276,56 @@ export function fusionar(copia) {
       datos.alias[cadena][texto] = id;
       informe.alias = (informe.alias || 0) + 1;
     }
+  }
+
+  /* --- recetas: el id manda; así el menú sigue apuntando bien --- */
+  if (Array.isArray(copia.recetas)) {
+    const r = importarRecetas({ recetas: copia.recetas });
+    informe.recetas = r.nuevas + r.actualizadas;
+  }
+
+  /* --- despensa: gana el dato más reciente --- */
+  for (const [id, e] of Object.entries(copia.despensa || {})) {
+    if (!segura(id) || !/^\d+$/.test(id) || !e || typeof e !== 'object') continue;
+    if (!['hay', 'acaba', 'agotado'].includes(e.estado)) continue;
+    const cant = e.cant == null ? null : Number(e.cant);
+    if (cant != null && !(cant >= 0 && cant <= 1e6)) continue;
+    const unidad = ['g', 'ml', 'ud'].includes(e.unidad) ? e.unidad : null;
+    const d = typeof e.d === 'string' ? e.d.slice(0, 30) : '';
+    datos.despensa ??= {};
+    const actual = propio(datos.despensa, id) ? datos.despensa[id] : null;
+    if (!actual || d >= (actual.d || '')) {
+      datos.despensa[id] = { cant, unidad: cant == null ? null : unidad, estado: e.estado, d };
+      informe.despensa = (informe.despensa || 0) + 1;
+    }
+  }
+
+  /* --- menú y bloques: lo que llega sustituye a ese día --- */
+  const FECHA = /^\d{4}-\d{2}-\d{2}$/;
+  const FRANJAS = ['desayuno', 'comida', 'cena'];
+  for (const [fecha, dia] of Object.entries(copia.menu || {})) {
+    if (!FECHA.test(fecha) || !dia || typeof dia !== 'object') continue;
+    const limpio = {};
+    for (const f of FRANJAS) {
+      const lista = Array.isArray(dia[f]) ? dia[f] : [];
+      limpio[f] = lista.slice(0, 6)
+        .filter(x => x && /^[a-z0-9_-]{1,60}$/.test(String(x.r || '')))
+        .map(x => ({ r: x.r, n: Math.max(1, Math.min(20, Math.round(Number(x.n)) || 1)) }));
+    }
+    if (dia.fuera && typeof dia.fuera === 'object') {
+      limpio.fuera = {};
+      for (const f of FRANJAS) if (dia.fuera[f] === true) limpio.fuera[f] = true;
+    }
+    datos.menu ??= {};
+    datos.menu[fecha] = limpio;
+    informe.menu = (informe.menu || 0) + 1;
+  }
+  for (const [fecha, b] of Object.entries(copia.bloques || {})) {
+    if (!FECHA.test(fecha) || !Array.isArray(b?.franjas)) continue;
+    datos.bloques ??= {};
+    datos.bloques[fecha] = { franjas: b.franjas.slice(0, 9)
+      .filter(x => x && FECHA.test(String(x.f)) && FRANJAS.includes(x.s))
+      .map(x => ({ f: x.f, s: x.s })) };
   }
 
   /* --- pendientes: se suman las apariciones --- */

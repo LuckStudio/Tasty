@@ -4,8 +4,8 @@
 
 import { listas, listaActiva, cambiarA, crearLista, renombrarLista,
          borrarLista, vaciarLista, copiarA, cuantosEn, EMOJIS }
-  from '../listas.js?v=29';
-import { $, tap } from '../util.js?v=29';
+  from '../listas.js?v=34';
+import { $, tap } from '../util.js?v=34';
 
 let raiz;
 let editando = null;          // id, 'nueva' o null

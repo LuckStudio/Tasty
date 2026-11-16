@@ -11,12 +11,13 @@
    donde se dejó (cerrar la app en mitad del súper no borra nada).
    ============================================================ */
 
-import { nuevoId } from './util.js?v=29';
-import { POR_ID } from './estado.js?v=29';
-import { aprenderDeTicket, preciosDe } from './precios.js?v=29';
-import { recordarTienda } from './ruta.js?v=29';
-import { registrarPendientes } from './gastos.js?v=29';
-import { datos, guardar } from './almacen.js?v=29';
+import { nuevoId } from './util.js?v=34';
+import { POR_ID } from './estado.js?v=34';
+import { aprenderDeTicket, preciosDe } from './precios.js?v=34';
+import { recordarTienda } from './ruta.js?v=34';
+import { desdeTicket } from './despensa.js?v=34';
+import { registrarPendientes } from './gastos.js?v=34';
+import { datos, guardar } from './almacen.js?v=34';
 const oyentes = new Set();
 
 export function suscribirCompra(fn) {
@@ -293,6 +294,9 @@ export function finalizar() {
   /* Lo comprado sin estar en el catálogo va a la bandeja de
      pendientes, para no perderlo de vista */
   ticket.nuevos = registrarPendientes(ticket);
+
+  /* Y lo que se ha llevado a casa entra en la despensa */
+  desdeTicket(ticket);
 
   avisar();
   return ticket;
