@@ -10,7 +10,7 @@
    datos.alias = { [cadena]: { [texto normalizado]: idProducto } }
    ============================================================ */
 
-import { datos, guardar } from './almacen.js?v=23';
+import { datos, guardar } from './almacen.js?v=24';
 
 /* Mismo texto, mismo alias: sin mayúsculas, tildes, números de
    peso al final ni espacios de más. */

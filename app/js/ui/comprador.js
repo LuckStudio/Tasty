@@ -7,17 +7,17 @@ import { compraActual, alternarHecho, fijarPrecio, cambiarCantidad,
          anadirExtra, quitarLinea, fijarTienda, fijarPago, progreso,
          total, previsto, sinPrecio, cuantosEstimados, fijarDescuento,
          totalDescuento, fijarTiendaSuelta, finalizar, ticketJSON,
-         ticketTexto } from '../compra.js?v=23';
-import { CAT_POR_ID } from '../../datos/categorias.js?v=23';
-import { tiendasActivas, TIENDA_POR_ID } from '../tiendas.js?v=23';
-import { POR_ID } from '../estado.js?v=23';
-import { iconoHTML } from '../iconos.js?v=23';
-import { preciosDe, formatoBase, NOMBRE_BASE, marcaDe } from '../precios.js?v=23';
+         ticketTexto } from '../compra.js?v=24';
+import { CAT_POR_ID } from '../../datos/categorias.js?v=24';
+import { tiendasActivas, TIENDA_POR_ID } from '../tiendas.js?v=24';
+import { POR_ID } from '../estado.js?v=24';
+import { iconoHTML } from '../iconos.js?v=24';
+import { preciosDe, formatoBase, NOMBRE_BASE, marcaDe } from '../precios.js?v=24';
 import { periodicidad, ultimaCompra, diasDesde, textoUrgencia,
-         nivelUrgencia } from '../reposicion.js?v=23';
-import { tiendaPreferida } from '../precios.js?v=23';
-import { ticketHTML } from './ticket.js?v=23';
-import { euros, tap } from '../util.js?v=23';
+         nivelUrgencia } from '../reposicion.js?v=24';
+import { tiendaPreferida } from '../precios.js?v=24';
+import { ticketHTML } from './ticket.js?v=24';
+import { euros, tap } from '../util.js?v=24';
 
 let raiz, pie, ticketFinal = null;
 

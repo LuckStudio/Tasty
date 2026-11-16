@@ -3,26 +3,26 @@
    Precios por supermercado, comparativa y preferencia
    ============================================================ */
 
-import { POR_ID, cantidad, sumar, alternar } from '../estado.js?v=23';
+import { POR_ID, cantidad, sumar, alternar } from '../estado.js?v=24';
 import { preciosDe, guardarPrecio, borrarPrecio, preferencias,
          alternarPreferencia, moverPreferencia, calcularBase, aNumero,
          formatoBase, FORMATOS, NOMBRE_BASE, DIAS_VIEJO,
          equivalentes, enlazarEquivalente, desenlazarEquivalente,
-         masBaratoQue, marcaDe, fijarMarca } from '../precios.js?v=23';
-import { tiendasActivas, TIENDA_POR_ID } from '../tiendas.js?v=23';
-import { CAT_POR_ID } from '../../datos/categorias.js?v=23';
-import { PRODUCTOS } from '../estado.js?v=23';
-import { historialHTML } from './stats.js?v=23';
+         masBaratoQue, marcaDe, fijarMarca } from '../precios.js?v=24';
+import { tiendasActivas, TIENDA_POR_ID } from '../tiendas.js?v=24';
+import { CAT_POR_ID } from '../../datos/categorias.js?v=24';
+import { PRODUCTOS } from '../estado.js?v=24';
+import { historialHTML } from './stats.js?v=24';
 import { periodicidad, fijarPeriodicidad, textoOrigen, ultimaCompra,
-         diasDesde } from '../reposicion.js?v=23';
-import { iconoHTML } from '../iconos.js?v=23';
-import { datos } from '../almacen.js?v=23';
-import { editarProducto } from '../catalogo-edit.js?v=23';
-import { SECCIONES, seccionDe, SECCION_POR_ID } from '../secciones.js?v=23';
-import { textosDe as textosDeTicket } from '../alias.js?v=23';
-import { recetas as todasLasRecetas } from '../recetas.js?v=23';
-import { serie, tendencia } from '../historial.js?v=23';
-import { euros, esc, $, tap } from '../util.js?v=23';
+         diasDesde } from '../reposicion.js?v=24';
+import { iconoHTML } from '../iconos.js?v=24';
+import { datos } from '../almacen.js?v=24';
+import { editarProducto } from '../catalogo-edit.js?v=24';
+import { SECCIONES, seccionDe, SECCION_POR_ID } from '../secciones.js?v=24';
+import { textosDe as textosDeTicket } from '../alias.js?v=24';
+import { recetas as todasLasRecetas } from '../recetas.js?v=24';
+import { serie, tendencia } from '../historial.js?v=24';
+import { euros, esc, $, tap } from '../util.js?v=24';
 
 let fondo, cuerpo, idActual = null, formAbierto = false, tiendaForm = null;
 

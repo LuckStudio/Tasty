@@ -15,9 +15,9 @@
    añade al final, así nunca desaparece un producto.
    ============================================================ */
 
-import { datos, guardar } from './almacen.js?v=23';
+import { datos, guardar } from './almacen.js?v=24';
 import { SECCIONES, SECCION_DE_CATEGORIA, SECCION_POR_ID, SIN_SECCION }
-  from '../datos/secciones.js?v=23';
+  from '../datos/secciones.js?v=24';
 
 export { SECCIONES, SECCION_POR_ID, SIN_SECCION };
 

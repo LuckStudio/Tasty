@@ -7,7 +7,7 @@
    abrir en oscuro.
    ============================================================ */
 
-import { acentoAccesible } from './color.js?v=23';
+import { acentoAccesible } from './color.js?v=24';
 
 const CLAVE = 'luckstudio_tema';
 

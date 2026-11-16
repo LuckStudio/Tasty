@@ -8,19 +8,22 @@ import { listaTickets, ticketPorId, borrarTicket, validarTicket,
          importarTicket, crearTicketManual, actualizarTicket,
          buscarProductos, pendientes, pendientesSugeridos,
          descartarPendiente, resumenGasto, UMBRAL_SUGERENCIA }
-  from '../gastos.js?v=23';
-import { tiendasActivas, TIENDA_POR_ID } from '../tiendas.js?v=23';
-import { POR_ID } from '../estado.js?v=23';
-import { aNumero } from '../precios.js?v=23';
-import { iconoHTML } from '../iconos.js?v=23';
-import { pintarStats, fijarPeriodo } from './stats.js?v=23';
-import { escanear } from '../escaner.js?v=23';
-import { hayClave } from '../gemini.js?v=23';
-import { buscarAlias, aprenderAlias } from '../alias.js?v=23';
+  from '../gastos.js?v=24';
+import { tiendasActivas, TIENDA_POR_ID } from '../tiendas.js?v=24';
+import { POR_ID } from '../estado.js?v=24';
+import { aNumero } from '../precios.js?v=24';
+import { iconoHTML } from '../iconos.js?v=24';
+import { pintarStats, fijarPeriodo } from './stats.js?v=24';
+import { escanear } from '../escaner.js?v=24';
+import { hayClave } from '../gemini.js?v=24';
+import { buscarAlias, aprenderAlias } from '../alias.js?v=24';
+import { abrirCantidad } from './cantidad.js?v=24';
+import { preciosDe } from '../precios.js?v=24';
+import { formatearCantidad } from '../unidades.js?v=24';
 import { abrirRevision, cerrarRevision, pintarRevision, clicRevision, entradaRevision }
-  from './revision.js?v=23';
-import { PRODUCTOS } from '../estado.js?v=23';
-import { euros, tap, esc, $ } from '../util.js?v=23';
+  from './revision.js?v=24';
+import { PRODUCTOS } from '../estado.js?v=24';
+import { euros, tap, esc, $ } from '../util.js?v=24';
 
 let raiz;
 let pantalla = 'lista';        // lista | importar | editor | stats | escaneo | revision
@@ -142,6 +145,23 @@ export function iniciarGastos(nodo) {
     if (sug) { anadirLinea(Number(sug.dataset.sug)); return; }
 
     if (t.closest('#ga-libre')) { anadirLinea(null); return; }
+
+    const peso = t.closest('[data-ed-q]');
+    if (peso) {
+      tap();
+      const l = borrador.lineas[+peso.dataset.edQ], p = POR_ID[l?.id];
+      if (!p) return;
+      /* Precio por kg/L conocido: el de la tienda del ticket y, si no, el más barato */
+      const filas = preciosDe(p.id).filter(f => f.base != null);
+      const base = (filas.find(f => f.tienda === borrador.tienda) || filas[0])?.base ?? null;
+      abrirCantidad({ producto: p, inicial: l.q || null, precioBase: base }, ({ q, precio }) => {
+        l.q = q; l.pb = undefined;
+        if (precio != null) l.precio = precio;       // se rellena el importe si se conoce el €/kg
+        if (q.u === 'ud') l.cant = Math.max(1, Math.round(q.v));
+        pintarGastos();
+      });
+      return;
+    }
 
     const quitar = t.closest('[data-ed-quitar]');
     if (quitar) { tap(); borrador.lineas.splice(+quitar.dataset.edQuitar, 1); pintarGastos(); return; }
@@ -608,6 +628,8 @@ function pintarEditor() {
         <span class="ga-linea-n">${esc(l.n)}${l.id ? '' : '<em>Nuevo</em>'}${
           l.textoTicket && l.id ? `<small class="ga-orig">${l.porMemoria ? 'recordado · ' : ''}ticket: ${esc(l.textoTicket)}</small>` : ''}${
           l.sugerido ? `<button class="ga-sugerido" data-ed-aceptar="${i}">¿Es ${esc(l.sugerido.nombre)}? Enlazar</button>` : ''}</span>
+        ${l.id && POR_ID[l.id]?.u !== 'ud' ? `<button class="ga-peso" data-ed-q="${i}" aria-label="Cantidad de ${esc(l.n)}">${
+          l.q ? esc(l.q.u === 'ud' ? `${l.q.v} ud` : formatearCantidad(l.q.v, l.q.u)) : 'Peso'}</button>` : ''}
         <label class="ga-mini">
           <span class="sr">Cantidad de ${esc(l.n)}</span>
           <input type="text" inputmode="numeric" data-ed-cant="${i}" value="${l.cant}">
