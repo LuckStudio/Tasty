@@ -102,6 +102,7 @@ for t in tests/*.test.mjs; do node "$t" || break; done
 | `cantidad` | Teclado de cantidad, equivalencias y precio por cantidad |
 | `fusion` | Fusión de productos duplicados en todos los datos |
 | `busqueda` | Filtros y orden del buscador de productos |
+| `ruta` | Compra agrupada por el recorrido de la tienda, estimado por tienda, última tienda |
 
 Los tests importan los módulos con la misma URL que la app (`tests/_app.mjs`); sin eso Node carga dos copias y alguna prueba comprobaría una copia distinta de la que modifica.
 
@@ -112,3 +113,18 @@ Hecho: revisión del ticket línea a línea y enlace (pantallas 15 y 16), memori
 Pendiente de la fase 2: el resumen de compra con «cambios de precio» y comparación con la estimación (13), y la navegación nueva (Hoy · Menú · Compra · Despensa · Ticket) que llega con la fase 4.
 
 **Aviso:** el brief habla de «stock actual» e «inventario», pero la app base no tiene control de stock (solo lista, precios y tickets). «En casa: n» (pantallas 5, 17 y 20) y los avisos de faltas necesitan un inventario nuevo. Se propone construirlo en la fase 4 junto a «Qué toca hoy».
+
+## Fase 3: estado
+
+Hecho: elegir tienda (pantalla 09: la app toma su color, recuerda la última y estima el total con sus precios), lista agrupada por el recorrido de la tienda (10), modo pasillo de una sección cada vez (11) y configurar la ruta de cada tienda con arrastrar y soltar y botones ▲▼ (12).
+
+- Cada tienda tiene su ruta propia (dos Mercadona distintos se configuran por separado; hay «copiar la ruta de otra tienda»).
+- Lo cogido baja al final de su sección. Una sección oculta en una tienda no hace desaparecer sus productos: pasan a «Sin sección», donde se pueden asignar en el momento.
+- Sin tienda elegida o en «otro sitio» se mantiene el comportamiento anterior (por categoría).
+- La lista y los precios funcionan sin conexión (la app no necesita red salvo para el escáner).
+
+Acceso: Ajustes → «Rutas de supermercado», o «Editar la ruta» desde la pantalla de elegir tienda.
+
+## Borrar el historial de tickets
+
+Ajustes → Tus datos → «Borrar historial de tickets». Quita solo los tickets y la bandeja de productos por catalogar; conserva precios actuales, listas, recetas, catálogo, rutas y enlaces recordados, y ofrece exportar una copia antes. El historial vive en cada dispositivo (no está en el repositorio), así que hay que hacerlo en cada móvil u ordenador donde se usó la app.

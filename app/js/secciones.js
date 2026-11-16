@@ -15,9 +15,9 @@
    añade al final, así nunca desaparece un producto.
    ============================================================ */
 
-import { datos, guardar } from './almacen.js?v=27';
+import { datos, guardar } from './almacen.js?v=29';
 import { SECCIONES, SECCION_DE_CATEGORIA, SECCION_POR_ID, SIN_SECCION }
-  from '../datos/secciones.js?v=27';
+  from '../datos/secciones.js?v=29';
 
 export { SECCIONES, SECCION_POR_ID, SIN_SECCION };
 
@@ -132,6 +132,16 @@ export function ocultarSeccion(tiendaId, seccionId, ocultar = true) {
   if (!ocultar && ya) r.ocultas = r.ocultas.filter(x => x !== seccionId);
   escribirRuta(tiendaId, r);
   return true;
+}
+
+/* Al arrastrar solo se ven las secciones NO ocultas, pero la ruta guarda
+   todas. Traduce «ponla en la posición j de las visibles» a la posición
+   real en el orden completo (la que espera colocarSeccion). */
+export function posicionEnOrden(orden, ocultas, seccionId, idxVisible) {
+  const sinEsa = orden.filter(x => x !== seccionId);
+  const visibles = sinEsa.filter(x => !ocultas.includes(x));
+  const j = Math.max(0, Math.min(idxVisible, visibles.length));
+  return j >= visibles.length ? sinEsa.length : sinEsa.indexOf(visibles[j]);
 }
 
 /* Copia el recorrido de otra tienda (misma cadena, otra ubicación) */

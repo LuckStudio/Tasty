@@ -11,59 +11,61 @@
    ============================================================ */
 
 import { estado, suscribir, totalArticulos, cargarLista, vaciar,
-         fijarVista, seleccionados } from './estado.js?v=27';
+         fijarVista, seleccionados } from './estado.js?v=29';
 import { compraActual, crearCompra, descartarCompra,
-         suscribirCompra } from './compra.js?v=27';
+         suscribirCompra, fijarTienda as fijarTiendaCompra } from './compra.js?v=29';
 import { suscribirPrecios, cuantosPreciosHay, aprenderDeTicket }
-  from './precios.js?v=27';
-import { CATALOGO_VERSION } from '../datos/catalogo.js?v=27';
-import { leerHash, enlace, codificar } from './url.js?v=27';
-import { vigilarIconos } from './iconos.js?v=27';
-import { iniciarTema, fijarTema, temaActual, TEMAS, fijarAcentoTienda } from './tema.js?v=27';
-import { iniciarGrid, pintarGrid, fijarBusqueda } from './ui/grid.js?v=27';
-import { iniciarResumen, pintarResumen } from './ui/resumen.js?v=27';
+  from './precios.js?v=29';
+import { CATALOGO_VERSION } from '../datos/catalogo.js?v=29';
+import { leerHash, enlace, codificar } from './url.js?v=29';
+import { vigilarIconos } from './iconos.js?v=29';
+import { iniciarTema, fijarTema, temaActual, TEMAS, fijarAcentoTienda } from './tema.js?v=29';
+import { iniciarGrid, pintarGrid, fijarBusqueda } from './ui/grid.js?v=29';
+import { iniciarResumen, pintarResumen } from './ui/resumen.js?v=29';
 import { iniciarComprador, pintarComprador, pintarTicket,
-         fijarTicketVisible } from './ui/comprador.js?v=27';
-import { iniciarFicha, cerrarFicha } from './ui/ficha.js?v=27';
-import { iniciarGastos, pintarGastos, reiniciarGastos } from './ui/gastos.js?v=27';
-import { iniciarAdmin, pintarAdmin, reiniciarAdmin } from './ui/admin.js?v=27';
+         fijarTicketVisible } from './ui/comprador.js?v=29';
+import { iniciarFicha, cerrarFicha } from './ui/ficha.js?v=29';
+import { iniciarGastos, pintarGastos, reiniciarGastos } from './ui/gastos.js?v=29';
+import { iniciarAdmin, pintarAdmin, reiniciarAdmin } from './ui/admin.js?v=29';
 import { iniciarPanelPrecios, pintarPanel, reiniciarPanelPrecios }
-  from './ui/precios-panel.js?v=27';
+  from './ui/precios-panel.js?v=29';
 import { iniciarVistaTiendas, pintarTiendas, reiniciarTiendas }
-  from './ui/tiendas.js?v=27';
-import { suscribirTiendas, TIENDAS, TIENDA_POR_ID } from './tiendas.js?v=27';
-import { abrirEdicionTicket } from './ui/gastos.js?v=27';
+  from './ui/tiendas.js?v=29';
+import { suscribirTiendas, TIENDAS, TIENDA_POR_ID } from './tiendas.js?v=29';
+import { abrirEdicionTicket } from './ui/gastos.js?v=29';
 import { iniciarImportar, pintarImportar, reiniciarImportar }
-  from './ui/importar.js?v=27';
+  from './ui/importar.js?v=29';
 import { iniciarRecordatorios, pintarRecordatorios, reiniciarRecordatorios }
-  from './ui/recordatorios.js?v=27';
+  from './ui/recordatorios.js?v=29';
 import { programar, avisosPerdidos, recordatorios, estadoPermiso }
-  from './recordatorios.js?v=27';
+  from './recordatorios.js?v=29';
 import { suscribirReposicion, limpiarUrgenciasHuerfanas, sugerencias }
-  from './reposicion.js?v=27';
+  from './reposicion.js?v=29';
 import { iniciarVistaListas, pintarListas, reiniciarListas }
-  from './ui/listas.js?v=27';
+  from './ui/listas.js?v=29';
 import { listaActiva, listas, cambiarA, otrasConCosas, suscribirListas }
-  from './listas.js?v=27';
-import { iniciarCesta, pintarCesta, reiniciarCesta } from './ui/cesta.js?v=27';
-import { iniciarDieta, pintarDieta, reiniciarDieta } from './ui/dieta.js?v=27';
-import { suscribirRecetas, resumenDieta } from './recetas.js?v=27';
+  from './listas.js?v=29';
+import { iniciarCesta, pintarCesta, reiniciarCesta } from './ui/cesta.js?v=29';
+import { iniciarDieta, pintarDieta, reiniciarDieta } from './ui/dieta.js?v=29';
+import { suscribirRecetas, resumenDieta } from './recetas.js?v=29';
 import { copiaTexto, csvTickets, csvPrecios, descargar, nombreArchivo,
          validarCopia, fusionar, limpiarTodo, cuantoHay, suscribirDatos,
          borrarHistorialTickets }
-  from './datos-io.js?v=27';
-import { suscribirCatalogo, estadoCatalogo } from './catalogo-edit.js?v=27';
+  from './datos-io.js?v=29';
+import { suscribirCatalogo, estadoCatalogo } from './catalogo-edit.js?v=29';
 import { suscribirGastos, ticketPorId, resumenGasto,
-         pendientesSugeridos } from './gastos.js?v=27';
-import { iniciarAjustesGemini, pintarBloqueGemini } from './ui/escaner.js?v=27';
-import { abrirHistorial, iniciarHistorial, pintarHistorial } from './ui/historial.js?v=27';
-import { iniciarProductos, pintarProductos } from './ui/productos.js?v=27';
-import { $, euros, tap } from './util.js?v=27';
+         pendientesSugeridos } from './gastos.js?v=29';
+import { iniciarAjustesGemini, pintarBloqueGemini } from './ui/escaner.js?v=29';
+import { abrirHistorial, iniciarHistorial, pintarHistorial } from './ui/historial.js?v=29';
+import { iniciarProductos, pintarProductos } from './ui/productos.js?v=29';
+import { abrirRuta, iniciarRuta, pintarRuta } from './ui/ruta.js?v=29';
+import { iniciarTienda, pintarTienda, prepararTienda, tiendaElegida } from './ui/tienda.js?v=29';
+import { $, euros, tap } from './util.js?v=29';
 
 /* Sello de versión. Lo cambia versionar.py junto con las rutas,
    así que ver aquí un número viejo significa que el navegador está
    usando archivos antiguos. */
-export const VERSION_APP = '27';
+export const VERSION_APP = '29';
 
 let vistaActual = 'grid';
 let modo = 'editor';
@@ -73,8 +75,10 @@ let modo = 'editor';
 /* En el supermercado, la app toma el color de la tienda elegida:
    solo cambia el acento, el resto del sistema visual no se toca. */
 function aplicarTemaTienda() {
-  const c = vistaActual === 'comprador' ? compraActual() : null;
-  fijarAcentoTienda(c?.tienda ? TIENDA_POR_ID[c.tienda]?.color : null);
+  let id = null;
+  if (vistaActual === 'comprador') id = compraActual()?.tienda;
+  else if (vistaActual === 'tienda') id = tiendaElegida();     // se tiñe al elegir
+  fijarAcentoTienda(id ? TIENDA_POR_ID[id]?.color : null);
 }
 
 function ir(vista) {
@@ -99,7 +103,7 @@ function ir(vista) {
     ajustes: 'Ajustes', admin: 'Catálogo', precios: 'Precios',
     tiendas: 'Supermercados', importar: 'Importar',
     recordatorios: 'Recordatorios', listas: 'Listas',
-    cesta: 'Dónde comprar', dieta: 'Dieta', historial: 'Histórico de precios', productos: 'Productos',
+    cesta: 'Dónde comprar', dieta: 'Dieta', historial: 'Histórico de precios', productos: 'Productos', ruta: 'Rutas de tienda', tienda: 'Elegir tienda',
     comprador: 'En el supermercado', ticket: 'Ticket'
   };
   pintarBarra(vista, titulos[vista] || '');
@@ -119,6 +123,8 @@ function ir(vista) {
   if (vista === 'cesta')         pintarCesta();
   if (vista === 'historial')     pintarHistorial();
   if (vista === 'productos')     pintarProductos();
+  if (vista === 'ruta')          pintarRuta();
+  if (vista === 'tienda')        pintarTienda();
   if (vista === 'dieta')         pintarDieta();
   if (vista === 'comprador') pintarComprador();
   if (vista === 'ticket')    pintarTicket($('#v-ticket'));
@@ -338,6 +344,9 @@ document.addEventListener('compartir-ticket', e => {
 function entrarComprador() {
   modo = 'comprador';
   document.body.dataset.modo = 'comprador';
+  /* Sin tienda elegida se pregunta primero dónde se va a comprar */
+  const c = compraActual();
+  if (c && !c.tienda && !c.tiendaTexto) { prepararTienda(); ir('tienda'); return; }
   ir('comprador');
 }
 
@@ -430,6 +439,8 @@ function pintarAjustes() {
       <h2>Catálogo</h2>
       <button class="btn-secundario" id="aj-productos"
               style="margin-bottom:0.5px">Buscar productos y precios</button>
+      <button class="btn-secundario" id="aj-rutas"
+              style="margin-bottom:0.5px">Rutas de supermercado</button>
       <button class="btn-secundario" id="aj-admin"
               style="margin-bottom:0.5px">Editar catálogo${
         cat.sinCambios ? '' : ` · ${cat.nuevos + cat.editados} sin consolidar`}</button>
@@ -488,6 +499,7 @@ function pintarAjustes() {
 
 $('#v-ajustes').addEventListener('click', e => {
   if (e.target.closest('#aj-productos')) { tap(); ir('productos'); return; }
+  if (e.target.closest('#aj-rutas')) { tap(); document.dispatchEvent(new CustomEvent('abrir-ruta', { detail: { volver: 'ajustes' } })); return; }
   if (e.target.closest('#aj-admin'))   { tap(); ir('admin');   return; }
   if (e.target.closest('#aj-precios')) { tap(); ir('precios'); return; }
   if (e.target.closest('#aj-tiendas')) { tap(); ir('tiendas'); return; }
@@ -789,6 +801,19 @@ function arrancar() {
   iniciarAjustesGemini();
   iniciarHistorial($('#v-historial'), vista => ir(vista));
   iniciarProductos($('#v-productos'));
+  iniciarRuta($('#v-ruta'), vista => ir(vista));
+  iniciarTienda($('#v-tienda'), {
+    alCambiar: () => aplicarTemaTienda(),
+    alEmpezar: id => { fijarTiendaCompra(id); ir('comprador'); },
+    alOtroSitio: () => ir('comprador'),
+    alEditarRutas: id => document.dispatchEvent(new CustomEvent('abrir-ruta', { detail: { tienda: id, volver: 'tienda' } })),
+    alSalir: () => salirComprador()
+  });
+  document.addEventListener('elegir-tienda', () => { prepararTienda(); ir('tienda'); });
+  document.addEventListener('abrir-ruta', e => {
+    abrirRuta(e.detail?.tienda, e.detail?.volver || (vistaActual === 'ruta' ? 'ajustes' : vistaActual));
+    ir('ruta');
+  });
   document.addEventListener('abrir-historial', e => {
     abrirHistorial(e.detail, vistaActual === 'historial' ? 'grid' : vistaActual);
     ir('historial');

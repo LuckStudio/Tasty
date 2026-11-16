@@ -10,7 +10,7 @@
    Sin DOM: se prueba aparte.
    ============================================================ */
 
-import { precioDeCantidad, convertir, formatearCantidad, atajos } from './unidades.js?v=27';
+import { precioDeCantidad, convertir, formatearCantidad, atajos } from './unidades.js?v=29';
 
 const TOPE = 99999;
 

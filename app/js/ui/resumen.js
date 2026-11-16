@@ -5,15 +5,15 @@
    ============================================================ */
 
 import { estado, seleccionados, sumar, quitar, quitarLibre,
-         anadirLibre, totalArticulos, fijarAgrupacion } from '../estado.js?v=27';
-import { CATEGORIAS } from '../../datos/categorias.js?v=27';
-import { TIENDA_POR_ID, TIENDAS } from '../tiendas.js?v=27';
+         anadirLibre, totalArticulos, fijarAgrupacion } from '../estado.js?v=29';
+import { CATEGORIAS } from '../../datos/categorias.js?v=29';
+import { TIENDA_POR_ID, TIENDAS } from '../tiendas.js?v=29';
 import { estimarLista, compararTiendas, tiendaPreferida,
-         preciosDe, marcaDe } from '../precios.js?v=27';
-import { iconoHTML } from '../iconos.js?v=27';
+         preciosDe, marcaDe } from '../precios.js?v=29';
+import { iconoHTML } from '../iconos.js?v=29';
 import { urgenciaDe, fijarUrgencia, textoUrgencia, nivelUrgencia,
-         urgentes } from '../reposicion.js?v=27';
-import { euros, tap } from '../util.js?v=27';
+         urgentes } from '../reposicion.js?v=29';
+import { euros, tap } from '../util.js?v=29';
 
 let raiz;
 

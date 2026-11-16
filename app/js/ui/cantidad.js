@@ -5,11 +5,11 @@
    ============================================================ */
 
 import { estadoInicial, cambiarModo, teclear, aplicarAtajo, atajosDe, leer, mostrar,
-         aproximacion, modosDe, nombreModo } from '../cantidad.js?v=27';
-import { formatearCantidad } from '../unidades.js?v=27';
-import { SUFIJO_BASE } from '../precios.js?v=27';
-import { iconoHTML } from '../iconos.js?v=27';
-import { esc, tap } from '../util.js?v=27';
+         aproximacion, modosDe, nombreModo } from '../cantidad.js?v=29';
+import { formatearCantidad } from '../unidades.js?v=29';
+import { SUFIJO_BASE } from '../precios.js?v=29';
+import { iconoHTML } from '../iconos.js?v=29';
+import { esc, tap } from '../util.js?v=29';
 
 let fondo = null, ctx = null;
 

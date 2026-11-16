@@ -4,13 +4,13 @@
    ============================================================ */
 
 import { PRODUCTOS, cantidad, alternar, sumar, estado, anadirLibre }
-  from '../estado.js?v=27';
-import { CATEGORIAS, FRECUENCIAS } from '../../datos/categorias.js?v=27';
-import { iconoHTML } from '../iconos.js?v=27';
+  from '../estado.js?v=29';
+import { CATEGORIAS, FRECUENCIAS } from '../../datos/categorias.js?v=29';
+import { iconoHTML } from '../iconos.js?v=29';
 import { sugerencias, descartarSugerencia, periodicidad,
-         textoOrigen } from '../reposicion.js?v=27';
-import { masBaratoQue } from '../precios.js?v=27';
-import { normalizar, tap } from '../util.js?v=27';
+         textoOrigen } from '../reposicion.js?v=29';
+import { masBaratoQue } from '../precios.js?v=29';
+import { normalizar, tap } from '../util.js?v=29';
 
 let raiz, busqueda = '';
 const plegadas = new Set(

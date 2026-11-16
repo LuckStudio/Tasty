@@ -11,11 +11,12 @@
    donde se dejó (cerrar la app en mitad del súper no borra nada).
    ============================================================ */
 
-import { nuevoId } from './util.js?v=27';
-import { POR_ID } from './estado.js?v=27';
-import { aprenderDeTicket, preciosDe } from './precios.js?v=27';
-import { registrarPendientes } from './gastos.js?v=27';
-import { datos, guardar } from './almacen.js?v=27';
+import { nuevoId } from './util.js?v=29';
+import { POR_ID } from './estado.js?v=29';
+import { aprenderDeTicket, preciosDe } from './precios.js?v=29';
+import { recordarTienda } from './ruta.js?v=29';
+import { registrarPendientes } from './gastos.js?v=29';
+import { datos, guardar } from './almacen.js?v=29';
 const oyentes = new Set();
 
 export function suscribirCompra(fn) {
@@ -141,6 +142,7 @@ export function quitarLinea(i) {
 export function fijarTienda(id) {
   if (!datos.compra) return;
   datos.compra.tienda = id;
+  if (id) recordarTienda(id);                 // la última tienda se recuerda
   delete datos.compra.tiendaTexto;
   rellenarPreciosDe(id);
   avisar();

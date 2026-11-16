@@ -7,19 +7,24 @@ import { compraActual, alternarHecho, fijarPrecio, cambiarCantidad,
          anadirExtra, quitarLinea, fijarTienda, fijarPago, progreso,
          total, previsto, sinPrecio, cuantosEstimados, fijarDescuento,
          totalDescuento, fijarTiendaSuelta, finalizar, ticketJSON,
-         ticketTexto } from '../compra.js?v=27';
-import { CAT_POR_ID } from '../../datos/categorias.js?v=27';
-import { tiendasActivas, TIENDA_POR_ID } from '../tiendas.js?v=27';
-import { POR_ID } from '../estado.js?v=27';
-import { iconoHTML } from '../iconos.js?v=27';
-import { preciosDe, formatoBase, NOMBRE_BASE, marcaDe } from '../precios.js?v=27';
+         ticketTexto } from '../compra.js?v=29';
+import { CAT_POR_ID } from '../../datos/categorias.js?v=29';
+import { tiendasActivas, TIENDA_POR_ID } from '../tiendas.js?v=29';
+import { POR_ID } from '../estado.js?v=29';
+import { iconoHTML } from '../iconos.js?v=29';
+import { preciosDe, formatoBase, NOMBRE_BASE, marcaDe } from '../precios.js?v=29';
 import { periodicidad, ultimaCompra, diasDesde, textoUrgencia,
-         nivelUrgencia } from '../reposicion.js?v=27';
-import { tiendaPreferida } from '../precios.js?v=27';
-import { ticketHTML } from './ticket.js?v=27';
-import { euros, tap } from '../util.js?v=27';
+         nivelUrgencia } from '../reposicion.js?v=29';
+import { tiendaPreferida } from '../precios.js?v=29';
+import { ticketHTML } from './ticket.js?v=29';
+import { gruposDeCompra, seccionActual } from '../ruta.js?v=29';
+import { rutaDe, SECCIONES, SECCION_POR_ID } from '../secciones.js?v=29';
+import { editarProducto } from '../catalogo-edit.js?v=29';
+import { inicialesTienda } from '../tiendas.js?v=29';
+import { euros, esc, tap } from '../util.js?v=29';
 
 let raiz, pie, ticketFinal = null;
+let pasillo = false, idxSec = 0;       // modo pasillo: una sección cada vez
 
 const CHECK = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
   stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
@@ -43,6 +48,15 @@ export function iniciarComprador(nodoLista, nodoPie) {
   pie = nodoPie;
 
   raiz.addEventListener('click', e => {
+    if (e.target.closest('#cmp-cambiar-tienda')) { tap(); document.dispatchEvent(new CustomEvent('elegir-tienda')); return; }
+    if (e.target.closest('#cmp-pasillo')) { tap(); entrarPasillo(); return; }
+    if (e.target.closest('#ps-prev')) { tap(); moverSeccion(-1); return; }
+    if (e.target.closest('#ps-next')) { tap(); moverSeccion(+1); return; }
+    const secTab = e.target.closest('[data-ps-sec]');
+    if (secTab) { tap(); idxSec = +secTab.dataset.psSec; pintarComprador(); return; }
+    const asignar = e.target.closest('[data-asignar]');
+    if (asignar) { tap(); asignarSeccion(+asignar.dataset.asignar); return; }
+
     const check = e.target.closest('[data-check]');
     if (check) { tap(); alternarHecho(+check.dataset.check); return; }
 
@@ -85,6 +99,8 @@ export function iniciarComprador(nodoLista, nodoPie) {
   });
 
   pie.addEventListener('click', e => {
+    if (e.target.closest('#ps-sig')) { tap(); siguienteSeccion(); return; }
+    if (e.target.closest('#ps-salir')) { tap(); pasillo = false; pintarComprador(); return; }
     const t = e.target.closest('[data-tienda]');
     if (t) {
       tap();
@@ -111,6 +127,50 @@ function anadirDesdeInput() {
   if (!input || !anadirExtra(input.value)) return;
   input.value = '';
   input.focus();
+}
+
+/* ---------- modo pasillo y ruta ---------- */
+
+function calcularGrupos(c) {
+  return c.tienda ? gruposDeCompra(c.lineas, rutaDe(c.tienda)) : null;
+}
+
+function entrarPasillo() {
+  const g = calcularGrupos(compraActual());
+  if (!g?.length) return;
+  pasillo = true;
+  idxSec = seccionActual(g);
+  pintarComprador();
+}
+
+function moverSeccion(d) {
+  const g = calcularGrupos(compraActual());
+  if (!g?.length) return;
+  idxSec = Math.max(0, Math.min(g.length - 1, idxSec + d));
+  pintarComprador();
+}
+
+function siguienteSeccion() {
+  const g = calcularGrupos(compraActual());
+  if (!g) return;
+  if (idxSec >= g.length - 1) { pasillo = false; pintarComprador(); return; }   // última: a revisar y finalizar
+  idxSec++;
+  pintarComprador();
+}
+
+/* «Sin sección»: se asigna en el momento y se recuerda para ese producto */
+function asignarSeccion(i) {
+  const c = compraActual();
+  const l = c?.lineas[i];
+  if (!l || l.k !== 'p' || !POR_ID[l.id]) return;
+  const orden = c.tienda ? rutaDe(c.tienda).orden : SECCIONES.map(x => x.id);
+  document.dispatchEvent(new CustomEvent('abrir-hoja', { detail: {
+    titulo: `¿En qué sección está ${l.n}?`,
+    opciones: orden.map(id => ({
+      texto: SECCION_POR_ID[id].nombre,
+      nota: id === orden[0] ? 'Lo primero del recorrido' : undefined,
+      accion: () => { editarProducto(l.id, { s: id }); pintarComprador(); }
+    })) } }));
 }
 
 /* ---------- pintar la checklist ---------- */
@@ -211,6 +271,43 @@ export function pintarComprador() {
   let cuerpo = '';
   const grupos = new Map();
 
+  /* CON TIENDA ELEGIDA manda su recorrido: las secciones en el orden
+     en que se pasa por ellas, y lo cogido baja al final de cada una. */
+  const ruta = calcularGrupos(c);
+  if (ruta) {
+    if (pasillo) { pintarPasillo(c, ruta, nombreTienda, p); return; }
+
+    for (const g of ruta) {
+      const hecha = g.hechos === g.total;
+      cuerpo += `<div class="cmp-grupo cmp-seccion" data-completa="${hecha}">
+        <span><b class="cmp-sec-n">${String(g.numero).padStart(2, '0')}</b> · ${esc(g.nombre).toUpperCase()}</span>
+        <span class="cmp-sec-h">${hecha ? 'Hecho' : `${g.hechos} de ${g.total}`}</span></div>`;
+      cuerpo += g.items.map(x => lineaHTML(x.l, x.i) + (
+        g.seccion === 'sin-seccion' && x.l.k === 'p' && !x.l.hecho
+          ? `<button class="cmp-asignar" data-asignar="${x.i}">Asignar sección</button>` : '')).join('');
+    }
+
+    raiz.innerHTML = `
+      <div class="cmp-cab cmp-cab-tienda">
+        <small class="rv-meta">COMPRANDO EN</small>
+        <div class="cmp-cab-fila">
+          <h1>${esc(nombreTienda)}</h1>
+          <button class="cmp-cambiar" id="cmp-cambiar-tienda">Cambiar</button>
+        </div>
+        <div class="cmp-barra"><i style="width:${p.pct}%"></i></div>
+        <div class="cmp-cab-pie"><span>${p.hechos} / ${p.total}</span>
+          <button class="cmp-modo" id="cmp-pasillo">Modo pasillo ›</button></div>
+      </div>
+      ${cuerpo}
+      <div class="cmp-anadir">
+        <input id="cmp-extra" type="text" placeholder="Añadir algo no previsto"
+               autocomplete="off" enterkeyhint="done">
+        <button id="cmp-anadir-btn">Añadir</button>
+      </div>`;
+    pintarPie();
+    return;
+  }
+
   for (const x of pendientes) {
     const clave = porTienda
       ? (x.l.k === 'p' ? tiendaPreferida(x.l.id) || 'libre' : 'libre')
@@ -258,6 +355,43 @@ export function pintarComprador() {
   pintarPie();
 }
 
+/* Modo pasillo (pantalla 11): una sola sección, letra grande y botones
+   grandes, para ir cogiendo con una mano. */
+function pintarPasillo(c, grupos, nombreTienda, p) {
+  idxSec = Math.max(0, Math.min(idxSec, grupos.length - 1));
+  const g = grupos[idxSec];
+  const sig = grupos[idxSec + 1];
+
+  raiz.innerHTML = `
+    <div class="ps-cab">
+      <div class="ps-tienda"><span class="tn-sello ps-sello" aria-hidden="true">${esc(inicialesTienda(c.tienda))}</span>
+        <b>${esc(nombreTienda)}</b><span class="ps-cuenta">${p.hechos} / ${p.total}</span></div>
+      <div class="ps-seccion">
+        <button class="ps-flecha" id="ps-prev" aria-label="Sección anterior" ${idxSec === 0 ? 'disabled' : ''}>‹</button>
+        <div><small class="rv-meta">ESTÁS EN · ${g.numero} DE ${grupos.length}</small><h1>${esc(g.nombre)}</h1></div>
+        <button class="ps-flecha" id="ps-next" aria-label="Sección siguiente" ${idxSec === grupos.length - 1 ? 'disabled' : ''}>›</button>
+      </div>
+    </div>
+    <div class="ps-tabs" role="tablist" aria-label="Secciones">
+      ${grupos.map((x, i) => `<button role="tab" data-ps-sec="${i}" aria-selected="${i === idxSec}"
+        data-completa="${x.hechos === x.total}">${String(x.numero).padStart(2, '0')} ${esc(x.nombre.split(' ')[0].toUpperCase())}</button>`).join('')}
+    </div>
+    <div class="ps-lista">
+      ${g.items.map(({ l, i }) => `
+        <button class="ps-fila" data-check="${i}" data-hecho="${l.hecho}" role="checkbox" aria-checked="${l.hecho}">
+          <span class="ps-circulo" aria-hidden="true">${CHECK}</span>
+          <span class="ps-txt"><b>${esc(l.n)}${l.cant > 1 ? ` <i>×${l.cant}</i>` : ''}</b>
+            ${l.urg ? `<small>${textoUrgencia(l.urg)}</small>` : ''}</span>
+          <span class="ps-precio">${l.precio != null ? String(l.precio.toFixed(2)).replace('.', ',') : ''}</span>
+        </button>`).join('')}
+    </div>`;
+
+  pie.innerHTML = `
+    <div class="cmp-total"><span>Llevas</span><b>${euros(total())}</b></div>
+    <button class="btn-principal ps-sig" id="ps-sig">${sig ? `Siguiente: ${esc(sig.nombre)} →` : 'Revisar y finalizar →'}</button>
+    <button class="rv-link rv-crear" id="ps-salir">Salir del modo pasillo</button>`;
+}
+
 function pintarPie() {
   const c = compraActual();
   if (!c) return;
@@ -280,6 +414,7 @@ function pintarPie() {
         <b>${euros(prevision)}</b>
       </div>` : ''}
 
+    ${c.tienda ? '' : `
     <div class="cmp-tiendas" role="group" aria-label="Dónde estás comprando">
       ${tiendasActivas().map(t => `
         <button data-tienda="${t.id}" style="--marca:${t.color}"
@@ -287,7 +422,7 @@ function pintarPie() {
       <button id="cmp-otro-sitio" class="cmp-otro"
               aria-pressed="${!!c.tiendaTexto}">${
         c.tiendaTexto ? c.tiendaTexto : '+ Otro sitio'}</button>
-    </div>
+    </div>`}
 
     ${pidiendoSitio ? `
       <div class="cmp-sitio">

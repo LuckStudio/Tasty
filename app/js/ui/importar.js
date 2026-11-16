@@ -7,8 +7,8 @@
    guarda el histórico completo sin perder lo que ya tenía.
    ============================================================ */
 
-import { validarCopia, fusionar, cuantoHay } from '../datos-io.js?v=27';
-import { euros, $, tap } from '../util.js?v=27';
+import { validarCopia, fusionar, cuantoHay } from '../datos-io.js?v=29';
+import { euros, $, tap } from '../util.js?v=29';
 
 let raiz, previa = null;
 

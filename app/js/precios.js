@@ -23,12 +23,12 @@
    regenerar el catálogo se consolidan las dos.
    ============================================================ */
 
-import { datos, guardar } from './almacen.js?v=27';
-import { POR_ID, PRODUCTOS } from './estado.js?v=27';
+import { datos, guardar } from './almacen.js?v=29';
+import { POR_ID, PRODUCTOS } from './estado.js?v=29';
 import { TIENDAS, TIENDA_POR_ID, favoritas, hayFavoritas }
-  from './tiendas.js?v=27';
-import { baseDeLinea } from './historial.js?v=27';
-import { aBase } from './unidades.js?v=27';
+  from './tiendas.js?v=29';
+import { baseDeLinea } from './historial.js?v=29';
+import { aBase } from './unidades.js?v=29';
 
 /* Un precio se considera viejo pasados estos días. No se borra,
    se muestra atenuado: un dato viejo sigue siendo mejor que

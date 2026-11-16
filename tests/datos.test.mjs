@@ -118,6 +118,15 @@ test('dos tiendas de la misma cadena tienen rutas independientes; se puede copia
   S.copiarRuta('mercadona-a', 'mercadona-c');
   assert.equal(S.rutaDe('mercadona-c').orden[0], 'carnes');
 });
+test('arrastrar con secciones ocultas por medio: la posición visible se traduce a la real', () => {
+  const orden = ['a', 'b', 'c', 'd', 'e'];
+  /* c está oculta: lo que se ve es a b d e. Mover «e» a la posición 2 de las visibles = antes de «d» */
+  assert.equal(S.posicionEnOrden(orden, ['c'], 'e', 2), 3);        // [a b c e d]
+  assert.equal(S.posicionEnOrden(orden, ['c'], 'a', 3), 4);        // al final: sin «a» hay 4
+  assert.equal(S.posicionEnOrden(orden, ['c'], 'd', 0), 0);        // al principio
+  assert.equal(S.posicionEnOrden(orden, [], 'b', 99), 4);          // pasarse del final se queda en el final
+  assert.equal(S.posicionEnOrden(orden, [], 'b', -5), 0);
+});
 test('ocultar una sección inexistente se rechaza', () => assert.equal(S.ocultarSeccion('lidl', 'xyz'), false));
 
 console.log('Unidades');
