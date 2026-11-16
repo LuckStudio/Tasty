@@ -3,6 +3,16 @@ Herramienta para hacer lista de compra, inventario, recetas y más.
 
 Tasty amplía la app «Lista de compra» con planificador de menús, bloque de cocina, cocina simultánea, rutas por supermercado, lectura de tickets sin duplicados y control de precios.
 
+## Abrir la app
+
+La app está en la carpeta `app/`. Al publicar el repositorio con GitHub Pages
+(Settings → Pages → «Deploy from a branch» → `main` y carpeta `/ (root)`), la
+dirección `https://luckstudio.github.io/Tasty/` abre la app directamente
+(`index.html` de la raíz lleva a `app/`).
+
+Ojo: la página del repositorio en github.com (`github.com/LuckStudio/Tasty`)
+siempre enseña este README; eso es normal y no es la app.
+
 ## Estructura
 - `app/`: la aplicación (PWA estática, se sirve tal cual; ver `app/LEEME.md`).
 - `docs/`: brief, plan, informe técnico y diseño.
