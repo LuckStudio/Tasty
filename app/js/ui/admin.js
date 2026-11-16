@@ -3,20 +3,20 @@
    Catálogo editable, iconos, export e importación
    ============================================================ */
 
-import { catalogoCompleto, POR_ID } from '../estado.js?v=22';
+import { catalogoCompleto, POR_ID } from '../estado.js?v=23';
 import { crearProducto, editarProducto, archivarProducto,
          restaurarProducto, borrarProductoNuevo, puedeBorrarse,
          catalogarPendiente, comprobarIconos, exportar,
          importarSnapshot, estadoCatalogo, rutaDe, slugDe,
          localesRedundantes, limpiarRedundantes }
-  from '../catalogo-edit.js?v=22';
-import { pendientes } from '../gastos.js?v=22';
-import { SET_ICONOS } from '../../datos/iconos.js?v=22';
-import { preferencias, alternarPreferencia, moverPreferencia } from '../precios.js?v=22';
-import { tiendasActivas, TIENDA_POR_ID } from '../tiendas.js?v=22';
-import { CATEGORIAS, CAT_POR_ID, FRECUENCIAS } from '../../datos/categorias.js?v=22';
-import { iconoHTML } from '../iconos.js?v=22';
-import { normalizar, $, tap } from '../util.js?v=22';
+  from '../catalogo-edit.js?v=23';
+import { pendientes } from '../gastos.js?v=23';
+import { SET_ICONOS } from '../../datos/iconos.js?v=23';
+import { preferencias, alternarPreferencia, moverPreferencia } from '../precios.js?v=23';
+import { tiendasActivas, TIENDA_POR_ID } from '../tiendas.js?v=23';
+import { CATEGORIAS, CAT_POR_ID, FRECUENCIAS } from '../../datos/categorias.js?v=23';
+import { iconoHTML } from '../iconos.js?v=23';
+import { normalizar, $, tap } from '../util.js?v=23';
 
 let raiz;
 let pantalla = 'lista';     // lista | editor | iconos | datos

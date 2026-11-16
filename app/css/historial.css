@@ -1,0 +1,48 @@
+/* ============================================================
+   HISTÓRICO DE PRECIOS
+   ============================================================ */
+
+.hp-tarjeta {
+  margin: 0.8rem var(--pad-x) 0; padding: 1.1rem 1.1rem 0.9rem;
+  background: var(--ticket); border: 1px solid var(--line-sutil); border-radius: var(--r-lg);
+}
+.hp-cab { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.8rem; }
+.hp-precio { display: flex; align-items: baseline; gap: 0.2rem; }
+.hp-num { font-family: var(--f-titulo); font-size: 2rem; font-weight: 700; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+.hp-suf { font-family: var(--f-mono); font-size: 0.9rem; color: var(--muted); }
+.hp-toggle { display: flex; padding: 3px; background: var(--papel); border-radius: var(--r-pill); }
+.hp-toggle button { min-height: 36px; padding: 0 0.8rem; border-radius: var(--r-pill); font-family: var(--f-mono); font-size: 0.72rem; }
+.hp-toggle button[aria-pressed="true"] { background: var(--ticket); box-shadow: 0 1px 3px rgba(0,0,0,0.12); font-weight: 700; }
+
+.hp-chip {
+  display: inline-block; margin-top: 0.6rem; padding: 0.3rem 0.7rem; border-radius: var(--r-pill);
+  font-size: 0.74rem; font-weight: 600; background: var(--papel); color: var(--muted-2);
+}
+.hp-baja { color: var(--hay); background: color-mix(in srgb, var(--hay) 13%, transparent); }
+.hp-sube { color: var(--agotado); background: color-mix(in srgb, var(--agotado) 13%, transparent); }
+
+.hp-svg { display: block; width: 100%; height: auto; margin-top: 0.8rem; }
+.hp-rej { stroke: var(--perforado); stroke-width: 1; stroke-dasharray: 3 4; }
+.hp-eje { font-family: var(--f-mono); font-size: 9px; fill: var(--muted); }
+.hp-lin { fill: none; stroke: var(--c); stroke-width: 2.4; stroke-linejoin: round; stroke-linecap: round; }
+.hp-lin.hp-alt { stroke-width: 1.8; stroke-dasharray: 5 4; }
+.hp-pto { fill: var(--ticket); stroke: var(--c); stroke-width: 1.6; }
+.hp-ult { fill: var(--c); stroke: var(--ticket); stroke-width: 2; }
+
+.hp-leyenda { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 0.4rem; font-size: 0.74rem; color: var(--muted-2); }
+.hp-leyenda i { display: inline-block; width: 18px; height: 0; border-top: 2.4px solid var(--c); vertical-align: middle; margin-right: 0.35rem; }
+.hp-leyenda i.hp-alt { border-top-style: dashed; border-top-width: 2px; }
+
+.hp-periodos { display: flex; gap: 6px; justify-content: flex-end; margin-top: 0.6rem; }
+.hp-periodos button { min-width: 48px; min-height: 40px; border-radius: var(--r-md); font-family: var(--f-mono); font-size: 0.72rem; }
+.hp-periodos button[aria-pressed="true"] { background: var(--tinta); color: var(--papel); font-weight: 700; }
+
+.hp-vacio { text-align: center; padding: 1.4rem 0.4rem; }
+.hp-vacio .rv-ico { margin: 0 auto 0.8rem; width: 64px; height: 64px; font-size: 2rem; }
+.hp-vacio .ga-nota { padding-top: 0.6rem; }
+
+.hp-tabla { margin: 0 var(--pad-x); background: var(--ticket); border: 1px solid var(--line-sutil); border-radius: var(--r-lg); overflow: hidden; }
+.hp-fila { display: grid; grid-template-columns: 0.8fr 1.2fr 1fr 0.9fr; gap: 0.4rem; padding: 0.75rem 1rem; font-family: var(--f-mono); font-size: 0.74rem; font-variant-numeric: tabular-nums; border-bottom: 1px dashed var(--perforado); }
+.hp-fila:last-child { border-bottom: 0; }
+.hp-fila span:last-child { text-align: right; }
+.hp-cabt { font-size: 0.6rem; letter-spacing: 0.1em; color: var(--muted); border-bottom: 1px solid var(--perforado); }

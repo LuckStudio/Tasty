@@ -14,10 +14,11 @@
    veces, la app lo señala para que lo añadas.
    ============================================================ */
 
-import { datos, guardar } from './almacen.js?v=22';
-import { POR_ID, PRODUCTOS } from './estado.js?v=22';
-import { aprenderDeTicket } from './precios.js?v=22';
-import { nuevoId, normalizar } from './util.js?v=22';
+import { datos, guardar } from './almacen.js?v=23';
+import { POR_ID, PRODUCTOS } from './estado.js?v=23';
+import { aprenderDeTicket } from './precios.js?v=23';
+import { nuevoId, normalizar } from './util.js?v=23';
+import { unidadNormal } from './unidades.js?v=23';
 
 /* A partir de cuántas apariciones se sugiere catalogar */
 export const UMBRAL_SUGERENCIA = 3;
@@ -30,6 +31,18 @@ export function suscribirGastos(fn) {
 function avisar() {
   guardar();
   oyentes.forEach(fn => fn());
+}
+
+/* Cantidad comprada y precio normalizado de una línea (opcionales).
+   Sirven para productos a peso: 0,612 kg a 3,49 €/kg. Siempre se
+   reconstruyen limpios: un ticket importado puede traer cualquier cosa. */
+function extraCantidad(l) {
+  const out = {};
+  const v = Number(l?.q?.v), u = unidadNormal(l?.q?.u);
+  if (v > 0 && v < 100000 && u) out.q = { v: Math.round(v * 1000) / 1000, u };
+  const pb = Number(l?.pb);
+  if (pb > 0 && pb < 100000) out.pb = Math.round(pb * 100) / 100;
+  return out;
 }
 
 /* ---------- pendientes de catalogar ---------- */
@@ -146,6 +159,7 @@ export function validarTicket(texto) {
       c: id ? POR_ID[id].c : (typeof l.c === 'string' ? l.c : null),
       cant: Math.max(1, Math.min(999, parseInt(l.cant, 10) || 1)),
       precio: Number.isFinite(l.precio) ? Math.round(l.precio * 100) / 100 : null,
+      ...extraCantidad(l),
       nuevo: !!l.nuevo || !id
     });
   }
@@ -203,6 +217,7 @@ export function actualizarTicket(id, { tienda, fecha, pago, lineas }) {
       cant: Math.max(1, parseInt(l.cant, 10) || 1),
       precio: Number.isFinite(l.precio) ? Math.round(l.precio * 100) / 100 : null,
       estimado: false,        // al editarlo a mano deja de ser estimación
+      ...extraCantidad(l),
       nuevo: !l.id
     }));
 
@@ -240,6 +255,7 @@ export function crearTicketManual({ tienda, fecha, lineas }) {
       c: l.id ? POR_ID[l.id]?.c ?? null : null,
       cant: Math.max(1, parseInt(l.cant, 10) || 1),
       precio: Number.isFinite(l.precio) ? Math.round(l.precio * 100) / 100 : null,
+      ...extraCantidad(l),
       nuevo: !l.id
     }));
 

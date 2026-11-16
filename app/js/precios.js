@@ -23,10 +23,12 @@
    regenerar el catálogo se consolidan las dos.
    ============================================================ */
 
-import { datos, guardar } from './almacen.js?v=22';
-import { POR_ID, PRODUCTOS } from './estado.js?v=22';
+import { datos, guardar } from './almacen.js?v=23';
+import { POR_ID, PRODUCTOS } from './estado.js?v=23';
 import { TIENDAS, TIENDA_POR_ID, favoritas, hayFavoritas }
-  from './tiendas.js?v=22';
+  from './tiendas.js?v=23';
+import { baseDeLinea } from './historial.js?v=23';
+import { aBase } from './unidades.js?v=23';
 
 /* Un precio se considera viejo pasados estos días. No se borra,
    se muestra atenuado: un dato viejo sigue siendo mejor que
@@ -233,6 +235,26 @@ export function aprenderDeTicket(ticket) {
     if (l.estimado) continue;
     const p = POR_ID[l.id];
     if (!p) continue;
+
+    /* Producto a peso: el ticket sí dice el €/kg (o el peso y el
+       importe). Se guarda ese precio normalizado, no «lo que costó
+       esta bolsa», que no dice nada del precio del kilo. */
+    if (l.pb > 0 || l.q?.v > 0) {
+      const base = baseDeLinea(l, p);
+      if (base != null) {
+        if (!datos.preciosLocal[l.id]) datos.preciosLocal[l.id] = {};
+        const ant = datos.preciosLocal[l.id][ticket.tienda] || {};
+        const nuevo = { ...ant, b: base, d: ticket.fecha.slice(0, 10) };
+        /* Si se conoce el formato de venta, el precio de formato se
+           recalcula con el €/kg nuevo */
+        const enBase = ant.q ? aBase(ant.q, ant.u, p) : null;
+        if (enBase != null) nuevo.f = Math.round(base * enBase * 100) / 100;
+        datos.preciosLocal[l.id][ticket.tienda] = nuevo;
+        aprendidos++;
+        continue;
+      }
+    }
+
     /* Del ticket solo se conoce lo pagado por lo que se llevó.
        Se registra como formato de una unidad de compra. */
     const unitario = l.precio / l.cant;

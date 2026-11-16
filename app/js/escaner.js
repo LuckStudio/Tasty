@@ -15,8 +15,8 @@
      escanear()            todo el recorrido
    ============================================================ */
 
-import { generar } from './gemini.js?v=22';
-import { normalizar } from './util.js?v=22';
+import { generar } from './gemini.js?v=23';
+import { normalizar } from './util.js?v=23';
 
 /* ---------- lo que se le pide a Gemini ---------- */
 
@@ -269,7 +269,10 @@ export function aBorrador(lectura, { productos, tiendas, buscarAlias: memoria })
         autoEnlazada: !!enlazado && !deMemoria,
         sugerido: m && !enlazado ? { id: m.id, nombre: m.nombre } : null,
         pesoKg: l.pesoKg,
-        precioKg: l.precioKg
+        precioKg: l.precioKg,
+        /* Producto a peso: se guarda cuánto pesó y a cuánto el kilo */
+        ...(l.pesoKg ? { q: { v: l.pesoKg, u: 'kg' } } : {}),
+        ...(l.precioKg ? { pb: l.precioKg } : {})
       };
     })
   };

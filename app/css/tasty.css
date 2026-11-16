@@ -263,3 +263,16 @@ a { color: var(--accent); }
 .res-pasos button { width: 38px; height: 36px; }
 .res-pasos span { font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
 .res-quitar { width: 40px; height: 40px; }
+
+/* ---------- datos de la ficha de producto ---------- */
+
+.fi-datos { padding: 0.4rem var(--pad-x) 0.6rem; }
+.fi-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 0.5rem 0; }
+.fi-chip { padding: 0.3rem 0.7rem; border-radius: var(--r-pill); background: var(--ticket); border: 1px solid var(--line-sutil); font-size: 0.74rem; font-weight: 500; }
+.fi-baja { color: var(--hay); } .fi-sube { color: var(--agotado); }
+.fi-ticket { padding: 0.3rem 0.6rem; border: 1px dashed var(--perforado); border-radius: var(--r-sm); font-family: var(--f-mono); font-size: 0.68rem; overflow-wrap: anywhere; }
+.fi-hist { width: 100%; display: flex; justify-content: space-between; align-items: center; min-height: 52px; padding: 0 1rem; margin: 0.4rem 0 0.8rem; background: var(--ticket); border: 1px solid var(--line-sutil); border-radius: var(--r-md); font-weight: 600; font-size: 0.9rem; }
+.fi-hist b { font-size: 1.3rem; color: var(--accent); }
+.fi-dato { display: block; margin-top: 0.8rem; }
+.fi-dato span { display: block; font-size: 0.78rem; color: var(--muted-2); margin-bottom: 0.3rem; }
+.fi-dato .ga-fecha { width: 100%; padding: 0 0.9rem; }

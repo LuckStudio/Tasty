@@ -2,7 +2,8 @@
    Ejecutar:  node tests/diseno.test.mjs */
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { contraste, acentoAccesible, aRGB } from '../app/js/color.js';
+import { app } from './_app.mjs';
+const { contraste, acentoAccesible, aRGB } = await app('js/color.js');
 
 const css = readFileSync(new URL('../app/css/base.css', import.meta.url), 'utf8');
 const bloque = (inicio) => {

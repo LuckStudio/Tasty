@@ -3,20 +3,26 @@
    Precios por supermercado, comparativa y preferencia
    ============================================================ */
 
-import { POR_ID, cantidad, sumar, alternar } from '../estado.js?v=22';
+import { POR_ID, cantidad, sumar, alternar } from '../estado.js?v=23';
 import { preciosDe, guardarPrecio, borrarPrecio, preferencias,
          alternarPreferencia, moverPreferencia, calcularBase, aNumero,
          formatoBase, FORMATOS, NOMBRE_BASE, DIAS_VIEJO,
          equivalentes, enlazarEquivalente, desenlazarEquivalente,
-         masBaratoQue, marcaDe, fijarMarca } from '../precios.js?v=22';
-import { tiendasActivas, TIENDA_POR_ID } from '../tiendas.js?v=22';
-import { CAT_POR_ID } from '../../datos/categorias.js?v=22';
-import { PRODUCTOS } from '../estado.js?v=22';
-import { historialHTML } from './stats.js?v=22';
+         masBaratoQue, marcaDe, fijarMarca } from '../precios.js?v=23';
+import { tiendasActivas, TIENDA_POR_ID } from '../tiendas.js?v=23';
+import { CAT_POR_ID } from '../../datos/categorias.js?v=23';
+import { PRODUCTOS } from '../estado.js?v=23';
+import { historialHTML } from './stats.js?v=23';
 import { periodicidad, fijarPeriodicidad, textoOrigen, ultimaCompra,
-         diasDesde } from '../reposicion.js?v=22';
-import { iconoHTML } from '../iconos.js?v=22';
-import { euros, $, tap } from '../util.js?v=22';
+         diasDesde } from '../reposicion.js?v=23';
+import { iconoHTML } from '../iconos.js?v=23';
+import { datos } from '../almacen.js?v=23';
+import { editarProducto } from '../catalogo-edit.js?v=23';
+import { SECCIONES, seccionDe, SECCION_POR_ID } from '../secciones.js?v=23';
+import { textosDe as textosDeTicket } from '../alias.js?v=23';
+import { recetas as todasLasRecetas } from '../recetas.js?v=23';
+import { serie, tendencia } from '../historial.js?v=23';
+import { euros, esc, $, tap } from '../util.js?v=23';
 
 let fondo, cuerpo, idActual = null, formAbierto = false, tiendaForm = null;
 
@@ -32,6 +38,13 @@ export function iniciarFicha(nodoFondo, nodoCuerpo) {
     const t = e.target;
 
     if (t.closest('#fi-cerrar')) { cerrarFicha(); return; }
+
+    if (t.closest('#fi-historial')) {
+      const id = idActual;
+      cerrarFicha();
+      document.dispatchEvent(new CustomEvent('abrir-historial', { detail: id }));
+      return;
+    }
 
     const pref = t.closest('[data-pref]');
     if (pref) { tap(); alternarPreferencia(idActual, pref.dataset.pref); pintar(); return; }
@@ -120,6 +133,18 @@ export function iniciarFicha(nodoFondo, nodoCuerpo) {
     if (e.target.closest('#fi-form')) refrescarPrevia();
   });
   cuerpo.addEventListener('change', e => {
+    if (e.target.id === 'fi-seccion') {
+      /* «Según categoría» = sin elegir: se quita la sección propia */
+      editarProducto(idActual, { s: e.target.value || undefined });
+      pintar();
+      return;
+    }
+    if (e.target.id === 'fi-pu') {
+      const g = aNumero(e.target.value);
+      editarProducto(idActual, { pu: g > 0 && g < 100000 ? Math.round(g * 10) / 10 : undefined });
+      pintar();
+      return;
+    }
     if (e.target.closest('#fi-form')) refrescarPrevia();
   });
   cuerpo.addEventListener('keydown', e => {
@@ -244,6 +269,8 @@ function pintar() {
       </button>
     </div>
 
+    ${bloqueFicha(p)}
+
     <div class="fi-lista">
       <div class="fi-cant">
         <span>En la lista</span>
@@ -305,6 +332,54 @@ function pintar() {
 }
 
 /* ------------------------------------------------------------
+   DATOS DE LA FICHA: sección, peso medio, tendencia, textos de
+   ticket y recetas. Lo editable (sección, peso medio) vive en la
+   capa editable del catálogo, así que se exporta con el resto.
+   ------------------------------------------------------------ */
+function bloqueFicha(p) {
+  const sec = seccionDe(p);
+  const propia = !!(p.s && SECCION_POR_ID[p.s]);
+  const todos = serie(p.id, datos.tickets, p);
+  const tend = tendencia(todos);
+  const textos = textosDeTicket(p.id);
+  const enRecetas = todasLasRecetas().filter(r => (r.ingredientes || []).some(i => i.id === p.id));
+
+  const chipTend = !tend ? '' : tend.estado === 'baja' ? `<span class="fi-chip fi-baja">↓ ${tend.pct} % en 3 meses</span>`
+    : tend.estado === 'sube' ? `<span class="fi-chip fi-sube">↑ ${tend.pct} % en 3 meses</span>`
+    : '<span class="fi-chip">Precio estable</span>';
+
+  return `
+    <div class="fi-datos">
+      <div class="fi-chips">
+        <span class="fi-chip">${esc(SECCION_POR_ID[sec]?.nombre || 'Sin sección')}</span>
+        <span class="fi-chip">Se vende por ${p.u === 'ud' ? 'unidad' : p.u === 'l' ? 'litro' : 'kg'}</span>
+        ${chipTend}
+      </div>
+
+      <button class="fi-hist" id="fi-historial">
+        <span>Cómo ha cambiado el precio</span><b aria-hidden="true">›</b></button>
+
+      <label class="fi-dato"><span>Sección del supermercado</span>
+        <select id="fi-seccion" class="ga-fecha">
+          <option value="">Según su categoría (${esc(SECCION_POR_ID[seccionDe({ c: p.c })]?.nombre || '—')})</option>
+          ${SECCIONES.map(s => `<option value="${s.id}" ${propia && p.s === s.id ? 'selected' : ''}>${esc(s.nombre)}</option>`).join('')}
+        </select></label>
+
+      ${p.u === 'kg' ? `
+      <label class="fi-dato"><span>Peso medio de una unidad (g)</span>
+        <input id="fi-pu" class="ga-fecha" inputmode="decimal" placeholder="Ej.: 85"
+               value="${p.pu ? String(p.pu).replace('.', ',') : ''}"></label>
+      <p class="ga-nota">Sirve para pasar de «6 kiwis» a gramos en recetas y comparar precios.</p>` : ''}
+
+      ${textos.length ? `<p class="fi-label">Así aparece en los tickets</p>
+        <div class="fi-chips">${textos.map(t => `<span class="fi-ticket">${esc(t.texto.toUpperCase())}</span>`).join('')}</div>` : ''}
+
+      ${enRecetas.length ? `<p class="fi-label">En tus recetas</p>
+        <div class="fi-chips">${enRecetas.map(r => `<span class="fi-chip">${esc(r.nombre)}</span>`).join('')}</div>` : ''}
+    </div>`;
+}
+
+/* ------------------------------------------------------------
    CADA CUÁNTO SE COMPRA
 
    Si hay historial suficiente la cifra sale sola de los tickets.
@@ -332,7 +407,7 @@ function bloqueMarca(id) {
       </div>
       ${estricta ? `
         <div class="fi-campos" style="margin-top:0.7rem">
-          <label class="fi-campo">
+          <label class="fi-dato">
             <span class="sr">Qué marca</span>
             <input id="fi-marca-txt" type="text"
                    value="${(m?.texto || '').replace(/"/g, '&quot;')}"
@@ -437,7 +512,7 @@ function bloquePeriodicidad(id) {
       : '<p class="fi-periodo-nota">Todavía no lo has comprado con la app.</p>'}
 
       <div class="fi-campos" style="margin-top:0.8rem">
-        <label class="fi-campo">
+        <label class="fi-dato">
           <span class="sr">Días entre compras</span>
           <input id="fi-periodo" type="text" inputmode="numeric"
                  value="${per.origen === 'manual' ? per.dias : ''}"
@@ -468,14 +543,14 @@ function formularioHTML(p, sugeridas) {
 
       <p class="fi-label">Lo que pagas en caja</p>
       <div class="fi-campos">
-        <label class="fi-campo">
+        <label class="fi-dato">
           <span class="sr">Precio</span>
           <input id="fi-precio" type="text" inputmode="decimal"
                  placeholder="1,29" autocomplete="off">
           <b>€</b>
         </label>
         <span class="fi-por">por</span>
-        <label class="fi-campo">
+        <label class="fi-dato">
           <span class="sr">Cantidad del formato</span>
           <input id="fi-cantidad" type="text" inputmode="decimal"
                  placeholder="${p.u === 'ud' ? '1' : '200'}" autocomplete="off">

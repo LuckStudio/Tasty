@@ -8,19 +8,19 @@ import { listaTickets, ticketPorId, borrarTicket, validarTicket,
          importarTicket, crearTicketManual, actualizarTicket,
          buscarProductos, pendientes, pendientesSugeridos,
          descartarPendiente, resumenGasto, UMBRAL_SUGERENCIA }
-  from '../gastos.js?v=22';
-import { tiendasActivas, TIENDA_POR_ID } from '../tiendas.js?v=22';
-import { POR_ID } from '../estado.js?v=22';
-import { aNumero } from '../precios.js?v=22';
-import { iconoHTML } from '../iconos.js?v=22';
-import { pintarStats, fijarPeriodo } from './stats.js?v=22';
-import { escanear } from '../escaner.js?v=22';
-import { hayClave } from '../gemini.js?v=22';
-import { buscarAlias, aprenderAlias } from '../alias.js?v=22';
+  from '../gastos.js?v=23';
+import { tiendasActivas, TIENDA_POR_ID } from '../tiendas.js?v=23';
+import { POR_ID } from '../estado.js?v=23';
+import { aNumero } from '../precios.js?v=23';
+import { iconoHTML } from '../iconos.js?v=23';
+import { pintarStats, fijarPeriodo } from './stats.js?v=23';
+import { escanear } from '../escaner.js?v=23';
+import { hayClave } from '../gemini.js?v=23';
+import { buscarAlias, aprenderAlias } from '../alias.js?v=23';
 import { abrirRevision, cerrarRevision, pintarRevision, clicRevision, entradaRevision }
-  from './revision.js?v=22';
-import { PRODUCTOS } from '../estado.js?v=22';
-import { euros, tap, esc, $ } from '../util.js?v=22';
+  from './revision.js?v=23';
+import { PRODUCTOS } from '../estado.js?v=23';
+import { euros, tap, esc, $ } from '../util.js?v=23';
 
 let raiz;
 let pantalla = 'lista';        // lista | importar | editor | stats | escaneo | revision
@@ -46,7 +46,7 @@ function borradorDe(t) {
     fecha: t.fecha.slice(0, 10),
     pago: t.pago || 'tarjeta',
     lineas: t.lineas.map(l => ({
-      id: l.id, n: l.n, c: l.c, cant: l.cant, precio: l.precio
+      id: l.id, n: l.n, c: l.c, cant: l.cant, precio: l.precio, q: l.q, pb: l.pb
     }))
   };
 }

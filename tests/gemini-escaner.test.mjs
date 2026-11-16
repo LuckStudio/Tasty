@@ -1,6 +1,7 @@
 /* Pruebas de la lógica de Gemini y del escáner (sin navegador ni red).
    Ejecutar:  node tests/gemini-escaner.test.mjs */
 import assert from 'node:assert/strict';
+import { app } from './_app.mjs';
 
 /* --- simulacros del navegador --- */
 const mem = new Map();
@@ -21,8 +22,8 @@ globalThis.fetch = async (url, op) => {
 const ok = cuerpo => ({ status: 200, cuerpo });
 const ko = (status, message = '') => ({ status, cuerpo: { error: { message } } });
 
-const G = await import('../app/js/gemini.js');
-const E = await import('../app/js/escaner.js');
+const G = await app('js/gemini.js');
+const E = await app('js/escaner.js');
 
 let n = 0;
 const test = async (nombre, fn) => {

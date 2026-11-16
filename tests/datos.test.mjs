@@ -2,6 +2,7 @@
    memoria de textos de ticket, migración y fusión segura.
    Ejecutar:  node tests/datos.test.mjs */
 import assert from 'node:assert/strict';
+import { app } from './_app.mjs';
 
 const mem = new Map();
 globalThis.localStorage = {
@@ -20,11 +21,11 @@ mem.set('luckstudio_compra', JSON.stringify({
   prefTienda: { 101: ['mercadona'] }
 }));
 
-const A = await import('../app/js/almacen.js');
-const S = await import('../app/js/secciones.js');
-const U = await import('../app/js/unidades.js');
-const L = await import('../app/js/alias.js');
-const IO = await import('../app/js/datos-io.js');
+const A = await app('js/almacen.js');
+const S = await app('js/secciones.js');
+const U = await app('js/unidades.js');
+const L = await app('js/alias.js');
+const IO = await app('js/datos-io.js');
 const { datos } = A;
 
 let n = 0;
@@ -55,7 +56,7 @@ test('una sección elegida a mano manda; una inventada se ignora', () => {
   assert.equal(S.seccionDe(null), S.SIN_SECCION);
 });
 test('toda categoría del catálogo tiene sección', async () => {
-  const { CATEGORIAS } = await import('../app/datos/categorias.js');
+  const { CATEGORIAS } = await app('datos/categorias.js');
   for (const c of CATEGORIAS) assert.notEqual(S.seccionDe({ c: c.id }), S.SIN_SECCION, c.id);
 });
 test('el orden completo añade al final las secciones que la ruta no conoce y limpia basura', () => {
