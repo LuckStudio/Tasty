@@ -1,0 +1,235 @@
+/* ============================================================
+   BASE — tokens del sistema visual LuckStudio
+   ------------------------------------------------------------
+   TEMA
+     El atributo data-tema del <html> manda:
+       "auto"    sigue al sistema operativo (por defecto)
+       "claro"   fuerza claro
+       "oscuro"  fuerza oscuro
+
+   En oscuro no se invierte sin más: el negro pasa a ser fondo
+   y el acento naranja sube un punto de saturación porque sobre
+   negro se apaga. Las líneas de medio píxel se mantienen, pero
+   en blanco a muy baja opacidad, como en el footer del sitio.
+   ============================================================ */
+
+:root {
+  --black:  #0a0a0a;
+  --white:  #ffffff;
+  --off:    #f5f4f0;
+  --accent: #ff7b00;
+
+  --muted:   rgba(10,10,10,0.38);
+  --muted-2: rgba(10,10,10,0.55);
+  --line:    rgba(10,10,10,0.12);
+  --line-sutil: rgba(10,10,10,0.07);
+
+  /* Si el icono SVG hay que invertirlo o no en este tema */
+  --invertir: 0;
+  --invertir-sel: 1;
+
+  --pad-x: 5vw;
+
+  /* alturas del shell, se usan para reservar espacio */
+  --barra-alto: 52px;
+  --nav-alto: 62px;
+
+  --curva: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+  /* zona segura de iPhone con notch */
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+
+  color-scheme: light;
+}
+
+/* Valores del tema oscuro. Están dos veces a propósito: una
+   para cuando lo pide el sistema y otra para cuando el usuario
+   lo fuerza desde ajustes. */
+
+:root[data-tema="oscuro"] {
+  --black:  #ffffff;      /* lo que antes era texto ahora es claro */
+  --white:  #0a0a0a;      /* y lo que era fondo ahora es oscuro    */
+  --off:    #161616;
+  --accent: #ff8c1a;
+
+  --muted:   rgba(255,255,255,0.42);
+  --muted-2: rgba(255,255,255,0.62);
+  --line:    rgba(255,255,255,0.14);
+  --line-sutil: rgba(255,255,255,0.08);
+
+  --invertir: 1;
+  --invertir-sel: 0;
+
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-tema="claro"]) {
+    --black:  #ffffff;
+    --white:  #0a0a0a;
+    --off:    #161616;
+    --accent: #ff8c1a;
+
+    --muted:   rgba(255,255,255,0.42);
+    --muted-2: rgba(255,255,255,0.62);
+    --line:    rgba(255,255,255,0.14);
+    --line-sutil: rgba(255,255,255,0.08);
+
+    --invertir: 1;
+    --invertir-sel: 0;
+
+    color-scheme: dark;
+  }
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  height: 100%;
+}
+
+body {
+  font-family: 'Host Grotesk', -apple-system, BlinkMacSystemFont,
+               'Segoe UI', sans-serif;
+  font-weight: 300;
+  background: var(--white);
+  color: var(--black);
+  height: 100%;
+  overflow: hidden;               /* el scroll vive dentro de .vista */
+  overscroll-behavior: none;      /* sin rebote de recarga en iOS */
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button, input, textarea, select {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  border-radius: 0;                /* border-radius cero en todo */
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+button { cursor: pointer; }
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ---------- tipografía ---------- */
+
+.titulo {
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+}
+
+/* El patrón de metadato de LuckStudio: minúscula pequeña,
+   mayúsculas y letter-spacing amplio */
+.label {
+  font-size: 0.62rem;
+  font-weight: 300;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.oculto { display: none !important; }
+
+/* Solo para lectores de pantalla */
+.sr {
+  position: absolute;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ---------- animación ---------- */
+
+@keyframes entrar {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
+
+@keyframes subir {
+  from { transform: translateY(100%); }
+  to   { transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================================
+   AVISO DE ARRANQUE FALLIDO
+   Solo se ve si el JavaScript no ha llegado a funcionar
+   ============================================================ */
+
+#fallo-carga {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  background: var(--white);
+  padding: 12vh var(--pad-x) 0;
+  overflow-y: auto;
+}
+#fallo-carga h2 {
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  margin-bottom: 0.9rem;
+}
+#fallo-carga p {
+  font-size: 0.88rem;
+  line-height: 1.65;
+  color: rgba(10,10,10,0.55);
+  margin-bottom: 1.2rem;
+}
+#fallo-carga code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.78rem;
+  word-break: break-all;
+}
+#fallo-carga pre {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.72rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+  background: #f5f4f0;
+  padding: 0.9rem;
+  margin-bottom: 1.2rem;
+  max-height: 34vh;
+  overflow-y: auto;
+}
+#fallo-carga button {
+  width: 100%;
+  padding: 1.05rem;
+  margin-bottom: 0.5px;
+  background: #0a0a0a;
+  color: #fff;
+  border: none;
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+#fallo-carga .fallo-sec {
+  background: transparent;
+  color: rgba(10,10,10,0.55);
+  border: 0.5px solid rgba(10,10,10,0.12);
+}
+#fallo-carga .fallo-pista {
+  font-size: 0.75rem;
+  margin-top: 1.2rem;
+}

@@ -1,0 +1,423 @@
+/* ============================================================
+   GRID — botones de producto
+   ============================================================ */
+
+.seccion { border-bottom: 0.5px solid var(--line-sutil); }
+
+.seccion-cab {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 1.1rem var(--pad-x) 0.8rem;
+  text-align: left;
+}
+
+.seccion-cab h2 {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  flex: 1;
+}
+
+.seccion-cuenta {
+  font-size: 0.62rem;
+  font-weight: 300;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+}
+
+.seccion-flecha {
+  width: 10px; height: 10px;
+  border-right: 1px solid var(--muted);
+  border-bottom: 1px solid var(--muted);
+  transform: rotate(45deg);
+  transition: transform 0.3s var(--curva);
+  margin-bottom: 3px;
+}
+.seccion[data-abierta="false"] .seccion-flecha {
+  transform: rotate(-45deg);
+  margin-bottom: -3px;
+}
+
+.seccion[data-abierta="false"] .grid { display: none; }
+
+/* ---------- la rejilla ---------- */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5px;
+  background: var(--line-sutil);
+  padding: 0 0 0.5px;
+  border-top: 0.5px solid var(--line-sutil);
+}
+
+@media (min-width: 420px) { .grid { grid-template-columns: repeat(4, 1fr); } }
+@media (min-width: 560px) { .grid { grid-template-columns: repeat(5, 1fr); } }
+
+/* ---------- botón de producto ---------- */
+
+.prod {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  background: var(--white);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.5rem 0.35rem;
+  transition: background 0.18s var(--curva), color 0.18s var(--curva);
+}
+
+.prod-icono {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  font-size: 25px;
+  line-height: 1;
+  flex: 0 0 auto;
+}
+.prod-icono img {
+  width: 100%; height: 100%;
+  object-fit: contain;
+}
+
+/* Inicial como último recurso si no hay SVG ni emoji */
+.prod-inicial {
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: var(--muted);
+}
+
+.prod-nombre {
+  font-size: 0.63rem;
+  font-weight: 400;
+  line-height: 1.25;
+  text-align: center;
+  letter-spacing: -0.005em;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-break: break-word;
+}
+
+/* ---------- seleccionado ---------- */
+
+.prod[aria-pressed="true"] {
+  background: var(--black);
+  color: var(--white);
+}
+.prod[aria-pressed="true"] .prod-inicial { color: rgba(255,255,255,0.45); }
+
+/* Los SVG se dibujan en negro. Se invierten cuando hace falta
+   para que siempre contrasten con el fondo que tienen detrás.
+   Las variables las pone el tema en base.css */
+.prod-icono img { filter: invert(var(--invertir)); }
+.prod[aria-pressed="true"] .prod-icono img { filter: invert(var(--invertir-sel)); }
+
+/* Marca naranja en la esquina: es el acento funcional */
+.prod[aria-pressed="true"]::before {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  border-top: 12px solid var(--accent);
+  border-left: 12px solid transparent;
+}
+
+.prod-cant {
+  position: absolute;
+  bottom: 5px; right: 6px;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  color: var(--accent);
+}
+.prod-cant[hidden] { display: none; }
+
+.prod:active { opacity: 0.75; }
+
+/* ---------- sin resultados ---------- */
+
+.sin-resultados {
+  padding: 3rem var(--pad-x);
+  text-align: center;
+}
+.sin-resultados p {
+  font-size: 0.85rem;
+  color: var(--muted-2);
+  margin-bottom: 1.2rem;
+}
+.sin-resultados button {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.8rem 1.3rem;
+  background: var(--black);
+  color: var(--white);
+}
+
+/* ============================================================
+   RESUMEN
+   ============================================================ */
+
+.res-cab {
+  padding: 2rem var(--pad-x) 1.4rem;
+  border-bottom: 0.5px solid var(--line);
+}
+.res-cab h1 {
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.045em;
+  line-height: 1;
+}
+.res-cab p {
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 0.6rem;
+}
+
+.res-grupo-cab {
+  padding: 1.5rem var(--pad-x) 0.5rem;
+  font-size: 0.6rem;
+  font-weight: 300;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.res-linea {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.85rem var(--pad-x);
+  border-bottom: 0.5px solid var(--line-sutil);
+}
+
+.res-icono {
+  width: 22px; height: 22px;
+  display: grid; place-items: center;
+  font-size: 19px; line-height: 1;
+  flex: 0 0 auto;
+}
+.res-icono img {
+  width: 100%; height: 100%; object-fit: contain;
+  filter: invert(var(--invertir));
+}
+
+.res-nombre {
+  flex: 1;
+  font-size: 0.92rem;
+  font-weight: 300;
+  min-width: 0;
+}
+.res-nombre em {
+  display: block;
+  font-style: normal;
+  font-size: 0.6rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.res-pasos {
+  display: flex;
+  align-items: center;
+  border: 0.5px solid var(--line);
+  flex: 0 0 auto;
+}
+.res-pasos button {
+  width: 32px; height: 30px;
+  display: grid; place-items: center;
+  font-size: 1rem;
+  font-weight: 300;
+  color: var(--muted-2);
+  transition: background 0.18s var(--curva), color 0.18s var(--curva);
+}
+.res-pasos button:active { background: var(--off); color: var(--black); }
+.res-pasos span {
+  min-width: 26px;
+  text-align: center;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.res-quitar {
+  width: 30px; height: 30px;
+  display: grid; place-items: center;
+  color: var(--muted);
+  flex: 0 0 auto;
+}
+.res-quitar svg { width: 15px; height: 15px; }
+
+/* ---------- añadir a mano ---------- */
+
+.res-anadir {
+  display: flex;
+  gap: 0.5px;
+  margin: 1.5rem var(--pad-x) 0;
+  border: 0.5px solid var(--line);
+}
+.res-anadir input {
+  flex: 1;
+  padding: 0.8rem 0.85rem;
+  font-size: 0.88rem;
+}
+.res-anadir input:focus { outline: none; background: var(--off); }
+.res-anadir button {
+  padding: 0 1.1rem;
+  background: var(--black);
+  color: var(--white);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* ---------- acciones ---------- */
+
+.res-acciones {
+  padding: 1.8rem var(--pad-x) 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.btn-principal {
+  width: 100%;
+  padding: 1.05rem;
+  background: var(--black);
+  color: var(--white);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  transition: opacity 0.22s var(--curva);
+}
+.btn-principal:hover  { opacity: 0.78; }
+.btn-principal:active { opacity: 0.6; }
+.btn-principal svg { width: 16px; height: 16px; }
+
+.btn-secundario {
+  width: 100%;
+  padding: 1.05rem;
+  border: 0.5px solid var(--line);
+  color: var(--muted-2);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  transition: color 0.22s var(--curva), border-color 0.22s var(--curva);
+}
+.btn-secundario:hover {
+  color: var(--black);
+  border-color: var(--black);
+}
+
+/* ============================================================
+   AJUSTES (placeholder de fases siguientes)
+   ============================================================ */
+
+.aj-bloque {
+  padding: 1.6rem var(--pad-x);
+  border-bottom: 0.5px solid var(--line-sutil);
+}
+.aj-bloque h2 {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 0.9rem;
+}
+.aj-bloque p {
+  font-size: 0.85rem;
+  font-weight: 300;
+  line-height: 1.65;
+  color: var(--muted-2);
+}
+.aj-dato {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.55rem 0;
+  font-size: 0.82rem;
+  border-bottom: 0.5px solid var(--line-sutil);
+}
+.aj-dato:last-child { border-bottom: none; }
+.aj-dato span:last-child { color: var(--muted); }
+
+.aj-proximo {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+  padding: 0.6rem 0;
+  font-size: 0.85rem;
+  color: var(--muted-2);
+}
+.aj-proximo b {
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: var(--muted);
+  flex: 0 0 auto;
+}
+
+/* La esquina de un producto seleccionado lo saca de la lista.
+   Solo aparece cuando el producto está en la lista. */
+.prod-quitar {
+  position: absolute;
+  top: 0; right: 0;
+  width: 26px; height: 26px;
+  display: grid;
+  place-items: center;
+  font-size: 0.72rem;
+  line-height: 1;
+  color: var(--white);
+  z-index: 2;
+}
+.prod[aria-pressed="true"]::before { z-index: 1; }
+.prod-quitar:active { opacity: 0.5; }
+
+/* ---------- sugeridos ---------- */
+
+.seccion-sug { border-bottom: 0.5px solid var(--line); }
+.seccion-sug .seccion-cab h2 { color: var(--accent); }
+
+.prod-sug { padding-bottom: 1.1rem; }
+
+/* Cuánto hace que se compró: es el dato que hace decidir */
+.prod-hace {
+  position: absolute;
+  bottom: 5px; left: 0; right: 0;
+  text-align: center;
+  font-size: 0.52rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.prod[aria-pressed="true"] .prod-hace { color: rgba(255,255,255,0.55); }
+
+.prod-descartar {
+  position: absolute;
+  top: 0; left: 0;
+  width: 24px; height: 24px;
+  display: grid;
+  place-items: center;
+  font-size: 0.7rem;
+  color: var(--muted);
+  z-index: 2;
+}
+.prod-descartar:active { opacity: 0.4; }
+.prod[aria-pressed="true"] .prod-descartar { color: rgba(255,255,255,0.5); }

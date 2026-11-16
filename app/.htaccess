@@ -1,0 +1,60 @@
+# ============================================================
+#  CONFIGURACIÓN DEL SERVIDOR
+# ------------------------------------------------------------
+#  Todo va envuelto en <IfModule>. Sin eso, si el servidor no
+#  tiene alguno de estos módulos activos, Apache considera la
+#  directiva un error y devuelve un 500 en TODO el subdominio.
+# ============================================================
+
+# ------------------------------------------------------------
+#  Tipos MIME
+#  Los módulos de JavaScript (type="module") solo se ejecutan si
+#  el servidor los entrega como text/javascript. Si los sirve
+#  como texto plano, el navegador los rechaza y la app se ve
+#  pero no responde a nada.
+# ------------------------------------------------------------
+<IfModule mod_mime.c>
+  AddType text/javascript .js
+  AddType text/javascript .mjs
+  AddType text/css .css
+  AddType application/manifest+json .webmanifest
+  AddType application/json .json
+  AddType image/svg+xml .svg
+</IfModule>
+
+# ------------------------------------------------------------
+#  Caché
+#  El HTML y el service worker NUNCA se cachean: son los que
+#  dicen qué versión de todo lo demás hay que pedir. Si el
+#  navegador se queda con una copia vieja de index.html, seguirá
+#  pidiendo los archivos antiguos por mucho que subas los nuevos.
+#
+#  El resto sí se cachea con ganas, porque lleva ?v= en la ruta:
+#  al cambiar la versión cambia la URL y se vuelve a pedir solo.
+# ------------------------------------------------------------
+<IfModule mod_headers.c>
+  <FilesMatch "\.(html|json)$">
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+  </FilesMatch>
+
+  <Files "sw.js">
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+    Header set Service-Worker-Allowed "/"
+  </Files>
+</IfModule>
+
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/html "access plus 0 seconds"
+  ExpiresByType text/javascript "access plus 1 year"
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 month"
+  ExpiresByType image/png "access plus 1 month"
+</IfModule>
+
+# ------------------------------------------------------------
+#  Compresión
+# ------------------------------------------------------------
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/javascript application/json image/svg+xml
+</IfModule>

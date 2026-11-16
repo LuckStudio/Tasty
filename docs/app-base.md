@@ -1,0 +1,68 @@
+# Informe técnico de la app base («Lista de compra» → Tasty)
+
+16 nov 2026 · Auditoría de `app/` tal como se recibió en `listacompra_app.zip` (versión 17 de la app, subida a 18 al renombrar).
+
+## Resumen
+
+| Aspecto | Estado |
+| --- | --- |
+| Tipo | PWA estática: HTML + CSS + JavaScript puro con módulos ES. **Sin framework, sin compilación, sin servidor propio** |
+| Tamaño | ≈ 14.900 líneas, 77 archivos, 792 KB |
+| Datos | Solo en el navegador (`localStorage`, clave `luckstudio_compra`, esquema 8 con migraciones) |
+| Funciona sin conexión | Sí (service worker `sw.js`, caché `compra-vN`) |
+| Despliegue actual | Hostinger, subiendo la carpeta (ver `app/LEEME.md`). `.htaccess` imprescindible |
+| Cuentas / varios usuarios | No. Compartir = enlaces con la lista codificada en la URL y exportar/importar por fusión |
+| Fuentes | Host Grotesk desde Google Fonts (única petición externa) |
+| Llamadas de red de la app | Ninguna a APIs. Solo `fetch HEAD` local para comprobar si existe un icono |
+
+## Auditoría de claves y secretos
+
+- Búsqueda de patrones de claves (`AIza…`, `sk-…`, `ghp_…`, `AKIA…`, `Bearer …`) en todo el código: **0 resultados**.
+- Búsqueda de `gemini`, `generativelanguage`, `api_key`, `apikey`, `secret`, `token`, `password`, `x-goog`: **0 resultados** (solo coincide la palabra «token» en el nombre de «tokens del sistema visual» de CSS).
+- Sin archivos `.env`, `.pem`, `.key` ni carpeta `.git` dentro del zip.
+- El repositorio no tiene historial previo con el código, así que no hay claves en commits antiguos.
+
+**Conclusión: no había ninguna clave que eliminar.** Se añade `.gitignore` que bloquea `.env`, claves y secretos a partir de ahora.
+
+## Diferencia importante con el brief
+
+El brief describe un **escáner de tickets por foto con Gemini**, pero **ese código no está en este zip**: la app no tiene ninguna llamada a Gemini ni a ningún servidor. Lo que sí existe es la importación de tickets pegando texto, el alta manual y el registro al terminar una compra.
+
+Hay que aclarar con el autor dónde está el escáner (otra carpeta, otra versión o un backend aparte). Hasta entonces, M9 y M6 se construyen desde cero en la Fase 1 y 2 respectivamente, con la clave siempre en el servidor.
+
+## Pantallas actuales (`index.html`, vistas `data-vista`)
+
+`grid` (lista) · `resumen` · `gastos` · `ajustes` · `admin` (catálogo) · `precios` · `tiendas` · `importar` · `recordatorios` · `listas` · `cesta` (dónde comprar) · `dieta` (recetas) · `comprador` (modo supermercado) · `ticket`.
+
+Navegación inferior: Lista · Dieta · Resumen · Gastos · Ajustes.
+
+## Lo que ya existe y se mantiene (regla de oro)
+
+- Catálogo de **183 productos** con ids inmutables, archivado en vez de borrado, catálogo editable y por catalogar.
+- Listas múltiples, compartir por enlace (compra / editable), modo comprador con checklist y ticket.
+- Precios por supermercado, €/kg calculado, comparativa sobre cesta común, presupuesto, tienda preferida.
+- Tickets guardados, histórico de compras, estadísticas y evolución de precio (SVG propio).
+- Reposición inteligente, urgencias y recordatorios.
+- Recetas/dieta: `datos/recetas-dieta.js` con ≈ 89 entradas (plan estricto cargable desde un botón); ingredientes enlazados por id de catálogo y cantidad del plan.
+- 10 supermercados base (`datos/tiendas.js`) con color, y altas propias.
+- Estética de ticket (`js/ui/ticket.js`, `css/comprador.css`).
+- Tema claro / oscuro / automático.
+
+## Modelo de datos actual (`js/almacen.js`, esquema 8)
+
+`listas`, `listaActiva`, `compra`, `preciosLocal`, `prefTienda`, `catalogoLocal`, `tiendasLocal`, `tickets`, `pendientes`, `periodicidad`, `sustitutos`, `marcas`, `recetas`, `urgencia`, `sugerenciasFuera`, `recordatorios`, `ajustes`.
+
+## Implicaciones para el plan de desarrollo
+
+1. **Mantener la tecnología actual** (JS puro, sin compilación) es posible y sencillo de desplegar, pero la sincronización entre miembros del hogar y la clave de Gemini en servidor exigen un backend. Decisión pendiente en Fase 1 (Supabase u otra opción). Los datos de `localStorage` se migrarán sin pérdida.
+2. Las recetas existentes no tienen pasos estructurados (duración, activo/espera, recurso): hará falta ampliarlas para la cocina simultánea.
+3. Los productos no tienen todavía sección de supermercado, formato de venta ni peso medio por unidad: migración en Fase 1.
+4. La clave de `localStorage` y los ids del catálogo **no se cambian** para no romper datos ni enlaces compartidos.
+
+## Cambios hechos en la Fase 0
+
+- Código copiado a `app/` sin modificar su lógica.
+- Renombrado visible a **Tasty** (título, manifest, barra superior, textos de compartir, página de reinicio).
+- Iconos de la app regenerados desde `assets/icono/tasty-icono-v1.svg` (180, 192, 512 y 512 «maskable» con margen de seguridad) y favicon/SVG sustituidos.
+- Versión subida a 18 con `versionar.py` (comprobación de módulos correcta).
+- Comprobado en navegador: arranca sin errores de consola, 228 botones en el grid, manifest correcto.

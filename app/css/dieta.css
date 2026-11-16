@@ -1,0 +1,176 @@
+/* ============================================================
+   DIETA Y RECETAS
+   ============================================================ */
+
+.di-recetas { border-top: 0.5px solid var(--line-sutil); }
+
+.di-plan {
+  padding: 0.9rem var(--pad-x) 0.3rem;
+  font-size: 0.56rem;
+  font-weight: 300;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.di-fila {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0 var(--pad-x);
+  border-bottom: 0.5px solid var(--line-sutil);
+}
+.di-fila[data-activa="false"] { opacity: 0.5; }
+
+.di-check {
+  width: 26px; height: 26px;
+  display: grid; place-items: center;
+  font-size: 0.75rem;
+  color: var(--muted);
+  flex: 0 0 auto;
+}
+.di-fila[data-activa="true"] .di-check { color: var(--accent); }
+
+.di-n {
+  flex: 1;
+  min-width: 0;
+  padding: 0.7rem 0;
+  text-align: left;
+  font-size: 0.9rem;
+  font-weight: 300;
+}
+.di-n em {
+  display: block;
+  font-style: normal;
+  font-size: 0.56rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 3px;
+}
+
+.di-nueva {
+  width: 100%;
+  padding: 0.85rem var(--pad-x);
+  text-align: left;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted-2);
+  border-bottom: 0.5px solid var(--line-sutil);
+  transition: color 0.22s var(--curva);
+}
+.di-nueva:hover { color: var(--black); }
+
+/* ---------- activa / inactiva ---------- */
+
+.di-activa {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  margin-top: 1.2rem;
+  padding-top: 1rem;
+  border-top: 0.5px solid var(--line-sutil);
+}
+.di-activa span {
+  font-size: 0.75rem;
+  color: var(--muted-2);
+  line-height: 1.5;
+}
+.di-activa button {
+  flex: 0 0 auto;
+  padding: 0.5rem 0.85rem;
+  border: 0.5px solid var(--line);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted-2);
+}
+
+/* ---------- ingredientes ---------- */
+
+.di-ing {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 0;
+  border-bottom: 0.5px solid var(--line-sutil);
+}
+.di-ing .res-icono { width: 20px; height: 20px; font-size: 17px; }
+
+.di-ing-n {
+  flex: 1;
+  min-width: 0;
+  font-size: 0.86rem;
+  font-weight: 300;
+}
+.di-ing-n em {
+  display: block;
+  font-style: normal;
+  font-size: 0.55rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.di-ing .ga-mini input { width: 34px; }
+.di-ing .pp-unidad select { padding: 0.4rem 0.35rem; font-size: 0.75rem; }
+
+.di-ir {
+  width: 22px;
+  color: var(--muted);
+  font-size: 1rem;
+  flex: 0 0 auto;
+}
+
+.di-notas {
+  width: 100%;
+  padding: 0.75rem 0.8rem;
+  border: 0.5px solid var(--line);
+  font-size: 0.88rem;
+  line-height: 1.55;
+  resize: vertical;
+  background: var(--white);
+}
+.di-notas:focus { outline: none; border-color: var(--black); }
+
+/* ---------- qué podrías cocinar ---------- */
+
+.di-cubierta { padding: 0.7rem 0; }
+.di-faltan {
+  font-size: 0.7rem;
+  line-height: 1.5;
+  color: var(--muted);
+  margin-top: 0.4rem;
+}
+
+/* ---------- estado de la receta en su fila ---------- */
+
+.di-fila[data-lista="true"] .di-n em { color: var(--accent); }
+
+.di-progreso {
+  width: 30px;
+  height: 3px;
+  background: var(--line-sutil);
+  flex: 0 0 auto;
+  overflow: hidden;
+}
+.di-progreso i {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.4s var(--curva);
+}
+
+.di-ed {
+  width: 32px;
+  display: grid;
+  place-items: center;
+  font-size: 0.85rem;
+  color: var(--muted);
+  flex: 0 0 auto;
+}

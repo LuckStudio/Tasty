@@ -1,0 +1,16 @@
+# Secretos: nunca se suben
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets/
+
+# Dependencias y compilados
+node_modules/
+dist/
+build/
+
+# Sistema
+.DS_Store
+Thumbs.db

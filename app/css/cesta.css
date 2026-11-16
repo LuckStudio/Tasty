@@ -1,0 +1,262 @@
+/* ============================================================
+   CESTA ÓPTIMA
+   ============================================================ */
+
+.ce-opciones {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5px;
+  background: var(--line-sutil);
+  margin-top: 1.2rem;
+  border-top: 0.5px solid var(--line-sutil);
+  border-bottom: 0.5px solid var(--line-sutil);
+}
+
+.ce-opcion {
+  background: var(--white);
+  padding: 1.1rem var(--pad-x);
+}
+.ce-opcion[data-mejor="true"] { background: var(--off); }
+
+.ce-tag {
+  display: block;
+  font-size: 0.55rem;
+  font-weight: 300;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.6rem;
+}
+
+.ce-cifra b {
+  display: block;
+  font-size: 1.55rem;
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 1;
+}
+.ce-opcion[data-mejor="true"] .ce-cifra b { color: var(--accent); }
+.ce-cifra span {
+  display: block;
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  color: var(--muted-2);
+  margin-top: 0.4rem;
+}
+
+.ce-nota {
+  font-size: 0.68rem;
+  line-height: 1.55;
+  color: var(--muted);
+  margin-top: 0.7rem;
+}
+.ce-nota b { font-weight: 700; color: var(--black); }
+
+/* ---------- veredicto ---------- */
+
+.ce-veredicto {
+  margin: 1.3rem var(--pad-x) 0;
+  padding: 1.1rem;
+  border: 0.5px solid var(--line);
+  border-left: 3px solid var(--muted);
+}
+.ce-veredicto[data-repartir="true"] { border-left-color: var(--accent); }
+.ce-veredicto b {
+  display: block;
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  margin-bottom: 0.45rem;
+}
+.ce-veredicto p {
+  font-size: 0.82rem;
+  line-height: 1.6;
+  color: var(--muted-2);
+}
+.ce-veredicto p b {
+  display: inline;
+  font-size: inherit;
+  letter-spacing: normal;
+  color: var(--black);
+}
+
+/* ---------- filas ---------- */
+
+.ce-fila {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.9rem;
+  padding: 0.7rem 0 0.7rem 0.7rem;
+  border-bottom: 0.5px solid var(--line-sutil);
+  border-left: 2px solid var(--marca);
+}
+.ce-fila span { font-size: 0.88rem; font-weight: 300; }
+.ce-fila em {
+  display: block;
+  font-style: normal;
+  font-size: 0.56rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 3px;
+}
+.ce-fila b { font-size: 0.95rem; font-weight: 700; letter-spacing: -0.025em; }
+.ce-fila[data-mejor="true"] b { color: var(--accent); }
+
+.ce-parada {
+  display: flex;
+  align-items: baseline;
+  gap: 0.8rem;
+  width: 100%;
+  padding: 0.75rem 0 0.75rem 0.7rem;
+  text-align: left;
+  border-bottom: 0.5px solid var(--line-sutil);
+  border-left: 2px solid var(--marca);
+}
+.ce-parada span { flex: 1; font-size: 0.88rem; font-weight: 300; }
+.ce-parada em {
+  display: block;
+  font-style: normal;
+  font-size: 0.56rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 3px;
+}
+.ce-parada b { font-size: 0.95rem; font-weight: 700; letter-spacing: -0.025em; }
+.ce-parada .seccion-flecha { margin-bottom: 4px; }
+.ce-parada[aria-expanded="false"] .seccion-flecha {
+  transform: rotate(-45deg);
+  margin-bottom: -2px;
+}
+
+.ce-detalle { padding: 0.4rem 0 0.6rem 1.4rem; }
+.ce-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.3rem 0;
+  font-size: 0.82rem;
+  font-weight: 300;
+}
+.ce-item span:nth-child(2) { flex: 1; min-width: 0; }
+.ce-item .res-icono { width: 18px; height: 18px; font-size: 15px; }
+.ce-item b { font-weight: 700; letter-spacing: -0.02em; }
+
+/* ---------- favoritos ---------- */
+
+.tn-fav {
+  width: 28px; height: 28px;
+  display: grid; place-items: center;
+  font-size: 0.95rem;
+  color: var(--muted);
+  flex: 0 0 auto;
+}
+.tn-fav[data-on="true"] { color: var(--accent); }
+
+/* ---------- marca exigida ---------- */
+
+.fi-marca, .fi-eq {
+  margin-top: 1.4rem;
+  padding-top: 1.2rem;
+  border-top: 0.5px solid var(--line);
+}
+
+.res-marca, .cmp-marca {
+  display: block;
+  font-style: normal;
+  font-size: 0.55rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted-2);
+  margin-top: 2px;
+}
+.cmp-marca::before, .res-marca::before { content: '⚑ '; color: var(--accent); }
+
+/* ---------- alternativa más barata ---------- */
+
+.fi-alternativa {
+  padding: 0.9rem;
+  border: 0.5px solid var(--accent);
+  margin-bottom: 0.9rem;
+}
+.fi-alternativa b {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin-bottom: 0.3rem;
+}
+.fi-alternativa span {
+  display: block;
+  font-size: 0.68rem;
+  color: var(--muted);
+}
+.fi-alternativa button {
+  margin-top: 0.6rem;
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.fi-eq-lista { margin-bottom: 0.6rem; }
+.fi-eq-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.45rem 0;
+  border-bottom: 0.5px solid var(--line-sutil);
+}
+.fi-eq-item button:first-child {
+  flex: 1;
+  text-align: left;
+  font-size: 0.85rem;
+  font-weight: 300;
+}
+.fi-eq-item button:last-child {
+  width: 24px;
+  color: var(--muted);
+}
+
+/* ---------- aviso con acción ---------- */
+
+.aviso-accion {
+  position: fixed;
+  left: 50%;
+  bottom: calc(var(--nav-alto) + var(--safe-bottom) + 16px);
+  transform: translateX(-50%);
+  width: calc(100% - 2 * var(--pad-x));
+  max-width: 420px;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  background: var(--black);
+  color: var(--white);
+  padding: 0.75rem 0.9rem;
+  z-index: 60;
+  animation: entrar 0.25s var(--curva);
+}
+.aviso-accion[hidden] { display: none; }
+.aviso-accion span {
+  flex: 1;
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+.aviso-accion button {
+  flex: 0 0 auto;
+  padding: 0.4rem 0.7rem;
+  border: 0.5px solid rgba(255,255,255,0.35);
+  color: var(--white);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.aviso-accion .aviso-x {
+  border: none;
+  padding: 0.4rem;
+  opacity: 0.5;
+}

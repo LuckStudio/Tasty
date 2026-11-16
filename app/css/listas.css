@@ -1,0 +1,223 @@
+/* ============================================================
+   LISTAS
+   ============================================================ */
+
+.ls-fichas {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5px;
+  margin: 1.3rem var(--pad-x) 0;
+}
+
+.ls-ficha {
+  display: flex;
+  align-items: stretch;
+  border: 0.5px solid var(--line);
+  transition: border-color 0.22s var(--curva);
+}
+.ls-ficha[data-activa="true"] { border-color: var(--black); }
+.ls-ficha[data-activa="true"] .ls-usar i { background: var(--accent); }
+
+.ls-usar {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.85rem;
+  text-align: left;
+  min-width: 0;
+}
+.ls-usar i {
+  width: 38px; height: 38px;
+  display: grid; place-items: center;
+  background: var(--off);
+  font-style: normal;
+  font-size: 1.1rem;
+  flex: 0 0 auto;
+}
+.ls-usar span { flex: 1; min-width: 0; font-size: 0.95rem; font-weight: 300; }
+.ls-usar em {
+  display: block;
+  font-style: normal;
+  font-size: 0.55rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 3px;
+}
+
+.ls-ed {
+  width: 40px;
+  display: grid;
+  place-items: center;
+  font-size: 0.9rem;
+  color: var(--muted);
+  border-left: 0.5px solid var(--line-sutil);
+  flex: 0 0 auto;
+}
+
+.ls-emojis {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.ls-emojis button {
+  width: 42px; height: 42px;
+  display: grid; place-items: center;
+  font-size: 1.2rem;
+  border: 0.5px solid var(--line);
+  transition: all 0.2s var(--curva);
+}
+.ls-emojis button[aria-pressed="true"] {
+  border-color: var(--black);
+  background: var(--off);
+}
+
+/* ---------- selector en la barra superior ---------- */
+
+.barra-lista {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: 0;
+  flex: 1;
+  text-align: left;
+}
+.barra-lista i { font-style: normal; font-size: 0.95rem; flex: 0 0 auto; }
+.barra-lista span {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.barra-lista b {
+  font-size: 0.55rem;
+  font-weight: 300;
+  color: var(--muted);
+  flex: 0 0 auto;
+}
+
+/* Aviso de que hay cosas pendientes en otra lista */
+.ls-otras {
+  display: flex;
+  gap: 0.4rem;
+  padding: 0.6rem var(--pad-x);
+  overflow-x: auto;
+  border-bottom: 0.5px solid var(--line-sutil);
+  scrollbar-width: none;
+}
+.ls-otras::-webkit-scrollbar { display: none; }
+.ls-otras button {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.6rem;
+  border: 0.5px solid var(--line);
+  font-size: 0.66rem;
+  color: var(--muted-2);
+  white-space: nowrap;
+}
+.ls-otras button i { font-style: normal; }
+.ls-otras button b {
+  font-size: 0.58rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+/* ============================================================
+   COMPRADOR · iconos e información
+   ============================================================ */
+
+.cmp-nombre {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  width: 100%;
+  text-align: left;
+  font-size: 0.95rem;
+  font-weight: 300;
+}
+
+.cmp-icono {
+  width: 22px; height: 22px;
+  display: grid; place-items: center;
+  font-size: 18px; line-height: 1;
+  flex: 0 0 auto;
+}
+.cmp-icono img {
+  width: 100%; height: 100%;
+  object-fit: contain;
+  filter: invert(var(--invertir));
+}
+
+.cmp-txt { flex: 1; min-width: 0; }
+.cmp-txt b {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin-left: 0.35rem;
+}
+.cmp-urg {
+  display: block;
+  font-style: normal;
+  font-size: 0.55rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-top: 2px;
+}
+
+/* Filo lateral según lo apurada que vaya la fecha */
+.cmp-linea[data-urg] { border-left: 2px solid transparent; padding-left: calc(var(--pad-x) - 2px); }
+.cmp-linea[data-urg="pasada"] { border-left-color: #c0392b; }
+.cmp-linea[data-urg="hoy"]    { border-left-color: var(--accent); }
+.cmp-linea[data-urg="pronto"] { border-left-color: var(--muted); }
+
+/* Sitio puntual en el selector de tienda */
+.cmp-otro {
+  border-style: dashed !important;
+}
+.cmp-otro[aria-pressed="true"] {
+  background: var(--black);
+  border-color: var(--black) !important;
+  border-style: solid !important;
+  color: var(--white);
+  font-weight: 700;
+}
+
+.tk-sello span em {
+  display: block;
+  font-style: normal;
+  font-size: 0.55rem;
+  font-weight: 300;
+  letter-spacing: 0.16em;
+  color: var(--muted);
+  margin-top: 3px;
+}
+
+/* Campo para escribir un sitio puntual, dentro del propio pie */
+.cmp-sitio {
+  display: flex;
+  margin-top: 0.5rem;
+  border: 0.5px solid var(--black);
+}
+.cmp-sitio input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.6rem 0.7rem;
+  font-size: 0.88rem;
+}
+.cmp-sitio input:focus { outline: none; }
+.cmp-sitio button {
+  padding: 0 1rem;
+  background: var(--black);
+  color: var(--white);
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
