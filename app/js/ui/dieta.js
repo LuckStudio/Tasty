@@ -9,12 +9,12 @@ import { COMIDAS, PLANES, COMIDA_POR_ID, PLAN_POR_ID, recetas,
          cambiarIngrediente, nombreIngrediente, cuentaPorComida,
          faltaPorAnadir, recetasCubiertas, productosDe, textosDe,
          buscarParaReceta, resumenDieta, exportarRecetas, recetasTexto,
-         validarRecetas, importarRecetas, textoCantidad } from '../recetas.js?v=35';
-import { POR_ID, cantidad, alternar, sumar, anadirLibre } from '../estado.js?v=35';
-import { iconoHTML } from '../iconos.js?v=35';
-import { DIETA } from '../../datos/recetas-dieta.js?v=35';
-import { RECETAS_NOVIEMBRE } from '../../datos/recetas-noviembre.js?v=35';
-import { $, tap } from '../util.js?v=35';
+         validarRecetas, importarRecetas, textoCantidad } from '../recetas.js?v=36';
+import { POR_ID, cantidad, alternar, sumar, anadirLibre } from '../estado.js?v=36';
+import { iconoHTML } from '../iconos.js?v=36';
+import { DIETA } from '../../datos/recetas-dieta.js?v=36';
+import { RECETAS_NOVIEMBRE } from '../../datos/recetas-noviembre.js?v=36';
+import { $, tap } from '../util.js?v=36';
 
 let raiz;
 let pantalla = 'inicio';       // inicio | receta | falta
@@ -443,7 +443,7 @@ function pintarInicio() {
         res.total ? 'Recargar la dieta estricta' : 'Cargar la dieta estricta'}</button>
     </div>
     <div class="ga-acciones" style="margin-top:0.5px">
-      <button class="btn-secundario" id="di-cargar-noviembre">Cargar las recetas de noviembre (14)</button>
+      <button class="btn-secundario" id="di-cargar-noviembre">Restaurar las recetas de noviembre (14)</button>
     </div>
     <div class="ga-acciones" style="margin-top:0.5px">
       <button class="btn-secundario" id="di-exportar">Exportar recetas</button>

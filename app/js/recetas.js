@@ -17,9 +17,9 @@
    para poder cocinar lo que tienes planeado.
    ============================================================ */
 
-import { datos, guardar } from './almacen.js?v=35';
-import { POR_ID, PRODUCTOS } from './estado.js?v=35';
-import { nuevoId, normalizar } from './util.js?v=35';
+import { datos, guardar } from './almacen.js?v=36';
+import { POR_ID, PRODUCTOS } from './estado.js?v=36';
+import { nuevoId, normalizar } from './util.js?v=36';
 
 export const COMIDAS = [
   { id: 'desayuno', nombre: 'Desayuno', orden: 1 },
@@ -483,6 +483,39 @@ export function importarRecetas(d, { sustituir = false } = {}) {
   informe.sinEnlazar = [...new Set(informe.sinEnlazar)];
   avisar();
   return informe;
+}
+
+/* ---------- recetas que vienen con la app ---------- */
+
+/* Paquetes de recetas incluidos en la app (por ejemplo, las de noviembre).
+   Se cargan SOLOS la primera vez que se abre la app, y nunca más:
+     · solo se añaden las que faltan (por id estable o por nombre + comida),
+       así que nunca se pisa una receta que ya tengas ni lo que hayas editado;
+     · el paquete queda marcado como cargado, así que una receta que borres
+       no vuelve a aparecer en el siguiente arranque.
+   Para volver a traerlas todas a su versión original hay un botón explícito
+   en Menú → Recetas («Restaurar»). Devuelve los ids de los paquetes que se
+   han cargado ahora. */
+export function cargarPaquetesIncluidos(paquetes) {
+  datos.ajustes.paquetes = Array.isArray(datos.ajustes.paquetes) ? datos.ajustes.paquetes : [];
+  if (!datos.recetas) datos.recetas = [];
+  const cargados = [];
+
+  for (const { id, paquete } of paquetes) {
+    if (datos.ajustes.paquetes.includes(id)) continue;
+
+    const faltan = paquete.recetas.filter(r => {
+      const estable = `r-${slugReceta(r.nombre)}-${r.comida}`;
+      return !datos.recetas.some(x => x.id === estable
+        || (normalizar(x.nombre) === normalizar(r.nombre) && x.comida === r.comida));
+    });
+    if (faltan.length) importarRecetas({ ...paquete, recetas: faltan });
+
+    datos.ajustes.paquetes.push(id);
+    cargados.push(id);
+  }
+  if (cargados.length) avisar();
+  return cargados;
 }
 
 /* ---------- resumen ---------- */

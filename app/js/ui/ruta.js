@@ -6,12 +6,12 @@
    Cada tienda tiene su propia ruta, aunque sea de la misma cadena.
    ============================================================ */
 
-import { PRODUCTOS } from '../estado.js?v=35';
-import { tiendasActivas, TIENDA_POR_ID } from '../tiendas.js?v=35';
+import { PRODUCTOS } from '../estado.js?v=36';
+import { tiendasActivas, TIENDA_POR_ID } from '../tiendas.js?v=36';
 import { SECCION_POR_ID, seccionDe, rutaDe, moverSeccion, colocarSeccion, ocultarSeccion,
          copiarRuta, restablecerRuta, tieneRutaPropia, posicionEnOrden }
-  from '../secciones.js?v=35';
-import { esc, tap } from '../util.js?v=35';
+  from '../secciones.js?v=36';
+import { esc, tap } from '../util.js?v=36';
 
 let raiz = null, tienda = null, volver = 'ajustes', alVolver = () => {};
 
