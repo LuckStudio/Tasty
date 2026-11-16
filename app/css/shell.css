@@ -1,0 +1,328 @@
+/* ============================================================
+   SHELL — estructura tipo aplicación móvil
+   Barra superior fija · contenido scrollable · nav inferior
+   ============================================================ */
+
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  max-width: 640px;              /* en escritorio se comporta como app */
+  margin: 0 auto;
+  border-left: 0.5px solid var(--line);
+  border-right: 0.5px solid var(--line);
+}
+
+/* ---------- barra superior ---------- */
+
+.barra {
+  flex: 0 0 auto;
+  padding-top: var(--safe-top);
+  background: var(--white);
+  border-bottom: 0.5px solid var(--line);
+  z-index: 20;
+}
+
+.barra-fila {
+  height: var(--barra-alto);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0 var(--pad-x);
+}
+
+.barra-titulo {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.barra-btn {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  color: var(--black);
+  transition: opacity 0.22s var(--curva);
+}
+.barra-btn:hover  { opacity: 0.6; }
+.barra-btn:active { opacity: 0.4; }
+.barra-btn svg { width: 19px; height: 19px; }
+
+/* ---------- buscador ---------- */
+
+.buscador {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0 var(--pad-x) 0.7rem;
+}
+
+.buscador input {
+  flex: 1;
+  padding: 0.62rem 0.75rem;
+  font-size: 0.9rem;
+  font-weight: 400;
+  background: var(--off);
+  border: 0.5px solid transparent;
+  transition: border-color 0.22s var(--curva);
+}
+.buscador input::placeholder { color: var(--muted); }
+.buscador input:focus {
+  outline: none;
+  border-color: var(--black);
+}
+
+.buscador-limpiar {
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted-2);
+}
+
+/* ---------- conmutador de vista ---------- */
+
+.conmutador {
+  display: flex;
+  border-top: 0.5px solid var(--line-sutil);
+}
+
+.conmutador button {
+  flex: 1;
+  padding: 0.62rem 0;
+  font-size: 0.6rem;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  position: relative;
+  transition: color 0.22s var(--curva);
+}
+
+.conmutador button[aria-pressed="true"] {
+  color: var(--black);
+  font-weight: 700;
+}
+
+/* Marcador naranja: señala acción, no decora */
+.conmutador button[aria-pressed="true"]::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 2px;
+  background: var(--accent);
+}
+
+/* ---------- área de contenido ---------- */
+
+.vistas {
+  flex: 1 1 auto;
+  position: relative;
+  overflow: hidden;
+}
+
+.vista {
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 2rem;
+}
+
+.vista[hidden] { display: none; }
+
+/* ---------- nav inferior ---------- */
+
+.nav {
+  flex: 0 0 auto;
+  display: flex;
+  background: var(--white);
+  border-top: 0.5px solid var(--line);
+  padding-bottom: var(--safe-bottom);
+  z-index: 20;
+}
+
+.nav-btn {
+  flex: 1;
+  height: var(--nav-alto);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  color: var(--muted);
+  position: relative;
+  transition: color 0.22s var(--curva);
+}
+
+.nav-btn svg { width: 20px; height: 20px; }
+
+.nav-btn span {
+  font-size: 0.55rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.nav-btn[aria-current="page"] { color: var(--black); }
+.nav-btn[aria-current="page"] span { font-weight: 700; }
+
+.nav-btn[aria-current="page"]::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 22px; height: 2px;
+  background: var(--accent);
+}
+
+/* Contador de artículos sobre el icono */
+.nav-contador {
+  position: absolute;
+  top: 9px;
+  left: 50%;
+  margin-left: 6px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  background: var(--accent);
+  color: var(--white);
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  display: grid;
+  place-items: center;
+}
+.nav-contador[data-vacio="true"] { display: none; }
+
+/* ---------- hoja inferior ---------- */
+
+.hoja-fondo {
+  position: fixed;
+  inset: 0;
+  background: rgba(10,10,10,0.35);
+  z-index: 40;
+  animation: entrar 0.2s var(--curva);
+}
+.hoja-fondo[hidden] { display: none; }
+
+.hoja {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  max-width: 640px;
+  margin: 0 auto;
+  max-height: 82dvh;
+  overflow-y: auto;
+  background: var(--white);
+  padding: 1.4rem var(--pad-x) calc(1.6rem + var(--safe-bottom));
+  animation: subir 0.3s var(--curva);
+}
+
+.hoja-titulo {
+  font-size: 0.66rem;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 1.2rem;
+}
+
+.hoja-opcion {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 1rem 0;
+  text-align: left;
+  font-size: 0.95rem;
+  border-bottom: 0.5px solid var(--line-sutil);
+  transition: opacity 0.22s var(--curva);
+}
+.hoja-opcion:last-child { border-bottom: none; }
+.hoja-opcion:active { opacity: 0.5; }
+.hoja-opcion svg { width: 18px; height: 18px; flex: 0 0 auto; }
+.hoja-opcion small {
+  display: block;
+  font-size: 0.72rem;
+  color: var(--muted);
+  margin-top: 2px;
+}
+.hoja-opcion.peligro { color: #c0392b; }
+
+/* ---------- aviso flotante ---------- */
+
+.aviso {
+  position: fixed;
+  left: 50%;
+  bottom: calc(var(--nav-alto) + var(--safe-bottom) + 16px);
+  transform: translateX(-50%);
+  background: var(--black);
+  color: var(--white);
+  padding: 0.7rem 1.1rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  z-index: 60;
+  animation: entrar 0.25s var(--curva);
+}
+.aviso[hidden] { display: none; }
+
+/* ---------- estado vacío ---------- */
+
+.vacio {
+  padding: 22vh var(--pad-x) 0;
+  text-align: center;
+}
+.vacio p {
+  font-size: 0.9rem;
+  color: var(--muted-2);
+  line-height: 1.7;
+  max-width: 260px;
+  margin: 0 auto;
+}
+.vacio strong {
+  display: block;
+  font-weight: 800;
+  font-size: 1.15rem;
+  letter-spacing: -0.03em;
+  color: var(--black);
+  margin-bottom: 0.6rem;
+}
+
+/* Punto naranja sobre una pestaña que reclama atención */
+.nav-punto {
+  position: absolute;
+  top: 11px;
+  left: 50%;
+  margin-left: 7px;
+  width: 6px;
+  height: 6px;
+  background: var(--accent);
+}
+
+/* ------------------------------------------------------------
+   Con cinco pestañas el espacio por botón baja de 80 px en un
+   móvil estrecho. Se aprieta la etiqueta y se recorta el margen
+   para que ninguna palabra se parta en dos líneas.
+   ------------------------------------------------------------ */
+.nav-btn span:last-child {
+  font-size: 0.52rem;
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+}
+.nav-btn svg { width: 19px; height: 19px; }
+.nav-btn { gap: 3px; padding: 0 2px; }
+
+@media (min-width: 400px) {
+  .nav-btn span:last-child { font-size: 0.55rem; letter-spacing: 0.13em; }
+}
+
+/* El contador y el punto se recolocan al haber menos ancho */
+.nav-contador { margin-left: 4px; }
+.nav-punto { margin-left: 5px; }

@@ -1,0 +1,460 @@
+/* ============================================================
+   FICHA DE PRODUCTO
+   ============================================================ */
+
+.fi-cab {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.9rem;
+  padding-bottom: 1.1rem;
+  border-bottom: 0.5px solid var(--line);
+}
+
+.fi-icono {
+  width: 34px; height: 34px;
+  display: grid; place-items: center;
+  font-size: 28px; line-height: 1;
+  flex: 0 0 auto;
+}
+.fi-icono img {
+  width: 100%; height: 100%; object-fit: contain;
+  filter: invert(var(--invertir));
+}
+
+.fi-titulo { flex: 1; min-width: 0; }
+.fi-titulo h2 {
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+}
+.fi-titulo p {
+  font-size: 0.6rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 0.35rem;
+}
+
+/* ---------- cantidad en la lista ---------- */
+
+.fi-cant {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.9rem 0;
+  border-bottom: 0.5px solid var(--line-sutil);
+}
+.fi-cant > span:first-child {
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ---------- fila de precio ---------- */
+
+.fi-fila {
+  padding: 0.95rem 0;
+  border-bottom: 0.5px solid var(--line-sutil);
+  position: relative;
+}
+.fi-fila[data-viejo="true"] { opacity: 0.55; }
+
+.fi-fila-cab {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin-bottom: 0.4rem;
+}
+
+.fi-tienda {
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted-2);
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: color 0.22s var(--curva);
+}
+.fi-tienda[aria-pressed="true"] { color: var(--black); }
+.fi-tienda i { font-style: normal; color: var(--accent); }
+
+.fi-tag {
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--white);
+  background: var(--accent);
+  padding: 2px 6px;
+}
+
+.fi-dif {
+  font-size: 0.68rem;
+  color: var(--muted);
+  margin-left: auto;
+}
+
+.fi-fila-datos {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+}
+.fi-fila-datos b {
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: -0.035em;
+}
+.fi-fila-datos span {
+  font-size: 0.78rem;
+  color: var(--muted-2);
+}
+
+.fi-viejo {
+  font-size: 0.65rem;
+  color: var(--muted);
+  margin-top: 0.3rem;
+}
+
+.fi-borrar {
+  position: absolute;
+  top: 0.95rem; right: 0;
+  font-size: 0.58rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  opacity: 0;
+  transition: opacity 0.22s var(--curva);
+}
+.fi-fila:hover .fi-borrar,
+.fi-fila:focus-within .fi-borrar { opacity: 1; }
+@media (hover: none) { .fi-borrar { opacity: 0.5; } }
+
+.fi-nada {
+  padding: 1.6rem 0;
+  font-size: 0.85rem;
+  line-height: 1.65;
+  color: var(--muted-2);
+}
+
+.fi-pref-nota {
+  font-size: 0.72rem;
+  line-height: 1.6;
+  color: var(--muted-2);
+  padding: 0.9rem 0 0;
+}
+.fi-pref-nota b { font-weight: 700; color: var(--black); }
+
+/* ---------- formulario ---------- */
+
+.fi-anadir {
+  width: 100%;
+  margin-top: 1.2rem;
+  padding: 0.9rem;
+  border: 0.5px solid var(--line);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted-2);
+  transition: color 0.22s var(--curva), border-color 0.22s var(--curva);
+}
+.fi-anadir:hover { color: var(--black); border-color: var(--black); }
+
+.fi-form { padding-top: 1.3rem; }
+
+.fi-label {
+  font-size: 0.58rem;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.55rem;
+}
+.fi-form .cmp-tiendas { margin: 0 0 1.2rem; }
+
+.fi-campos {
+  display: flex;
+  align-items: stretch;
+  gap: 0.4rem;
+  margin-bottom: 0.9rem;
+}
+
+.fi-campo {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  border: 0.5px solid var(--line);
+  padding: 0.55rem 0.6rem;
+  min-width: 0;
+  flex: 1;
+}
+.fi-campo:focus-within { border-color: var(--black); }
+.fi-campo input {
+  width: 100%;
+  min-width: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.fi-campo input:focus { outline: none; }
+.fi-campo input::placeholder { color: var(--muted); font-weight: 400; }
+.fi-campo b { font-size: 0.85rem; font-weight: 400; color: var(--muted); }
+
+.fi-campo-select { flex: 0 0 auto; padding: 0; }
+.fi-campo-select select {
+  padding: 0.55rem 0.7rem;
+  font-size: 0.85rem;
+  background: transparent;
+}
+.fi-campo-select select:focus { outline: none; }
+
+.fi-por {
+  align-self: center;
+  font-size: 0.65rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  flex: 0 0 auto;
+}
+
+/* El cálculo del €/kg aparece en vivo mientras se escribe:
+   es la prueba de que no hay que hacer ninguna división */
+.fi-previa {
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin-bottom: 1rem;
+  padding: 0.7rem 0;
+  border-top: 0.5px solid var(--line-sutil);
+  border-bottom: 0.5px solid var(--line-sutil);
+}
+.fi-previa[data-listo="true"] {
+  color: var(--black);
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+/* ============================================================
+   PRESUPUESTO Y COMPARATIVA EN EL RESUMEN
+   ============================================================ */
+
+.pr-panel {
+  margin: 1.4rem var(--pad-x) 0;
+  border: 0.5px solid var(--line);
+}
+
+.pr-cab {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 1rem 1.1rem;
+  border-bottom: 0.5px solid var(--line-sutil);
+}
+.pr-cab span {
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.pr-cab b {
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.045em;
+}
+
+.pr-nota {
+  padding: 0.75rem 1.1rem;
+  font-size: 0.72rem;
+  line-height: 1.55;
+  color: var(--muted-2);
+}
+
+.pr-tienda {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.8rem;
+  padding: 0.65rem 1.1rem;
+  border-top: 0.5px solid var(--line-sutil);
+  font-size: 0.82rem;
+}
+.pr-tienda em {
+  font-style: normal;
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-left: 0.4rem;
+}
+.pr-tienda b { font-weight: 700; letter-spacing: -0.02em; }
+.pr-tienda[data-mejor="true"] b { color: var(--accent); }
+
+/* ---------- conmutador de agrupación del resumen ---------- */
+
+.res-agrupar {
+  display: flex;
+  border-bottom: 0.5px solid var(--line);
+}
+.res-agrupar button {
+  flex: 1;
+  padding: 0.7rem 0;
+  font-size: 0.58rem;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  position: relative;
+}
+.res-agrupar button[aria-pressed="true"] { color: var(--black); font-weight: 700; }
+.res-agrupar button[aria-pressed="true"]::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 2px;
+  background: var(--accent);
+}
+
+/* Precio estimado en cada línea del resumen */
+.res-precio {
+  font-size: 0.72rem;
+  color: var(--muted);
+  flex: 0 0 auto;
+  letter-spacing: -0.01em;
+}
+
+/* ---------- dónde comprarlo: orden de preferencia ---------- */
+
+.fi-donde {
+  margin-top: 1.4rem;
+  padding-top: 1.2rem;
+  border-top: 0.5px solid var(--line);
+}
+
+.fi-orden { list-style: none; }
+.fi-orden li {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem 0 0.6rem 0.7rem;
+  border-bottom: 0.5px solid var(--line-sutil);
+  border-left: 2px solid var(--marca);
+}
+.fi-orden li b {
+  width: 20px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--marca);
+  flex: 0 0 auto;
+  text-align: center;
+}
+.fi-orden li span {
+  flex: 1;
+  min-width: 0;
+  font-size: 0.88rem;
+  font-weight: 400;
+}
+.fi-orden li span em {
+  display: block;
+  font-style: normal;
+  font-size: 0.55rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 2px;
+}
+.fi-orden li button {
+  width: 26px; height: 26px;
+  display: grid; place-items: center;
+  font-size: 0.85rem;
+  color: var(--muted);
+  flex: 0 0 auto;
+}
+.fi-orden li button:disabled { opacity: 0.22; }
+
+/* Número de puesto cuando no es la primera opción */
+.fi-puesto {
+  display: inline-grid;
+  place-items: center;
+  width: 14px; height: 14px;
+  background: var(--muted);
+  color: var(--white);
+  font-size: 0.5rem;
+  font-weight: 700;
+  font-style: normal;
+}
+
+/* Las tiendas llevan su color de marca */
+.fi-tienda[aria-pressed="true"] { color: var(--marca); }
+.cmp-tiendas button[aria-pressed="true"] {
+  background: var(--marca, var(--black));
+  border-color: var(--marca, var(--black));
+  color: var(--white);
+}
+
+/* ---------- urgencia en el resumen ---------- */
+
+.res-reloj {
+  width: 28px; height: 28px;
+  display: grid; place-items: center;
+  font-size: 0.85rem;
+  color: var(--muted);
+  flex: 0 0 auto;
+  opacity: 0.5;
+  transition: opacity 0.22s var(--curva), color 0.22s var(--curva);
+}
+.res-reloj[data-puesta="true"] { opacity: 1; color: var(--accent); }
+
+.res-urg {
+  display: block;
+  font-style: normal;
+  font-size: 0.55rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-top: 2px;
+}
+
+/* Filo lateral según lo apurado que vaya */
+.res-linea[data-urg] { border-left: 2px solid transparent; padding-left: calc(var(--pad-x) - 2px); }
+.res-linea[data-urg="pasada"] { border-left-color: #c0392b; }
+.res-linea[data-urg="hoy"]    { border-left-color: var(--accent); }
+.res-linea[data-urg="pronto"] { border-left-color: var(--muted); }
+.res-linea[data-urg="pasada"] .res-urg { color: #c0392b; }
+.res-linea[data-urg="lejos"] .res-urg { color: var(--muted); }
+
+.res-urgentes {
+  margin: 1.3rem var(--pad-x) 0;
+  padding: 1rem 1.1rem;
+  border: 0.5px solid var(--accent);
+}
+.res-urgentes > b {
+  display: block;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.6rem;
+}
+.res-urgente {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.8rem;
+  padding: 0.3rem 0;
+  font-size: 0.85rem;
+  font-weight: 400;
+}
+.res-urgente em {
+  font-style: normal;
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.res-urgente[data-nivel="pasada"] em { color: #c0392b; }
+.res-urgente[data-nivel="hoy"] em { color: var(--accent); }

@@ -1,0 +1,309 @@
+/* ============================================================
+   GASTOS
+   ============================================================ */
+
+.ga-acciones {
+  display: flex;
+  gap: 0.5px;
+  margin: 1.4rem var(--pad-x) 0;
+}
+.ga-acciones button { flex: 1; }
+
+/* ---------- aviso de productos repetidos ---------- */
+
+.ga-aviso {
+  margin: 1.4rem var(--pad-x) 0;
+  padding: 1.1rem;
+  border: 0.5px solid var(--accent);
+}
+.ga-aviso b {
+  display: block;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+.ga-aviso p {
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: var(--muted-2);
+}
+
+/* ---------- fila del historial ---------- */
+
+.ga-fila {
+  display: flex;
+  align-items: stretch;
+  border-bottom: 0.5px solid var(--line-sutil);
+}
+.ga-fila > button:first-child {
+  flex: 1;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.8rem 0;
+  text-align: left;
+  transition: opacity 0.22s var(--curva);
+}
+.ga-fila > button:first-child:active { opacity: 0.5; }
+.ga-fila span { font-size: 0.88rem; font-weight: 400; }
+.ga-fila span em {
+  display: block;
+  font-style: normal;
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 3px;
+}
+.ga-fila b { font-size: 0.95rem; font-weight: 700; letter-spacing: -0.025em; }
+
+.ga-borrar {
+  width: 34px;
+  display: grid;
+  place-items: center;
+  font-size: 1.1rem;
+  color: var(--muted);
+  flex: 0 0 auto;
+  transition: color 0.22s var(--curva);
+}
+.ga-borrar:hover { color: var(--black); }
+
+/* ---------- pendientes de catalogar ---------- */
+
+.ga-pend {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.7rem 0;
+  border-bottom: 0.5px solid var(--line-sutil);
+}
+.ga-pend span { flex: 1; font-size: 0.88rem; font-weight: 400; min-width: 0; }
+.ga-pend span em {
+  display: block;
+  font-style: normal;
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 3px;
+}
+.ga-pend b { font-size: 0.85rem; font-weight: 700; }
+.ga-pend button {
+  width: 26px; height: 26px;
+  display: grid; place-items: center;
+  font-size: 1.05rem;
+  color: var(--muted);
+  flex: 0 0 auto;
+}
+
+.ga-nota {
+  font-size: 0.72rem;
+  line-height: 1.6;
+  color: var(--muted);
+  padding-top: 0.9rem;
+}
+
+/* ---------- importar ---------- */
+
+.ga-json {
+  margin: 0 var(--pad-x);
+}
+.ga-json textarea {
+  width: 100%;
+  padding: 0.85rem;
+  border: 0.5px solid var(--line);
+  font-family: var(--f-mono);
+  font-size: 0.75rem;
+  line-height: 1.5;
+  resize: vertical;
+  background: var(--off);
+}
+.ga-json textarea:focus { outline: none; border-color: var(--black); }
+.ga-json .btn-secundario { margin-top: 0.5px; }
+
+/* ---------- editor ---------- */
+
+.ga-fecha {
+  width: 100%;
+  padding: 0.7rem 0.8rem;
+  border: 0.5px solid var(--line);
+  font-size: 0.9rem;
+  background: var(--white);
+}
+.ga-fecha:focus { outline: none; border-color: var(--black); }
+
+.ga-buscador {
+  margin: 1.4rem var(--pad-x) 0;
+  border: 0.5px solid var(--line);
+}
+.ga-buscador > input {
+  width: 100%;
+  padding: 0.85rem;
+  font-size: 0.92rem;
+}
+.ga-buscador > input:focus { outline: none; background: var(--off); }
+
+.ga-sug {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.65rem 0.85rem;
+  text-align: left;
+  font-size: 0.85rem;
+  font-weight: 400;
+  border-top: 0.5px solid var(--line-sutil);
+  transition: background 0.18s var(--curva);
+}
+.ga-sug:active { background: var(--off); }
+.ga-sug .res-icono { width: 20px; height: 20px; font-size: 17px; }
+.ga-sug-libre { color: var(--accent); font-weight: 700; }
+
+.ga-linea {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.7rem var(--pad-x);
+  border-bottom: 0.5px solid var(--line-sutil);
+}
+.ga-linea-n {
+  flex: 1;
+  min-width: 0;
+  font-size: 0.88rem;
+  font-weight: 400;
+}
+.ga-linea-n em {
+  display: block;
+  font-style: normal;
+  font-size: 0.55rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-top: 2px;
+}
+
+.ga-mini {
+  border: 0.5px solid var(--line);
+  padding: 0.35rem 0.4rem;
+  flex: 0 0 auto;
+}
+.ga-mini input {
+  width: 26px;
+  text-align: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+.ga-mini input:focus { outline: none; }
+
+/* En el editor el precio se pide siempre, no solo al marcar */
+.ga-linea .cmp-precio { display: flex; }
+.ga-linea .cmp-precio input { width: 48px; }
+
+/* Filo de color de la tienda en cada fila del historial */
+.ga-fila { position: relative; }
+.ga-fila[style*="--marca"]::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0.55rem; bottom: 0.55rem;
+  width: 2px;
+  background: var(--marca);
+}
+.ga-fila[style*="--marca"] > button:first-child { padding-left: 0.7rem; }
+
+.ga-icono {
+  width: 32px;
+  display: grid;
+  place-items: center;
+  font-size: 0.9rem;
+  color: var(--muted);
+  flex: 0 0 auto;
+  transition: color 0.22s var(--curva);
+}
+.ga-icono:hover { color: var(--black); }
+
+/* ---------- historial agrupado por meses ---------- */
+
+.ga-mes {
+  width: 100%;
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+  padding: 0.9rem 0 0.7rem;
+  text-align: left;
+  border-bottom: 0.5px solid var(--line);
+}
+.ga-mes span {
+  flex: 1;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.ga-mes span em {
+  display: block;
+  font-style: normal;
+  font-size: 0.55rem;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  color: var(--muted);
+  margin-top: 3px;
+}
+.ga-mes b { font-size: 1rem; font-weight: 800; letter-spacing: -0.03em; }
+.ga-mes .seccion-flecha { margin-bottom: 4px; }
+.ga-mes[aria-expanded="false"] .seccion-flecha {
+  transform: rotate(-45deg);
+  margin-bottom: -2px;
+}
+
+.ga-mes-cuerpo[hidden] { display: none; }
+
+/* ---------- previa de importación ---------- */
+
+.im-previa {
+  margin: 1.4rem var(--pad-x) 0;
+  padding: 1.2rem;
+  border: 0.5px solid var(--accent);
+}
+.im-previa h2 {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.8rem;
+}
+
+/* Acción destructiva en ajustes */
+.aj-peligro { color: #c0392b; border-color: rgba(192,57,43,0.4); }
+.aj-peligro:hover { color: #c0392b; border-color: #c0392b; }
+
+/* ---------- lectura de tickets por foto ---------- */
+
+.ga-orig {
+  display: block;
+  margin-top: 0.2rem;
+  font-family: var(--f-mono);
+  font-size: 0.62rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+.ga-sugerido {
+  display: block;
+  margin-top: 0.35rem;
+  padding: 0.5rem 0.7rem;
+  min-height: 44px;
+  border: 0.5px solid var(--accent);
+  background: transparent;
+  color: var(--accent);
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+}

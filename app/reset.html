@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>Reiniciar · Tasty</title>
+
+<!-- ============================================================
+     PÁGINA DE REINICIO
+
+     Deliberadamente tonta: un solo archivo, sin módulos, sin CSS
+     externo, sin service worker. Así funciona incluso cuando la
+     app está completamente rota por culpa de la caché.
+
+     Lo que hace: borra todas las cachés, quita el service worker
+     y vuelve a la app con una URL nueva que el navegador no puede
+     tener guardada.
+
+     NO TOCA TUS DATOS. Las compras, los precios, las listas y las
+     recetas viven en localStorage, que esto ni roza.
+     ============================================================ -->
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    font-weight: 300;
+    background: #fff;
+    color: #0a0a0a;
+    padding: 10vh 6vw;
+    max-width: 640px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+  h1 {
+    font-size: 1.9rem;
+    font-weight: 800;
+    letter-spacing: -0.045em;
+    line-height: 1.05;
+    margin-bottom: 1rem;
+  }
+  p { font-size: 0.92rem; color: rgba(10,10,10,0.6); margin-bottom: 1rem; }
+  p b { color: #0a0a0a; font-weight: 700; }
+  button {
+    width: 100%;
+    padding: 1.15rem;
+    margin-top: 1.4rem;
+    background: #0a0a0a;
+    color: #fff;
+    border: none;
+    border-radius: 0;
+    font: inherit;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  button[disabled] { opacity: 0.45; }
+  #log {
+    margin-top: 1.6rem;
+    padding-top: 1.2rem;
+    border-top: 0.5px solid rgba(10,10,10,0.12);
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.75rem;
+    line-height: 1.7;
+    color: rgba(10,10,10,0.55);
+    white-space: pre-wrap;
+  }
+  .aviso {
+    margin-top: 1.6rem;
+    padding: 1rem;
+    border: 0.5px solid #ff7b00;
+    font-size: 0.82rem;
+  }
+  .aviso b {
+    display: block;
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #ff7b00;
+    margin-bottom: 0.4rem;
+  }
+</style>
+</head>
+<body>
+
+<h1>Reiniciar la app</h1>
+
+<p>Esto borra todo lo que el navegador tiene guardado de esta
+página: la caché, los archivos antiguos y el service worker.</p>
+
+<p><b>No toca tus datos.</b> Las compras, los precios, las listas y
+las recetas se quedan exactamente como están.</p>
+
+<button id="ir">Borrar todo y volver a la app</button>
+
+<div id="log"></div>
+
+<div class="aviso">
+  <b>Si aun así no arranca</b>
+  Abre <code>index.html</code> con Ctrl+Shift+R (o Cmd+Shift+R en Mac)
+  para forzar una recarga completa. Y comprueba en el servidor que la
+  carpeta <code>datos/</code> tiene los archivos nuevos: es la que
+  suele quedarse sin actualizar.
+</div>
+
+<script>
+(function () {
+  var log = document.getElementById('log');
+  var boton = document.getElementById('ir');
+
+  function di(t) { log.textContent += t + '\n'; }
+
+  boton.onclick = function () {
+    boton.disabled = true;
+    boton.textContent = 'Limpiando…';
+    log.textContent = '';
+
+    var tareas = [];
+
+    /* 1. Cachés del service worker */
+    if (window.caches) {
+      tareas.push(
+        caches.keys().then(function (claves) {
+          if (!claves.length) { di('Cachés: no había ninguna'); return; }
+          di('Cachés encontradas: ' + claves.join(', '));
+          return Promise.all(claves.map(function (c) { return caches.delete(c); }))
+            .then(function () { di('Cachés borradas'); });
+        }).catch(function () { di('Cachés: no se pudieron leer'); })
+      );
+    } else {
+      di('Cachés: este navegador no las usa');
+    }
+
+    /* 2. Service workers registrados */
+    if (navigator.serviceWorker) {
+      tareas.push(
+        navigator.serviceWorker.getRegistrations().then(function (regs) {
+          if (!regs.length) { di('Service worker: no había ninguno'); return; }
+          di('Service workers: ' + regs.length);
+          return Promise.all(regs.map(function (r) { return r.unregister(); }))
+            .then(function () { di('Service workers retirados'); });
+        }).catch(function () { di('Service worker: no se pudo leer'); })
+      );
+    }
+
+    function terminar() {
+      di('');
+      di('Listo. Volviendo a la app…');
+      /* La marca de tiempo en la URL hace imposible que el
+         navegador sirva una copia guardada de index.html */
+      setTimeout(function () {
+        location.replace('./index.html?limpio=' + Date.now());
+      }, 900);
+    }
+
+    Promise.all(tareas).then(terminar, terminar);
+    setTimeout(terminar, 5000);   /* pase lo que pase, se sale de aquí */
+  };
+
+  /* Al abrir, se dice qué hay guardado ahora mismo */
+  if (window.caches) {
+    caches.keys().then(function (c) {
+      di('Ahora mismo hay ' + c.length + ' caché(s): ' + (c.join(', ') || '—'));
+    });
+  }
+  if (navigator.serviceWorker) {
+    navigator.serviceWorker.getRegistrations().then(function (r) {
+      di('Service workers activos: ' + r.length);
+    });
+  }
+})();
+</script>
+
+</body>
+</html>

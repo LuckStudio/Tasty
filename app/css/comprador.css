@@ -1,0 +1,554 @@
+/* ============================================================
+   COMPRADOR — checklist en el supermercado
+   ============================================================ */
+
+/* En modo comprador no hay nav inferior: solo hay una cosa que
+   hacer. La barra de abajo la ocupa el total y el botón. */
+body[data-modo="comprador"] .nav { display: none; }
+
+/* ---------- cabecera con progreso ---------- */
+
+.cmp-cab {
+  padding: 1.6rem var(--pad-x) 1.2rem;
+  border-bottom: 0.5px solid var(--line);
+}
+
+.cmp-cab h1 {
+  font-size: 1.9rem;
+  font-weight: 800;
+  letter-spacing: -0.045em;
+  line-height: 1;
+}
+
+.cmp-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-top: 0.7rem;
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.cmp-barra {
+  height: 3px;
+  background: var(--line-sutil);
+  margin-top: 0.9rem;
+  overflow: hidden;
+}
+.cmp-barra i {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.4s var(--curva);
+}
+
+/* ---------- líneas ---------- */
+
+.cmp-grupo {
+  padding: 1.4rem var(--pad-x) 0.4rem;
+  font-size: 0.6rem;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.cmp-linea {
+  display: grid;
+  grid-template-columns: 26px 1fr auto;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.75rem var(--pad-x);
+  border-bottom: 0.5px solid var(--line-sutil);
+  transition: opacity 0.28s var(--curva);
+}
+
+/* Cogido: se atenúa y se tacha, pero sigue ahí */
+.cmp-linea[data-hecho="true"] { opacity: 0.42; }
+.cmp-linea[data-hecho="true"] .cmp-nombre { text-decoration: line-through; }
+
+.cmp-check {
+  width: 22px; height: 22px;
+  border: 1px solid var(--muted);
+  display: grid; place-items: center;
+  transition: background 0.2s var(--curva), border-color 0.2s var(--curva);
+}
+.cmp-check svg { width: 13px; height: 13px; opacity: 0; color: var(--white); }
+.cmp-linea[data-hecho="true"] .cmp-check {
+  background: var(--black);
+  border-color: var(--black);
+}
+.cmp-linea[data-hecho="true"] .cmp-check svg { opacity: 1; }
+
+.cmp-cuerpo { min-width: 0; }
+
+.cmp-nombre {
+  font-size: 0.95rem;
+  font-weight: 400;
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+.cmp-nombre b {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.cmp-pasos {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.3rem;
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.cmp-pasos button {
+  width: 22px; height: 20px;
+  border: 0.5px solid var(--line);
+  display: grid; place-items: center;
+  font-size: 0.85rem;
+  color: var(--muted-2);
+}
+
+/* ---------- precio ---------- */
+
+.cmp-precio {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  border: 0.5px solid var(--line);
+  padding: 0.35rem 0.5rem;
+}
+.cmp-precio input {
+  width: 52px;
+  text-align: right;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.cmp-precio input:focus { outline: none; }
+.cmp-precio input::placeholder { color: var(--muted); font-weight: 400; }
+.cmp-precio span { font-size: 0.82rem; color: var(--muted); }
+
+/* Hasta que no se coge el producto no se pide el precio:
+   así la lista no se ensucia mientras aún estás buscando */
+.cmp-linea[data-hecho="false"] .cmp-precio { display: none; }
+
+.cmp-quitar {
+  width: 28px; height: 28px;
+  display: grid; place-items: center;
+  color: var(--muted);
+}
+.cmp-quitar svg { width: 14px; height: 14px; }
+
+/* ---------- añadir en el súper ---------- */
+
+.cmp-anadir {
+  display: flex;
+  margin: 1.4rem var(--pad-x) 0;
+  border: 0.5px solid var(--line);
+}
+.cmp-anadir input { flex: 1; padding: 0.8rem 0.85rem; font-size: 0.88rem; }
+.cmp-anadir input:focus { outline: none; background: var(--off); }
+.cmp-anadir button {
+  padding: 0 1.1rem;
+  background: var(--black);
+  color: var(--white);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* ---------- pie fijo con el total ---------- */
+
+.cmp-pie {
+  flex: 0 0 auto;
+  background: var(--white);
+  border-top: 0.5px solid var(--line);
+  padding: 0.9rem var(--pad-x) calc(0.9rem + var(--safe-bottom));
+}
+
+.cmp-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.8rem;
+}
+.cmp-total span {
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.cmp-total b {
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: -0.045em;
+}
+
+/* ============================================================
+   TICKET
+   ============================================================ */
+
+.tk-hoja {
+  background: var(--off);
+  padding: 2rem var(--pad-x) 2.4rem;
+  margin: 1.2rem var(--pad-x) 0;
+}
+
+.tk-cab {
+  text-align: center;
+  padding-bottom: 1.3rem;
+  border-bottom: 0.5px dashed var(--line);
+}
+.tk-cab h2 {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+.tk-cab p {
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 0.5rem;
+}
+
+.tk-linea {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.5rem 0;
+  font-size: 0.85rem;
+  font-weight: 400;
+  border-bottom: 0.5px solid var(--line-sutil);
+}
+.tk-linea span:first-child { min-width: 0; }
+.tk-linea em {
+  font-style: normal;
+  color: var(--muted);
+  font-size: 0.75rem;
+  margin-left: 0.3rem;
+}
+.tk-linea b { font-weight: 400; white-space: nowrap; }
+.tk-linea[data-nuevo="true"] span:first-child::before {
+  content: '+ ';
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.tk-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-top: 1.2rem;
+  padding-top: 1.1rem;
+  border-top: 0.5px dashed var(--line);
+}
+.tk-total span {
+  font-size: 0.62rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.tk-total b {
+  font-size: 1.8rem;
+  font-weight: 800;
+  letter-spacing: -0.05em;
+}
+
+.tk-nota {
+  margin-top: 1.2rem;
+  font-size: 0.72rem;
+  line-height: 1.6;
+  color: var(--muted-2);
+}
+.tk-nota b {
+  display: block;
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.3rem;
+}
+
+/* ---------- selector de supermercado ---------- */
+
+.cmp-tiendas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.9rem;
+}
+.cmp-tiendas button {
+  padding: 0.5rem 0.8rem;
+  border: 0.5px solid var(--line);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  color: var(--muted-2);
+  transition: all 0.2s var(--curva);
+}
+.cmp-tiendas button[aria-pressed="true"] {
+  background: var(--black);
+  border-color: var(--black);
+  color: var(--white);
+  font-weight: 700;
+}
+
+/* ---------- historial en ajustes ---------- */
+
+.tk-fila {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  width: 100%;
+  padding: 0.75rem 0;
+  border-bottom: 0.5px solid var(--line-sutil);
+  text-align: left;
+}
+.tk-fila span { font-size: 0.85rem; font-weight: 400; }
+.tk-fila span em {
+  display: block;
+  font-style: normal;
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 2px;
+}
+.tk-fila b { font-size: 0.95rem; font-weight: 700; letter-spacing: -0.02em; }
+
+/* ============================================================
+   TICKET · versión con sello, hora y código de barras
+   ============================================================ */
+
+.tk-hoja { --marca: var(--muted); position: relative; }
+
+/* Filo de color de la tienda, arriba del ticket */
+.tk-hoja::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--marca);
+}
+
+/* ---------- sello de la tienda ---------- */
+
+.tk-sello {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding-bottom: 1.1rem;
+}
+.tk-sello i {
+  width: 42px; height: 42px;
+  display: grid; place-items: center;
+  background: var(--marca);
+  color: #fff;
+  font-style: normal;
+  font-size: 0.92rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  flex: 0 0 auto;
+}
+.tk-sello span {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.tk-cab {
+  text-align: left;
+  padding-bottom: 1.2rem;
+  border-bottom: 0.5px dashed var(--line);
+}
+.tk-cab p {
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.tk-dur { margin-top: 0.3rem; }
+
+.tk-lineas { padding-top: 0.4rem; }
+
+/* Los precios estimados se ven distintos: son previsión */
+.tk-linea[data-estimado="true"] b {
+  opacity: 0.6;
+  font-style: italic;
+}
+.tk-linea[data-estimado="true"] b::after {
+  content: ' ~';
+  font-style: normal;
+}
+
+/* ---------- forma de pago ---------- */
+
+.tk-pago {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin-top: 1rem;
+  padding-top: 0.9rem;
+  border-top: 0.5px dashed var(--line);
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted-2);
+}
+.tk-pago svg { width: 17px; height: 17px; flex: 0 0 auto; }
+
+/* ---------- código de barras ---------- */
+
+.tk-barras {
+  margin-top: 1.6rem;
+  padding-top: 1.2rem;
+  border-top: 0.5px dashed var(--line);
+}
+.tk-barras svg {
+  width: 100%;
+  height: 42px;
+  display: block;
+  fill: var(--black);
+}
+.tk-barras span {
+  display: block;
+  text-align: center;
+  margin-top: 0.5rem;
+  font-family: var(--f-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.24em;
+  color: var(--muted);
+}
+
+/* ---------- selector de forma de pago en el pie ---------- */
+
+.cmp-pago {
+  display: flex;
+  gap: 0.5px;
+  margin-top: 0.6rem;
+}
+.cmp-pago button {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.6rem 0;
+  border: 0.5px solid var(--line);
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted-2);
+  transition: all 0.2s var(--curva);
+}
+.cmp-pago button svg { width: 15px; height: 15px; }
+.cmp-pago button[aria-pressed="true"] {
+  background: var(--black);
+  border-color: var(--black);
+  color: var(--white);
+  font-weight: 700;
+}
+
+/* Las tiendas llevan su color de marca en el borde al elegirlas */
+.cmp-tiendas button[aria-pressed="true"] {
+  background: var(--marca, var(--black));
+  border-color: var(--marca, var(--black));
+}
+
+/* Un precio estimado se distingue del escrito a mano */
+.cmp-precio input[data-estimado="true"] {
+  opacity: 0.62;
+  font-style: italic;
+}
+
+/* Previsión de lo que costará la compra entera, contando lo que
+   aún no está en el carro pero cuyo precio ya se conoce */
+.cmp-prevision {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin: -0.4rem 0 0.8rem;
+  padding-top: 0.45rem;
+  border-top: 0.5px solid var(--line-sutil);
+}
+.cmp-prevision span {
+  font-size: 0.58rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.cmp-prevision b {
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: var(--muted-2);
+}
+
+/* ---------- descuentos ---------- */
+
+.tk-desc {
+  font-style: normal;
+  font-size: 0.68rem;
+  color: var(--accent);
+  margin-left: 0.4rem;
+}
+
+.tk-ahorro {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-top: 0.9rem;
+  padding-top: 0.7rem;
+  border-top: 0.5px dashed var(--line);
+}
+.tk-ahorro span {
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.tk-ahorro b {
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--accent);
+}
+
+/* Campo de descuento en la checklist, junto al precio */
+.cmp-desc {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  border: 0.5px solid var(--line);
+  padding: 0.3rem 0.4rem;
+  margin-top: 0.3rem;
+}
+.cmp-desc input {
+  width: 40px;
+  text-align: right;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+.cmp-desc input:focus { outline: none; }
+.cmp-desc span { font-size: 0.62rem; color: var(--muted); }
+.cmp-linea[data-hecho="false"] .cmp-desc { display: none; }
+
+/* El precio y su descuento se apilan a la derecha de la línea */
+.cmp-precios {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  flex: 0 0 auto;
+}

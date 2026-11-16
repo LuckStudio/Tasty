@@ -1,0 +1,43 @@
+ICONOS DE PRODUCTO
+==================
+
+Dónde va cada archivo
+---------------------
+  iconos/<categoria>/<nombre_del_producto>.svg
+
+La categoría es la misma que aparece en el campo "c" del
+producto dentro de datos/catalogo.js
+
+Cómo se escribe el nombre del archivo
+-------------------------------------
+  minúsculas
+  sin acentos ni eñes
+  los espacios se convierten en guion bajo
+  sin símbolos raros
+
+  Tomate             ->  iconos/verduras/tomate.svg
+  Patatas fritas     ->  iconos/snacks/patatas_fritas.svg
+  Plátanos           ->  iconos/frutas/platanos.svg
+  Judías verdes      ->  iconos/verduras/judias_verdes.svg
+  Papel higiénico    ->  iconos/higiene/papel_higienico.svg
+  Aceite de oliva    ->  iconos/despensa/aceite_de_oliva.svg
+
+Si el archivo no existe la app usa el emoji del producto, así
+que puedes ir subiendo iconos poco a poco sin romper nada.
+
+Cómo dibujarlos para que encajen
+--------------------------------
+  viewBox 0 0 32 32
+  trazo (stroke) en lugar de relleno, grosor 1.5 o 1.6
+  color #0a0a0a
+  sin fondo, sin sombras, esquinas redondeadas en el trazo
+
+  Se dibujan en negro. Cuando el producto está seleccionado
+  la app los invierte a blanco automáticamente.
+
+  Tienes un ejemplo listo en iconos/verduras/tomate.svg
+
+Los archivos app-180.png, app-192.png y app-512.png son el
+icono de la aplicación en la pantalla de inicio del móvil.
+Sustitúyelos cuando quieras por los tuyos, manteniendo los
+mismos nombres y tamaños.

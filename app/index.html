@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+<title>Tasty</title>
+<meta name="description" content="Tasty: lista de compra, despensa, recetas y control de gasto.">
+
+<!-- El HTML es la pieza que decide qué versión de todo lo demás se
+     pide. Si el navegador se queda con una copia vieja, seguirá
+     cargando archivos antiguos por mucho que subas los nuevos. -->
+<meta http-equiv="Cache-Control" content="no-cache, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+
+<!-- Comportamiento de app al añadir a la pantalla de inicio -->
+<meta name="theme-color" content="#F3F2EE">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Tasty">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="iconos/app-180.png">
+<link rel="icon" type="image/svg+xml" href="iconos/favicon.svg">
+<link rel="icon" type="image/png" sizes="192x192" href="iconos/app-192.png">
+
+<link rel="preload" href="fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/space-grotesk.woff2" as="font" type="font/woff2" crossorigin>
+
+<!-- Se aplica el tema antes de pintar nada para que abrir en
+     oscuro no dé un fogonazo blanco -->
+<script>
+(function(){
+  try {
+    var t = localStorage.getItem('luckstudio_tema') || 'auto';
+    document.documentElement.dataset.tema = t;
+    var oscuro = t === 'oscuro' ||
+      (t === 'auto' && matchMedia('(prefers-color-scheme: dark)').matches);
+    document.querySelector('meta[name="theme-color"]').content =
+      oscuro ? '#121418' : '#F3F2EE';
+  } catch (e) {}
+})();
+</script>
+
+<link rel="stylesheet" href="css/base.css?v=35">
+<link rel="stylesheet" href="css/shell.css?v=35">
+<link rel="stylesheet" href="css/grid.css?v=35">
+<link rel="stylesheet" href="css/comprador.css?v=35">
+<link rel="stylesheet" href="css/ficha.css?v=35">
+<link rel="stylesheet" href="css/gastos.css?v=35">
+<link rel="stylesheet" href="css/stats.css?v=35">
+<link rel="stylesheet" href="css/admin.css?v=35">
+<link rel="stylesheet" href="css/tiendas.css?v=35">
+<link rel="stylesheet" href="css/listas.css?v=35">
+<link rel="stylesheet" href="css/cesta.css?v=35">
+<link rel="stylesheet" href="css/dieta.css?v=35">
+<link rel="stylesheet" href="css/revision.css?v=35">
+<link rel="stylesheet" href="css/historial.css?v=35">
+<link rel="stylesheet" href="css/productos.css?v=35">
+<link rel="stylesheet" href="css/ruta.css?v=35">
+<link rel="stylesheet" href="css/cocina.css?v=35">
+<link rel="stylesheet" href="css/tasty.css?v=35">
+</head>
+
+<body>
+
+<div class="app">
+
+  <!-- ================= BARRA SUPERIOR ================= -->
+  <header class="barra">
+    <div class="barra-fila">
+      <div class="barra-titulo" id="titulo-barra">Tasty</div>
+      <button class="barra-btn" id="menu" aria-label="Compartir y opciones">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <circle cx="12" cy="5" r="1.6"/>
+          <circle cx="12" cy="12" r="1.6"/>
+          <circle cx="12" cy="19" r="1.6"/>
+        </svg>
+      </button>
+    </div>
+
+    <div id="herramientas">
+      <div class="buscador">
+        <label class="sr" for="buscar">Buscar productos</label>
+        <input type="search" id="buscar" placeholder="Buscar producto"
+               autocomplete="off" enterkeyhint="search">
+        <button class="buscador-limpiar" id="limpiar" hidden>Limpiar</button>
+      </div>
+
+      <div class="conmutador" role="group" aria-label="Cómo agrupar el grid">
+        <button data-vista-grid="frecuencia" aria-pressed="true">Frecuencia</button>
+        <button data-vista-grid="tipo" aria-pressed="false">Tipo</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= CONTENIDO ================= -->
+  <main class="vistas">
+    <div class="vista" data-vista="grid"    id="v-grid"></div>
+    <div class="vista" data-vista="resumen" id="v-resumen" hidden></div>
+    <div class="vista" data-vista="gastos"  id="v-gastos" hidden></div>
+    <div class="vista" data-vista="ajustes" id="v-ajustes" hidden></div>
+    <div class="vista" data-vista="admin"   id="v-admin" hidden></div>
+    <div class="vista" data-vista="precios" id="v-precios" hidden></div>
+    <div class="vista" data-vista="tiendas" id="v-tiendas" hidden></div>
+    <div class="vista" data-vista="importar" id="v-importar" hidden></div>
+    <div class="vista" data-vista="recordatorios" id="v-recordatorios" hidden></div>
+    <div class="vista" data-vista="listas" id="v-listas" hidden></div>
+    <div class="vista" data-vista="cesta" id="v-cesta" hidden></div>
+    <div class="vista" data-vista="hoy" id="v-hoy" hidden></div>
+    <div class="vista" data-vista="menu" id="v-menu" hidden></div>
+    <div class="vista" data-vista="receta" id="v-receta" hidden></div>
+    <div class="vista" data-vista="dieta" id="v-dieta" hidden></div>
+    <div class="vista" data-vista="historial" id="v-historial" hidden></div>
+    <div class="vista" data-vista="productos" id="v-productos" hidden></div>
+    <div class="vista" data-vista="ruta" id="v-ruta" hidden></div>
+    <div class="vista" data-vista="tienda" id="v-tienda" hidden></div>
+    <div class="vista" data-vista="comprador" id="v-comprador" hidden></div>
+    <div class="vista" data-vista="ticket" id="v-ticket" hidden></div>
+  </main>
+
+  <!-- Pie fijo del modo comprador: total y finalizar -->
+  <div class="cmp-pie" id="cmp-pie" hidden></div>
+
+  <!-- ================= NAV INFERIOR ================= -->
+  <nav class="nav" aria-label="Secciones">
+    <button class="nav-btn" data-ir="hoy" aria-current="page">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+           stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 11.5 12 5l8 6.5"/><path d="M6 10v9.5h12V10"/><path d="M10 19.5v-5h4v5"/>
+      </svg>
+      <span>Hoy</span>
+    </button>
+
+    <button class="nav-btn" data-ir="menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+           stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/>
+      </svg>
+      <span class="nav-punto" id="punto-dieta" hidden aria-hidden="true"></span>
+      <span>Menú</span>
+    </button>
+
+    <button class="nav-btn" data-ir="grid">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+           stroke-linecap="round" stroke-linejoin="round">
+        <path d="M8 4H6a1 1 0 0 0-1 1v15a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1h-2"/>
+        <path d="M9 2.5h6v3H9z"/>
+        <path d="m8 11.5 1.4 1.4L12 10.3"/>
+        <path d="M14.5 12.5h3M8 17h3.5M14.5 17h3"/>
+      </svg>
+      <span>Lista</span>
+    </button>
+
+    <button class="nav-btn" data-ir="resumen">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+           stroke-linecap="round">
+        <path d="M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01"/>
+      </svg>
+      <span class="nav-contador" id="contador" data-vacio="true">0</span>
+      <span>Resumen</span>
+    </button>
+
+    <button class="nav-btn" data-ir="gastos">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+           stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6 3v18l2-1.4 2 1.4 2-1.4 2 1.4 2-1.4 2 1.4V3l-2 1.4L14 3l-2 1.4L10 3 8 4.4 6 3Z"/>
+        <path d="M10 8.5h4M10 12h4"/>
+      </svg>
+      <span class="nav-punto" hidden aria-hidden="true"></span>
+      <span>Gastos</span>
+    </button>
+
+    <button class="nav-btn" data-ir="ajustes">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="12" cy="12" r="3"/>
+        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+      </svg>
+      <span>Ajustes</span>
+    </button>
+  </nav>
+
+</div>
+
+<!-- ================= HOJA INFERIOR ================= -->
+<div class="hoja-fondo" id="hoja-fondo" hidden>
+  <div class="hoja" role="dialog" aria-modal="true" aria-labelledby="hoja-titulo">
+    <p class="hoja-titulo" id="hoja-titulo"></p>
+    <div id="hoja-cuerpo"></div>
+  </div>
+</div>
+
+<!-- ================= FICHA DE PRODUCTO ================= -->
+<div class="hoja-fondo" id="ficha-fondo" hidden>
+  <div class="hoja" role="dialog" aria-modal="true" aria-label="Ficha del producto">
+    <div id="ficha-cuerpo"></div>
+  </div>
+</div>
+
+<div class="aviso" id="aviso" role="status" hidden></div>
+<div class="aviso-accion" id="aviso-accion" role="status" hidden></div>
+
+<!-- ============================================================
+     PRECARGA DE MÓDULOS
+
+     La app son 33 archivos de JavaScript que se importan unos a
+     otros. Sin esto el navegador los va descubriendo en cascada:
+     pide app.js, lee sus imports, pide esos, lee los suyos… En
+     una conexión móvil eso son varios segundos de espera.
+
+     Con modulepreload los pide todos a la vez desde el primer
+     momento. Es la diferencia entre arrancar en medio segundo o
+     en cinco.
+     ============================================================ -->
+<link rel="modulepreload" href="js/alias.js?v=35">
+<link rel="modulepreload" href="js/app.js?v=35">
+<link rel="modulepreload" href="js/almacen.js?v=35">
+<link rel="modulepreload" href="js/catalogo-edit.js?v=35">
+<link rel="modulepreload" href="js/cantidad.js?v=35">
+<link rel="modulepreload" href="js/busqueda.js?v=35">
+<link rel="modulepreload" href="js/color.js?v=35">
+<link rel="modulepreload" href="js/compra.js?v=35">
+<link rel="modulepreload" href="js/datos-io.js?v=35">
+<link rel="modulepreload" href="js/escaner.js?v=35">
+<link rel="modulepreload" href="js/despensa.js?v=35">
+<link rel="modulepreload" href="js/estado.js?v=35">
+<link rel="modulepreload" href="js/fusion.js?v=35">
+<link rel="modulepreload" href="js/gastos.js?v=35">
+<link rel="modulepreload" href="js/gemini.js?v=35">
+<link rel="modulepreload" href="js/historial.js?v=35">
+<link rel="modulepreload" href="js/iconos.js?v=35">
+<link rel="modulepreload" href="js/listas.js?v=35">
+<link rel="modulepreload" href="js/menu.js?v=35">
+<link rel="modulepreload" href="js/precios.js?v=35">
+<link rel="modulepreload" href="js/recetas.js?v=35">
+<link rel="modulepreload" href="js/recordatorios.js?v=35">
+<link rel="modulepreload" href="js/reposicion.js?v=35">
+<link rel="modulepreload" href="js/ruta.js?v=35">
+<link rel="modulepreload" href="js/secciones.js?v=35">
+<link rel="modulepreload" href="js/unidades.js?v=35">
+<link rel="modulepreload" href="js/stats.js?v=35">
+<link rel="modulepreload" href="js/tema.js?v=35">
+<link rel="modulepreload" href="js/tiendas.js?v=35">
+<link rel="modulepreload" href="js/ui/admin.js?v=35">
+<link rel="modulepreload" href="js/ui/cesta.js?v=35">
+<link rel="modulepreload" href="js/ui/cantidad.js?v=35">
+<link rel="modulepreload" href="js/ui/comprador.js?v=35">
+<link rel="modulepreload" href="js/ui/dieta.js?v=35">
+<link rel="modulepreload" href="js/ui/escaner.js?v=35">
+<link rel="modulepreload" href="js/ui/ficha.js?v=35">
+<link rel="modulepreload" href="js/ui/gastos.js?v=35">
+<link rel="modulepreload" href="js/ui/historial.js?v=35">
+<link rel="modulepreload" href="js/ui/grid.js?v=35">
+<link rel="modulepreload" href="js/ui/importar.js?v=35">
+<link rel="modulepreload" href="js/ui/listas.js?v=35">
+<link rel="modulepreload" href="js/ui/productos.js?v=35">
+<link rel="modulepreload" href="js/ui/acaba.js?v=35">
+<link rel="modulepreload" href="js/ui/hoy.js?v=35">
+<link rel="modulepreload" href="js/ui/menu.js?v=35">
+<link rel="modulepreload" href="js/ui/receta.js?v=35">
+<link rel="modulepreload" href="js/ui/receta-comun.js?v=35">
+<link rel="modulepreload" href="js/ui/precios-panel.js?v=35">
+<link rel="modulepreload" href="js/ui/recordatorios.js?v=35">
+<link rel="modulepreload" href="js/ui/resumen.js?v=35">
+<link rel="modulepreload" href="js/ui/ruta.js?v=35">
+<link rel="modulepreload" href="js/ui/revision.js?v=35">
+<link rel="modulepreload" href="js/ui/stats.js?v=35">
+<link rel="modulepreload" href="js/ui/ticket.js?v=35">
+<link rel="modulepreload" href="js/ui/tienda.js?v=35">
+<link rel="modulepreload" href="js/ui/tiendas.js?v=35">
+<link rel="modulepreload" href="js/url.js?v=35">
+<link rel="modulepreload" href="js/util.js?v=35">
+<link rel="modulepreload" href="datos/catalogo.js?v=35">
+<link rel="modulepreload" href="datos/categorias.js?v=35">
+<link rel="modulepreload" href="datos/fotos-recetas.js?v=35">
+<link rel="modulepreload" href="datos/iconos.js?v=35">
+<link rel="modulepreload" href="datos/recetas-dieta.js?v=35">
+<link rel="modulepreload" href="datos/recetas-noviembre.js?v=35">
+<link rel="modulepreload" href="datos/secciones.js?v=35">
+<link rel="modulepreload" href="datos/tiendas.js?v=35">
+
+<!-- ============================================================
+     RED DE SEGURIDAD
+
+     Si el JavaScript no llega a arrancar, la página se queda
+     visible pero muerta y sin ninguna pista de por qué. Esto lo
+     detecta, dice qué ha pasado de verdad y ofrece repararlo.
+
+     Cuidado con los falsos positivos: en una conexión lenta la
+     app puede tardar en arrancar sin que nada esté roto. Por eso
+     el aviso por tiempo espera de sobra, comprueba antes si la
+     app ya ha pintado algo, y desaparece solo si acaba llegando.
+     ============================================================ -->
+<script>
+(function () {
+  var arrancado = false;
+  var motivo = null;
+
+  window.addEventListener('lista-lista', function () {
+    arrancado = true;
+    var n = document.getElementById('fallo-carga');
+    if (n) n.remove();          /* llegó tarde, pero llegó */
+  });
+
+  /* Errores de ejecución: lo más útil para saber qué pasa */
+  window.addEventListener('error', function (e) {
+    if (e.target && e.target.tagName === 'SCRIPT') {
+      mostrar('No se pudo descargar un archivo',
+              (e.target.src || 'script') + '\n\nSuele ser un archivo que falta ' +
+              'en el servidor, o que se entrega con el tipo equivocado.');
+      return;
+    }
+    if (e.message) {
+      motivo = e.message + (e.filename ? '\n' + e.filename + ':' + e.lineno : '');
+      mostrar('Error al ejecutar el código', motivo);
+    }
+  }, true);
+
+  window.addEventListener('unhandledrejection', function (e) {
+    motivo = 'Promesa rechazada: ' + (e.reason && (e.reason.message || e.reason));
+    mostrar('Error al arrancar', motivo);
+  });
+
+  /* Aviso por tiempo, solo si de verdad no hay nada pintado */
+  setTimeout(function () {
+    if (arrancado) return;
+    var grid = document.getElementById('v-grid');
+    if (grid && grid.children.length) return;   /* está funcionando */
+    mostrar('La app no ha llegado a arrancar',
+            motivo || 'No ha dado ningún error, así que puede ser una conexión ' +
+            'muy lenta o un archivo a medias en la caché. Prueba a reparar; si ' +
+            'vuelve a pasar, revisa que estén subidos todos los archivos y el .htaccess.');
+  }, 15000);
+
+  function mostrar(titulo, detalle) {
+    if (arrancado || document.getElementById('fallo-carga')) return;
+
+    var n = document.createElement('div');
+    n.id = 'fallo-carga';
+    n.innerHTML =
+      '<h2>' + titulo + '</h2>' +
+      '<pre id="fallo-detalle"></pre>' +
+      '<button id="fallo-reparar">Borrar caché y reintentar</button>' +
+      '<button id="fallo-copiar" class="fallo-sec">Copiar el error</button>' +
+      '<button id="fallo-cerrar" class="fallo-sec">Cerrar este aviso</button>' +
+      '<p class="fallo-pista">Comprueba que están subidos todos los archivos ' +
+      'del ZIP, incluido el <b>.htaccess</b>, que es el que hace que el ' +
+      'servidor entregue los .js como text/javascript.</p>';
+    document.body.appendChild(n);
+    document.getElementById('fallo-detalle').textContent = detalle;
+
+    document.getElementById('fallo-cerrar').onclick = function () { n.remove(); };
+
+    document.getElementById('fallo-copiar').onclick = function () {
+      var t = titulo + '\n' + detalle + '\n' + navigator.userAgent;
+      if (navigator.clipboard) navigator.clipboard.writeText(t);
+      this.textContent = 'Copiado';
+    };
+
+    document.getElementById('fallo-reparar').onclick = function () {
+      this.textContent = 'Limpiando…';
+      var fin = function () { location.reload(); };
+      var tareas = [];
+      try {
+        if (window.caches) {
+          tareas.push(caches.keys().then(function (k) {
+            return Promise.all(k.map(function (x) { return caches.delete(x); }));
+          }));
+        }
+        if (navigator.serviceWorker) {
+          tareas.push(navigator.serviceWorker.getRegistrations().then(function (rs) {
+            return Promise.all(rs.map(function (r) { return r.unregister(); }));
+          }));
+        }
+        Promise.all(tareas).then(fin, fin);
+        setTimeout(fin, 3000);          /* pase lo que pase, se recarga */
+      } catch (e) { fin(); }
+    };
+  }
+})();
+</script>
+
+<script type="module" src="js/app.js?v=35"></script>
+</body>
+</html>

@@ -1,0 +1,380 @@
+/* ============================================================
+   TIENDAS Y PANEL DE PRECIOS
+   ============================================================ */
+
+.tn-fila {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.65rem 0;
+  border-bottom: 0.5px solid var(--line-sutil);
+}
+.tn-fila[data-off="true"] { opacity: 0.48; }
+
+.tn-sello {
+  width: 30px; height: 30px;
+  display: grid; place-items: center;
+  background: var(--marca);
+  color: #fff;
+  font-style: normal;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  flex: 0 0 auto;
+}
+
+.tn-n {
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+  font-size: 0.9rem;
+  font-weight: 400;
+}
+.tn-n em {
+  display: block;
+  font-style: normal;
+  font-size: 0.55rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.tn-orden, .tn-off {
+  width: 26px; height: 26px;
+  display: grid; place-items: center;
+  font-size: 0.9rem;
+  color: var(--muted);
+  flex: 0 0 auto;
+}
+.tn-orden:disabled { opacity: 0.22; }
+.tn-off { border: 0.5px solid var(--line); }
+
+/* ---------- paleta ---------- */
+
+.tn-colores {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+.tn-colores button {
+  width: 32px; height: 32px;
+  background: var(--marca);
+  border: 2px solid transparent;
+  transition: border-color 0.2s var(--curva);
+}
+.tn-colores button[aria-pressed="true"] {
+  border-color: var(--black);
+  outline: 1px solid var(--white);
+  outline-offset: -4px;
+}
+
+.tn-previa {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-top: 1.3rem;
+  padding: 1rem;
+  background: var(--off);
+  border-top: 3px solid var(--marca);
+}
+.tn-previa i {
+  width: 40px; height: 40px;
+  display: grid; place-items: center;
+  background: var(--marca);
+  color: #fff;
+  font-style: normal;
+  font-size: 0.88rem;
+  font-weight: 800;
+}
+.tn-previa span {
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ============================================================
+   PANEL DE PRECIOS
+   ============================================================ */
+
+.pp-cab { border-left: 3px solid var(--marca); }
+
+.pp-tiendas {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5px;
+  margin: 1.2rem var(--pad-x) 0;
+}
+.pp-tiendas button {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.8rem;
+  border: 0.5px solid var(--line);
+  text-align: left;
+  transition: background 0.18s var(--curva);
+}
+.pp-tiendas button:active { background: var(--off); }
+.pp-tiendas i {
+  width: 32px; height: 32px;
+  display: grid; place-items: center;
+  background: var(--marca);
+  color: #fff;
+  font-style: normal;
+  font-size: 0.65rem;
+  font-weight: 800;
+  flex: 0 0 auto;
+}
+.pp-tiendas span { font-size: 0.92rem; font-weight: 400; }
+.pp-tiendas em {
+  display: block;
+  font-style: normal;
+  font-size: 0.58rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+/* Cambiar de tienda sin salir del panel */
+.pp-tiendas-mini {
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0.9rem var(--pad-x);
+}
+.pp-tiendas-mini button { padding: 0; border: none; }
+.pp-tiendas-mini i {
+  width: 34px; height: 26px;
+  opacity: 0.4;
+  transition: opacity 0.2s var(--curva);
+}
+.pp-tiendas-mini button[aria-pressed="true"] i { opacity: 1; }
+
+/* ---------- filtros de categoría ---------- */
+
+.pp-cats {
+  display: flex;
+  gap: 0.35rem;
+  overflow-x: auto;
+  padding: 0.8rem var(--pad-x);
+  border-bottom: 0.5px solid var(--line-sutil);
+  scrollbar-width: none;
+}
+.pp-cats::-webkit-scrollbar { display: none; }
+.pp-cats button {
+  flex: 0 0 auto;
+  padding: 0.4rem 0.7rem;
+  border: 0.5px solid var(--line);
+  font-size: 0.66rem;
+  color: var(--muted-2);
+  white-space: nowrap;
+}
+.pp-cats button[aria-pressed="true"] {
+  background: var(--black);
+  border-color: var(--black);
+  color: var(--white);
+  font-weight: 700;
+}
+
+/* ---------- fila de precio ---------- */
+
+.pp-fila {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  padding: 0.85rem var(--pad-x);
+  border-bottom: 0.5px solid var(--line-sutil);
+  transition: background 0.4s var(--curva);
+}
+.pp-fila[data-guardado="true"] { background: var(--off); }
+.pp-fila[data-viejo="true"] .pp-nombre { opacity: 0.6; }
+.pp-fila .res-icono { width: 22px; height: 22px; font-size: 18px; margin-top: 2px; }
+
+.pp-datos { flex: 1; min-width: 0; }
+
+.pp-nombre { font-size: 0.9rem; font-weight: 400; display: block; }
+.pp-nombre em {
+  display: block;
+  font-style: normal;
+  font-size: 0.55rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.pp-campos {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.55rem;
+}
+.pp-campos .cmp-precio { display: flex; padding: 0.35rem 0.5rem; }
+.pp-campos .cmp-precio input { width: 46px; }
+.pp-campos .ga-mini input { width: 34px; }
+
+.pp-por {
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  flex: 0 0 auto;
+}
+
+.pp-unidad { border: 0.5px solid var(--line); flex: 0 0 auto; }
+.pp-unidad select {
+  padding: 0.42rem 0.4rem;
+  font-size: 0.78rem;
+  background: transparent;
+}
+.pp-unidad select:focus { outline: none; }
+
+.pp-pie {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+  margin-top: 0.45rem;
+  min-height: 14px;
+}
+.pp-previa {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--accent);
+}
+.pp-caducado {
+  font-style: normal;
+  font-size: 0.55rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.pp-pie button {
+  font-size: 0.55rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-left: auto;
+}
+
+.pp-estrella {
+  width: 30px; height: 30px;
+  display: grid; place-items: center;
+  font-size: 1rem;
+  color: var(--muted);
+  flex: 0 0 auto;
+  margin-top: 2px;
+}
+.pp-estrella[data-estado="principal"] { color: var(--accent); }
+.pp-estrella[data-estado="planb"] { color: var(--muted-2); }
+
+/* ============================================================
+   PERIODICIDAD Y RECORDATORIOS
+   ============================================================ */
+
+.fi-periodo {
+  margin-top: 1.4rem;
+  padding-top: 1.2rem;
+  border-top: 0.5px solid var(--line);
+}
+
+.fi-periodo-cifra {
+  display: flex;
+  align-items: baseline;
+  gap: 0.55rem;
+}
+.fi-periodo-cifra b {
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 1;
+}
+.fi-periodo-cifra[data-toca="true"] b { color: var(--accent); }
+.fi-periodo-cifra span {
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted-2);
+}
+.fi-periodo-cifra span em {
+  display: block;
+  font-style: normal;
+  font-size: 0.55rem;
+  letter-spacing: 0.14em;
+  color: var(--muted);
+  margin-top: 3px;
+}
+
+.fi-periodo-nota {
+  font-size: 0.78rem;
+  line-height: 1.6;
+  color: var(--muted-2);
+  margin-top: 0.7rem;
+}
+.fi-periodo-nota b { font-weight: 700; color: var(--black); }
+.fi-periodo-nota[data-toca="true"] b { color: var(--accent); }
+
+/* ---------- recordatorios ---------- */
+
+.rc-fila {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.7rem 0;
+  border-bottom: 0.5px solid var(--line-sutil);
+}
+.rc-fila[data-off="true"] { opacity: 0.45; }
+
+.rc-n {
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+  font-size: 0.92rem;
+  font-weight: 400;
+}
+.rc-n em {
+  display: block;
+  font-style: normal;
+  font-size: 0.58rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 3px;
+}
+.rc-n i {
+  display: block;
+  font-style: normal;
+  font-size: 0.62rem;
+  color: var(--accent);
+  margin-top: 3px;
+}
+
+.rc-off {
+  width: 34px; height: 34px;
+  display: grid; place-items: center;
+  border: 0.5px solid var(--line);
+  font-size: 0.7rem;
+  color: var(--muted-2);
+  flex: 0 0 auto;
+}
+
+.rc-dias {
+  display: flex;
+  gap: 0.35rem;
+}
+.rc-dias button {
+  flex: 1;
+  aspect-ratio: 1;
+  border: 0.5px solid var(--line);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--muted-2);
+  transition: all 0.2s var(--curva);
+}
+.rc-dias button[aria-pressed="true"] {
+  background: var(--black);
+  border-color: var(--black);
+  color: var(--white);
+}
