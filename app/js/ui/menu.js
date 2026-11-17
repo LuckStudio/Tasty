@@ -6,15 +6,20 @@
    varias recetas y un número de raciones.
    ============================================================ */
 
-import { recetas as todasLasRecetas, recetaPorId } from '../recetas.js?v=37';
+import { recetas as todasLasRecetas, recetaPorId } from '../recetas.js?v=39';
 import { FRANJAS, diaDe, recetasDeFranja, anadirReceta, quitarReceta, fijarRaciones,
          marcarFuera, copiarDia, copiarSemana, vaciarDia, semana, lunesDe, sumarDias, fechaISO,
-         bloqueDe, consolidarSemana, faltasALaLista, disponibilidadReceta, FRANJA_POR_ID, cabeEnFranja }
-  from '../menu.js?v=37';
+         bloqueDe, consolidarSemana, faltasALaLista, disponibilidadReceta, FRANJA_POR_ID, cabeEnFranja, costeDe }
+  from '../menu.js?v=39';
 import { imagenReceta, puntoReceta, diaCorto, diaLargo, diaNumero, mesCorto, nombreFranja,
-         pregunta, etiquetaDisponibilidad } from './receta-comun.js?v=37';
-import { mostrarAcaba } from './acaba.js?v=37';
-import { normalizar, esc, tap } from '../util.js?v=37';
+         pregunta, etiquetaDisponibilidad } from './receta-comun.js?v=39';
+import { mostrarAcaba } from './acaba.js?v=39';
+import { personas } from '../hogar.js?v=39';
+import { ultimaVezCocinada, textoHace } from '../cocina.js?v=39';
+import { normalizar, esc, tap } from '../util.js?v=39';
+
+/* Los tres platos principales van en columnas; la merienda, en una franja fina debajo */
+const PRINCIPALES = ['desayuno', 'comida', 'cena'];
 
 let raiz = null, ancla = fechaISO(), cb = {};
 let sel = null;     // selector abierto: { fecha, franja, filtro, q, elegida, raciones }
@@ -60,10 +65,20 @@ function celdaHTML(fecha, franja, enBloque) {
   const d = diaDe(fecha);
   const rs = recetasDeFranja(fecha, franja);
   const atrib = `data-mn-celda="${fecha}|${franja}"`;
-  if (d.fuera[franja]) return `<button class="mn-celda mn-fuera" ${atrib}>${nombreFranja(franja)} fuera</button>`;
-  if (!rs.length) return `<button class="mn-celda mn-vacia" ${atrib} aria-label="Añadir receta: ${diaLargo(fecha)} ${nombreFranja(franja).toLowerCase()}">+</button>`;
-  return `<button class="mn-celda ${enBloque ? 'mn-bloque' : ''}" ${atrib}>
-    ${rs.map(x => `<span class="mn-rec">${puntoReceta(x.receta)}<span>${esc(x.receta.nombre)}${x.raciones !== (x.receta.raciones || 1) ? ` <small>×${x.raciones}</small>` : ''}</span></span>`).join('')}</button>`;
+  const fina = franja === 'merienda' ? ' mn-fina' : '';        // la merienda ocupa una franja fina bajo el día
+  if (d.fuera[franja]) return `<button class="mn-celda mn-fuera${fina}" ${atrib}>${nombreFranja(franja)} fuera</button>`;
+  if (!rs.length) return `<button class="mn-celda mn-vacia${fina}" ${atrib} aria-label="Añadir receta: ${diaLargo(fecha)} ${nombreFranja(franja).toLowerCase()}">${fina ? '+ Merienda' : '+'}</button>`;
+  return `<button class="mn-celda ${enBloque ? 'mn-bloque' : ''}${fina}" ${atrib}>${fina ? '<small class="mn-etq">MERIENDA</small>' : ''}
+    ${rs.map(x => `<span class="mn-rec">${puntoReceta(x.receta)}<span>${esc(x.receta.nombre)}${x.raciones !== personas() ? ` <small>×${x.raciones}</small>` : ''}</span></span>`).join('')}</button>`;
+}
+
+/* Coste aproximado de los ingredientes de lo planificado esta semana */
+function costeSemana(dias) {
+  const cons = consolidarSemana(dias);
+  if (!cons.length) return '';
+  const c = costeDe(cons);
+  if (!c.conocidos) return '';
+  return `<p class="mn-coste">Ingredientes de la semana: ≈ <b>${c.total.toFixed(2).replace('.', ',')} €</b>${c.sinPrecio ? ` · ${c.sinPrecio} sin precio` : ''}</p>`;
 }
 
 export function pintarMenu() {
@@ -86,13 +101,15 @@ export function pintarMenu() {
       </div>
     </div>
     <p class="mn-leyenda"><i class="mn-cuadro" aria-hidden="true"></i>Bloque de cocina del ${diaLargo(base)} por la tarde</p>
+    ${costeSemana(dias)}
 
     <div class="mn-tabla" role="grid" aria-label="Menú de la semana">
-      <div class="mn-cols" aria-hidden="true"><span></span>${FRANJAS.map(f => `<span>${f.corto}</span>`).join('')}</div>
+      <div class="mn-cols" aria-hidden="true"><span></span>${PRINCIPALES.map(f => `<span>${FRANJA_POR_ID[f].corto}</span>`).join('')}</div>
       ${dias.map(f => `
         <div class="mn-fila" role="row">
           <div class="mn-dia ${f === hoy ? 'mn-hoy' : ''}"><small>${diaCorto(f)}</small><b>${diaNumero(f)}</b></div>
-          ${FRANJAS.map(fr => celdaHTML(f, fr.id, enBloque.has(`${f}|${fr.id}`))).join('')}
+          ${PRINCIPALES.map(fr => celdaHTML(f, fr, enBloque.has(`${f}|${fr}`))).join('')}
+          ${celdaHTML(f, 'merienda', enBloque.has(`${f}|merienda`))}
         </div>`).join('')}
     </div>
 
@@ -188,7 +205,7 @@ function generarLista() {
 /* ---------- selector de receta (pantalla 03) ---------- */
 
 function abrirSelector(fecha, franja) {
-  sel = { fecha, franja, filtro: 'todas', q: '', elegida: null, raciones: 2 };
+  sel = { fecha, franja, filtro: 'todas', q: '', elegida: null, raciones: personas() };
   mostrarAcaba(false);               // el botón flotante taparía el pie del selector
   pintarSelector();
   document.querySelector('.vista:not([hidden])')?.scrollTo?.(0, 0);
@@ -218,7 +235,7 @@ function gridSelector() {
     return `<button class="sl-card" data-sl-r="${r.id}" aria-pressed="${sel.elegida === r.id}">
       ${imagenReceta(r, 'rc-tarjeta')}
       <b>${esc(r.nombre)}</b>
-      <span class="sl-pie"><small>${r.ingredientes.length} ING.</small>${e ? `<span class="rc-chip ${e.clase}">${e.texto}</span>` : ''}</span>
+      <span class="sl-pie"><small>${r.ingredientes.length} ING.${ultimaVezCocinada(r.id) ? ` · ${esc(textoHace(ultimaVezCocinada(r.id)))}` : ''}</small>${e ? `<span class="rc-chip ${e.clase}">${e.texto}</span>` : ''}</span>
     </button>`;
   }).join('');
 }
@@ -252,9 +269,8 @@ function clicSelector(t) {
   const c = t.closest('[data-sl-r]');
   if (c) {
     tap();
-    const r = recetaPorId(c.dataset.slR);
     sel.elegida = c.dataset.slR;
-    sel.raciones = r?.raciones || 2;
+    sel.raciones = personas();                 // las raciones del hogar, no las de la receta
     pintarSelector(); return;
   }
   if (t.closest('#sl-menos')) { tap(); sel.raciones = Math.max(1, sel.raciones - 1); pintarSelector(); return; }

@@ -7,12 +7,12 @@
    El orden de las secciones lo pone js/secciones.js.
    ============================================================ */
 
-import { datos } from './almacen.js?v=37';
-import { POR_ID } from './estado.js?v=37';
-import { preciosDe } from './precios.js?v=37';
-import { favoritas } from './tiendas.js?v=37';
+import { datos } from './almacen.js?v=39';
+import { POR_ID } from './estado.js?v=39';
+import { preciosDe } from './precios.js?v=39';
+import { favoritas } from './tiendas.js?v=39';
 import { seccionDe, agruparPorRuta, rutaDe, SECCION_POR_ID, SIN_SECCION }
-  from './secciones.js?v=37';
+  from './secciones.js?v=39';
 
 /* Líneas de la compra -> grupos numerados en el orden de la ruta.
    Cada grupo: { seccion, nombre, numero, hechos, total, items:[{i,l,hecho}] }

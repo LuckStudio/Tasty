@@ -21,11 +21,11 @@
    y nunca finge que lo tiene ni que no.
    ============================================================ */
 
-import { datos, guardar } from './almacen.js?v=37';
-import { POR_ID } from './estado.js?v=37';
-import { cantidad as enLista, sumar as sumarALista } from './estado.js?v=37';
-import { convertir, unidadNormal } from './unidades.js?v=37';
-import { preciosDe } from './precios.js?v=37';
+import { datos, guardar } from './almacen.js?v=39';
+import { POR_ID } from './estado.js?v=39';
+import { cantidad as enLista, sumar as sumarALista } from './estado.js?v=39';
+import { convertir, unidadNormal, formatearCantidad } from './unidades.js?v=39';
+import { preciosDe } from './precios.js?v=39';
 
 const oyentes = new Set();
 export function suscribirDespensa(fn) { oyentes.add(fn); return () => oyentes.delete(fn); }
@@ -187,4 +187,23 @@ export function aLaLista(ids, nivel = 'acaba') {
     else { sumarALista(id, 1); anadidos++; }
   }
   return { anadidos, yaEstaban };
+}
+
+/* Lo que hay, en texto: «650 g», «1,5 kg», «6 ud», «Hay», «Se acaba», «Agotado» */
+export function textoStock(e) {
+  if (!e) return '';
+  if (e.cant == null) return e.estado === 'acaba' ? 'Se acaba' : e.estado === 'agotado' ? 'Agotado' : 'Hay';
+  if (e.unidad === 'ud') return `${e.cant} ud`;
+  return e.cant >= 1000
+    ? formatearCantidad(e.cant / 1000, e.unidad === 'ml' ? 'l' : 'kg')
+    : formatearCantidad(e.cant, e.unidad);
+}
+
+/* Todos los productos con existencias anotadas, de menos a más urgentes */
+export function enDespensa() {
+  const orden = { agotado: 0, acaba: 1, hay: 2 };
+  return Object.entries(datos.despensa || {})
+    .filter(([id]) => POR_ID[id])
+    .map(([id, e]) => ({ id: Number(id), producto: POR_ID[id], stock: e }))
+    .sort((a, b) => (orden[a.stock.estado] - orden[b.stock.estado]) || a.producto.n.localeCompare(b.producto.n, 'es'));
 }

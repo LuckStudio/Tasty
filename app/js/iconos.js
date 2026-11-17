@@ -10,8 +10,8 @@
    errores y hacía cientos de peticiones inútiles.
    ============================================================ */
 
-import { slug, rutaIcono } from './util.js?v=37';
-import { SET_ICONOS } from '../datos/iconos.js?v=37';
+import { slug, rutaIcono } from './util.js?v=39';
+import { SET_ICONOS } from '../datos/iconos.js?v=39';
 
 /* Si un SVG declarado no está en el servidor, se apunta para no
    volver a pedirlo durante esta sesión */

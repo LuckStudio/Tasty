@@ -5,8 +5,8 @@
 import { hayClave, guardarClave, borrarClave, claveEnmascarada,
          modeloManual, fijarModeloManual, ultimoModeloUsado,
          modelosEnCache, modelosDisponibles, probar }
-  from '../gemini.js?v=37';
-import { esc, tap, $ } from '../util.js?v=37';
+  from '../gemini.js?v=39';
+import { esc, tap, $ } from '../util.js?v=39';
 
 /* ---------- ajustes ---------- */
 

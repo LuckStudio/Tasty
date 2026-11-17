@@ -4,15 +4,18 @@
    en letra grande y «Añadir al menú».
    ============================================================ */
 
-import { recetaPorId, editarReceta, nombreIngrediente, textoCantidad } from '../recetas.js?v=37';
-import { POR_ID } from '../estado.js?v=37';
-import { cantidadEscalada, anadirReceta, fechaISO, sumarDias, franjaDeReceta, mensajeNoCabe } from '../menu.js?v=37';
-import { disponibilidad, esFalta } from '../despensa.js?v=37';
-import { formatearCantidad } from '../unidades.js?v=37';
+import { recetaPorId, editarReceta, nombreIngrediente, textoCantidad } from '../recetas.js?v=39';
+import { POR_ID } from '../estado.js?v=39';
+import { cantidadEscalada, anadirReceta, fechaISO, sumarDias, franjaDeReceta, mensajeNoCabe } from '../menu.js?v=39';
+import { disponibilidad, esFalta } from '../despensa.js?v=39';
+import { formatearCantidad } from '../unidades.js?v=39';
 import { imagenReceta, puntoReceta, diaCorto, diaLargo, diaNumero, mesCorto, relativo, nombreFranja }
-  from './receta-comun.js?v=37';
-import { COMIDA_POR_ID } from '../recetas.js?v=37';
-import { esc, tap } from '../util.js?v=37';
+  from './receta-comun.js?v=39';
+import { COMIDA_POR_ID } from '../recetas.js?v=39';
+import { personas } from '../hogar.js?v=39';
+import { costePorRacion } from '../menu.js?v=39';
+import { ultimaVezCocinada, vecesCocinada, textoHace } from '../cocina.js?v=39';
+import { esc, tap } from '../util.js?v=39';
 
 let raiz = null, id = null, tab = 'ingredientes', raciones = null, volver = 'menu', cb = {};
 
@@ -40,7 +43,7 @@ export function iniciarReceta(nodo, callbacks) {
     const menos = t.closest('#rc-menos'), mas = t.closest('#rc-mas');
     if (menos || mas) {
       tap();
-      const actual = raciones || r.raciones || 1;
+      const actual = raciones || personas();
       raciones = Math.max(1, Math.min(20, actual + (mas ? 1 : -1)));
       pintarReceta(); return;
     }
@@ -67,7 +70,7 @@ function elegirDia(r) {
       texto: `${relativo(f, hoy) === 'HOY' ? 'Hoy' : relativo(f, hoy) === 'MAÑANA' ? 'Mañana' : diaLargo(f)} · ${diaNumero(f)} ${mesCorto(f)}`,
       nota: nombreFranja(franja),
       accion: () => {
-        const res = anadirReceta(f, franja, r.id, raciones || r.raciones || 1);
+        const res = anadirReceta(f, franja, r.id, raciones || personas());
         document.dispatchEvent(new CustomEvent('aviso', { detail: res.ok
           ? `Añadida a ${nombreFranja(franja).toLowerCase()} del ${diaLargo(f)}` : res.error }));
         if (res.ok) cb.alMenu(f);
@@ -85,6 +88,21 @@ function estadoChip(ing, r, n) {
   return m ? `<span class="rc-chip ${m[0]}">${m[1]}${d.estado === 'hay' ? tengo : ''}</span>` : '';
 }
 
+/* Última vez que se cocinó y coste aproximado por ración */
+function datosExtra(r) {
+  const ult = ultimaVezCocinada(r.id);
+  const c = costePorRacion(r);
+  const partes = [];
+  if (ult) {
+    const v = vecesCocinada(r.id);
+    partes.push(`Última vez: ${textoHace(ult)}${v > 1 ? ` · ${v} veces` : ''}`);
+  } else partes.push('Todavía no la has cocinado');
+  if (c.porRacion != null) {
+    partes.push(`≈ ${c.porRacion.toFixed(2).replace('.', ',')} € por ración${c.sinPrecio ? ` (${c.sinPrecio} ingredientes sin precio)` : ''}`);
+  }
+  return `<p class="rc-extra">${partes.map(esc).join('<br>')}</p>`;
+}
+
 export function pintarReceta() {
   if (!raiz) return;
   const r = recetaPorId(id);
@@ -92,7 +110,7 @@ export function pintarReceta() {
     raiz.innerHTML = `<div class="rv-cab"><button class="barra-btn rv-atras" id="rc-atras" aria-label="Volver">‹</button><div><h1>Receta no encontrada</h1></div></div>`;
     return;
   }
-  const n = raciones || r.raciones || 1;
+  const n = raciones || personas();
   const comida = COMIDA_POR_ID[r.comida]?.nombre || '';
 
   raiz.innerHTML = `
@@ -111,6 +129,8 @@ export function pintarReceta() {
         <div><small>Raciones</small>
           <span class="res-pasos rc-pasos"><button id="rc-menos" aria-label="Menos raciones">−</button><span>${n}</span><button id="rc-mas" aria-label="Más raciones">+</button></span></div>
       </div>
+
+      ${datosExtra(r)}
 
       <div class="rc-tabs" role="tablist">
         <button role="tab" data-rc-tab="ingredientes" aria-selected="${tab === 'ingredientes'}">Ingredientes</button>

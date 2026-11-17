@@ -5,11 +5,11 @@
    y estima el total con sus precios. Se recuerda la última usada.
    ============================================================ */
 
-import { compraActual } from '../compra.js?v=37';
-import { tiendasActivas, TIENDA_POR_ID, inicialesTienda } from '../tiendas.js?v=37';
+import { compraActual } from '../compra.js?v=39';
+import { tiendasActivas, TIENDA_POR_ID, inicialesTienda } from '../tiendas.js?v=39';
 import { estimarLineas, ordenarTiendas, ultimaTienda, ultimaVez, textoHace, resumenRuta }
-  from '../ruta.js?v=37';
-import { euros, esc, tap } from '../util.js?v=37';
+  from '../ruta.js?v=39';
+import { euros, esc, tap } from '../util.js?v=39';
 
 let raiz = null, elegida = null, cb = {};
 

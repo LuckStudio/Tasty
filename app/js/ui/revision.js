@@ -14,13 +14,13 @@
    pasar al editor clásico lo decide quien lo abre (callbacks).
    ============================================================ */
 
-import { POR_ID, PRODUCTOS } from '../estado.js?v=37';
-import { TIENDA_POR_ID } from '../tiendas.js?v=37';
-import { buscarCandidatos } from '../escaner.js?v=37';
-import { seccionDe, SECCION_POR_ID } from '../secciones.js?v=37';
-import { textosDe } from '../alias.js?v=37';
-import { iconoHTML } from '../iconos.js?v=37';
-import { normalizar, euros, esc, tap } from '../util.js?v=37';
+import { POR_ID, PRODUCTOS } from '../estado.js?v=39';
+import { TIENDA_POR_ID } from '../tiendas.js?v=39';
+import { buscarCandidatos } from '../escaner.js?v=39';
+import { seccionDe, SECCION_POR_ID } from '../secciones.js?v=39';
+import { textosDe } from '../alias.js?v=39';
+import { iconoHTML } from '../iconos.js?v=39';
+import { normalizar, euros, esc, tap } from '../util.js?v=39';
 
 let e = null;   // estado de la revisión; null = cerrada
 

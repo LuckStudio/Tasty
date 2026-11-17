@@ -5,13 +5,14 @@
    añadir a la lista con un toque.
    ============================================================ */
 
-import { PRODUCTOS, cantidad, sumar } from '../estado.js?v=37';
-import { preciosDe, SUFIJO_BASE } from '../precios.js?v=37';
-import { tiendasActivas, TIENDA_POR_ID } from '../tiendas.js?v=37';
-import { SECCIONES, seccionDe } from '../secciones.js?v=37';
-import { buscarProductos, textoFormato } from '../busqueda.js?v=37';
-import { iconoHTML } from '../iconos.js?v=37';
-import { esc, tap } from '../util.js?v=37';
+import { PRODUCTOS, cantidad, sumar } from '../estado.js?v=39';
+import { preciosDe, SUFIJO_BASE } from '../precios.js?v=39';
+import { tiendasActivas, TIENDA_POR_ID } from '../tiendas.js?v=39';
+import { SECCIONES, seccionDe } from '../secciones.js?v=39';
+import { buscarProductos, textoFormato } from '../busqueda.js?v=39';
+import { iconoHTML } from '../iconos.js?v=39';
+import { stockDe, textoStock } from '../despensa.js?v=39';
+import { esc, tap } from '../util.js?v=39';
 
 let raiz = null;
 const f = { texto: '', tienda: null, seccion: null, orden: 'nombre' };
@@ -75,6 +76,7 @@ function tarjeta({ p, fila, enLista, sinPrecioEnTienda }) {
     </button>
     <b class="pr-nombre">${esc(p.n)}</b>
     <small class="pr-formato">${esc(textoFormato(fila, p))}</small>
+    ${stockDe(p.id) ? `<small class="pr-casa">EN CASA · ${esc(textoStock(stockDe(p.id)).toUpperCase())}</small>` : ''}
     <div class="pr-pie">
       <div class="pr-precios">${precio != null
         ? `<span class="pr-precio">${fmt(precio)} €</span>${base ? `<small>${base}</small>` : ''}`

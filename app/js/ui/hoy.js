@@ -7,14 +7,18 @@
    ============================================================ */
 
 import { tocaHoy, fechaISO, sumarDias, franjasPorDefecto, franjasDeBloque, configurarBloque,
-         restablecerBloque, faltasALaLista, resumenConsolidado, FRANJAS } from '../menu.js?v=37';
+         restablecerBloque, faltasALaLista, resumenConsolidado, FRANJAS } from '../menu.js?v=39';
 import { imagenReceta, puntoReceta, diaLargo, diaNumero, mesCorto, relativo, nombreFranja }
-  from './receta-comun.js?v=37';
-import { nombreIngrediente } from '../recetas.js?v=37';
-import { colorDeReceta } from '../menu.js?v=37';
-import { formatearCantidad } from '../unidades.js?v=37';
-import { esFalta } from '../despensa.js?v=37';
-import { esc, tap } from '../util.js?v=37';
+  from './receta-comun.js?v=39';
+import { nombreIngrediente } from '../recetas.js?v=39';
+import { colorDeReceta } from '../menu.js?v=39';
+import { formatearCantidad } from '../unidades.js?v=39';
+import { esFalta } from '../despensa.js?v=39';
+import { terminarDeCocinar, ultimaVezCocinada, textoHace as haceTiempo } from '../cocina.js?v=39';
+import { costeDe } from '../menu.js?v=39';
+import { avisoDeCopia, posponerAvisoDeCopia } from '../hogar.js?v=39';
+import { recordatorios, crearRecordatorio } from '../recordatorios.js?v=39';
+import { esc, tap } from '../util.js?v=39';
 
 let raiz = null, cb = {};
 let pantalla = 'hoy';       // hoy | bloque
@@ -31,6 +35,10 @@ export function iniciarHoy(nodo, callbacks) {
     if (t.closest('#hy-atras')) { tap(); pantalla = 'hoy'; pintarHoy(); return; }
     if (t.closest('#hy-faltas') || t.closest('#bl-faltas')) { tap(); faltasALista(); return; }
     if (t.closest('#hy-planificar')) { tap(); cb.alMenu(); return; }
+    if (t.closest('#hy-terminar')) { tap(); menuTerminar(); return; }
+    if (t.closest('#hy-despensa')) { tap(); cb.alDespensa(); return; }
+    if (t.closest('#hy-copia')) { tap(); document.dispatchEvent(new CustomEvent('exportar-copia')); return; }
+    if (t.closest('#hy-copia-luego')) { tap(); posponerAvisoDeCopia(); pintarHoy(); return; }
 
     const rec = t.closest('[data-hy-receta]');
     if (rec) { tap(); const [id, n] = rec.dataset.hyReceta.split('|'); cb.alVerReceta(id, +n); return; }
@@ -59,6 +67,39 @@ function faltasALista() {
   pintarHoy();
 }
 
+/* «He terminado de cocinar»: descuenta lo usado de la despensa y apunta que
+   esas recetas se han cocinado hoy. */
+function menuTerminar() {
+  const h = tocaHoy();
+  if (!h.recetas.length) return;
+  const hacer = items => {
+    const r = terminarDeCocinar(items.map(x => ({ receta: x.receta, raciones: x.raciones })));
+    document.dispatchEvent(new CustomEvent('aviso', { detail:
+      `${r.recetas} ${r.recetas === 1 ? 'receta cocinada' : 'recetas cocinadas'} · ${r.descontados} ingredientes descontados` +
+      (r.sinCuantificar ? ` · ${r.sinCuantificar} sin cantidad exacta` : '') }));
+    pintarHoy();
+  };
+  document.dispatchEvent(new CustomEvent('abrir-hoja', { detail: {
+    titulo: 'He terminado de cocinar',
+    opciones: [
+      { texto: h.recetas.length === 1 ? `«${h.recetas[0].receta.nombre}»` : `Todo el bloque (${h.recetas.length} recetas)`,
+        nota: 'Se descuentan los ingredientes de la despensa y se apunta que se ha cocinado hoy',
+        accion: () => hacer(h.recetas) },
+      ...(h.recetas.length > 1 ? h.recetas.map(x => ({
+        texto: `Solo «${x.receta.nombre}»`, accion: () => hacer([x]) })) : []),
+      { texto: 'Todavía no' }
+    ] } }));
+}
+
+/* Un aviso cada tarde a la hora de cocinar (usa los recordatorios de la app) */
+function crearAvisoDiario() {
+  const ya = recordatorios().some(r => r.tipo === 'cocinar');
+  if (ya) { document.dispatchEvent(new CustomEvent('aviso', { detail: 'Ya tienes un aviso para cocinar (Ajustes → Recordatorios)' })); return; }
+  const r = crearRecordatorio({ dias: [0, 1, 2, 3, 4, 5, 6], hora: 18, minuto: 0, texto: 'Esta tarde toca cocinar', tipo: 'cocinar' });
+  document.dispatchEvent(new CustomEvent('aviso', { detail: r.ok
+    ? 'Aviso creado a las 18:00. Puedes cambiarlo en Ajustes → Recordatorios (hacen falta los permisos de notificaciones)' : r.error }));
+}
+
 /* Configurar qué franjas entran en el bloque de esta tarde */
 function menuBloque() {
   const hoy = fechaISO();
@@ -79,6 +120,8 @@ function menuBloque() {
         } })),
       { texto: 'Restablecer lo habitual', nota: 'Cena de hoy, desayuno y comida de mañana',
         accion: () => { restablecerBloque(hoy); pintarHoy(); } },
+      { texto: 'Avisarme cada tarde a las 18:00', nota: 'Un recordatorio para mirar qué toca cocinar',
+        accion: crearAvisoDiario },
       { texto: 'Hecho' }
     ] } }));
 }
@@ -94,7 +137,17 @@ export function pintarHoy() {
   const n = h.recetas.length;
   const nombresFalta = h.faltas.map(x => nombreIngrediente({ id: x.id, texto: x.texto })).slice(0, 4);
 
+  const copia = avisoDeCopia();
+
   raiz.innerHTML = `
+    ${copia ? `
+    <div class="hy-aviso hy-copia" role="status">
+      <span aria-hidden="true">💾</span>
+      <div><b>${copia.dias == null ? 'Aún no has hecho ninguna copia' : `Hace ${copia.dias} días que no haces una copia`}</b>
+        <small>Tus datos viven en este dispositivo: una copia evita sustos.</small></div>
+      <div class="hy-copia-bot"><button class="btn-secundario" id="hy-copia">Hacer copia</button>
+        <button class="rv-link" id="hy-copia-luego">Más tarde</button></div>
+    </div>` : ''}
     <div class="hy-cab">
       <div><small class="rv-meta">${diaLargo(hoy).toUpperCase()} · ${diaNumero(hoy)} ${mesCorto(hoy).toUpperCase()}</small>
         <h1>${n ? `Esta tarde toca cocinar ${n} ${n === 1 ? 'plato' : 'platos'}` : 'Hoy no hay nada que cocinar'}</h1></div>
@@ -110,7 +163,8 @@ export function pintarHoy() {
             ${imagenReceta(x.receta, 'rc-mini')}
             <span class="hy-rec-t"><small class="rv-meta">${nombreFranja(x.franja).toUpperCase()} · ${relativo(x.fecha, hoy)}</small>
               <b>${esc(x.receta.nombre)}</b>
-              <small>${x.raciones} ${x.raciones === 1 ? 'ración' : 'raciones'}${x.receta.pasos?.length ? ` · ${x.receta.pasos.length} pasos` : ''}</small></span>
+              <small>${x.raciones} ${x.raciones === 1 ? 'ración' : 'raciones'}${x.receta.pasos?.length ? ` · ${x.receta.pasos.length} pasos` : ''}${
+                ultimaVezCocinada(x.receta.id) ? ` · la última vez, ${haceTiempo(ultimaVezCocinada(x.receta.id), hoy)}` : ''}</small></span>
             ${puntoReceta(x.receta)}
           </button></li>`).join('')}
       </ul>
@@ -120,6 +174,7 @@ export function pintarHoy() {
         <button class="btn-principal" id="hy-cocinar">▶ Empezar a cocinar</button>
         <button class="btn-secundario" id="hy-ingredientes">Ingredientes</button>
       </div>
+      <button class="btn-secundario hy-terminar" id="hy-terminar">✓ He terminado de cocinar</button>
     </section>
 
     ${h.faltas.length ? `
@@ -129,6 +184,8 @@ export function pintarHoy() {
         <small>${nombresFalta.map(esc).join(' · ')}${h.faltas.length > 4 ? ' · …' : ''}</small></div>
       <button class="btn-secundario" id="hy-faltas">A la lista</button>
     </div>` : ''}
+
+    <div class="rt-extras" style="padding-top:0.8rem"><button class="rv-link" id="hy-despensa">Ver lo que hay en casa</button></div>
 
     ${h.mananaNombres.length ? `
     <p class="hy-manana"><small class="rv-meta">MAÑANA POR LA TARDE</small>${h.mananaNombres.map(esc).join(' · ')}</p>` : ''}`
@@ -164,6 +221,7 @@ function pintarBloque() {
   const h = tocaHoy(hoy);
   const lista = h.consolidado;
   const r = resumenConsolidado(lista);
+  const coste = costeDe(lista);
   const vistas = new Map();
   for (const x of h.recetas) vistas.set(x.receta.id, x);
   const raciones = h.recetas.reduce((a, x) => a + x.raciones, 0);
@@ -177,7 +235,7 @@ function pintarBloque() {
 
     <div class="bl-ticket" role="table" aria-label="Ingredientes del bloque">
       <p class="bl-cab">${vistas.size} RECETAS · ${raciones} RACIONES · ${diaNumero(hoy)}/${String(new Date().getMonth() + 1).padStart(2, '0')}</p>
-      ${lista.length ? lista.map(f => {
+      ${lista.filter(f => !f.basico).length ? lista.filter(f => !f.basico).map(f => {
         const e = estadoLinea(f);
         return `<button class="bl-fila" role="row" ${f.id ? `data-bl-prod="${f.id}"` : ''}>
           <span class="bl-linea1"><b>${esc(nombreIngrediente({ id: f.id, texto: f.texto }).toUpperCase())}</b><b>${esc(cantidadTexto(f))}</b></span>
@@ -186,6 +244,8 @@ function pintarBloque() {
         </button>`;
       }).join('') : '<p class="ga-nota" style="padding:1rem">No hay recetas en el bloque de esta tarde.</p>'}
       <p class="bl-pie"><span>${r.ingredientes} INGREDIENTES</span><span class="${r.faltan ? 'bl-falta' : ''}">FALTAN ${r.faltan}</span></p>
+      ${r.basicos ? `<p class="bl-basicos">+ ${r.basicos} básicos de despensa (${esc(r.nombresBasicos.slice(0, 4).join(', ').toLowerCase())}${r.basicos > 4 ? '…' : ''})</p>` : ''}
+      ${coste.conocidos ? `<p class="bl-basicos">≈ ${coste.total.toFixed(2).replace('.', ',')} € en ingredientes${coste.sinPrecio ? ` · ${coste.sinPrecio} sin precio` : ''}</p>` : ''}
     </div>
 
     <div class="rv-pie">

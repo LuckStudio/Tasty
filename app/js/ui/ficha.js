@@ -3,27 +3,30 @@
    Precios por supermercado, comparativa y preferencia
    ============================================================ */
 
-import { POR_ID, cantidad, sumar, alternar } from '../estado.js?v=37';
+import { POR_ID, cantidad, sumar, alternar } from '../estado.js?v=39';
 import { preciosDe, guardarPrecio, borrarPrecio, preferencias,
          alternarPreferencia, moverPreferencia, calcularBase, aNumero,
          formatoBase, FORMATOS, NOMBRE_BASE, DIAS_VIEJO,
          equivalentes, enlazarEquivalente, desenlazarEquivalente,
-         masBaratoQue, marcaDe, fijarMarca } from '../precios.js?v=37';
-import { tiendasActivas, TIENDA_POR_ID } from '../tiendas.js?v=37';
-import { CAT_POR_ID } from '../../datos/categorias.js?v=37';
-import { PRODUCTOS } from '../estado.js?v=37';
-import { historialHTML } from './stats.js?v=37';
+         masBaratoQue, marcaDe, fijarMarca } from '../precios.js?v=39';
+import { tiendasActivas, TIENDA_POR_ID } from '../tiendas.js?v=39';
+import { CAT_POR_ID } from '../../datos/categorias.js?v=39';
+import { PRODUCTOS } from '../estado.js?v=39';
+import { historialHTML } from './stats.js?v=39';
 import { periodicidad, fijarPeriodicidad, textoOrigen, ultimaCompra,
-         diasDesde } from '../reposicion.js?v=37';
-import { iconoHTML } from '../iconos.js?v=37';
-import { datos } from '../almacen.js?v=37';
-import { editarProducto } from '../catalogo-edit.js?v=37';
-import { SECCIONES, seccionDe, SECCION_POR_ID } from '../secciones.js?v=37';
-import { textosDe as textosDeTicket } from '../alias.js?v=37';
-import { recetas as todasLasRecetas } from '../recetas.js?v=37';
-import { serie, tendencia } from '../historial.js?v=37';
-import { fusionarProductos } from '../fusion.js?v=37';
-import { euros, esc, normalizar, $, tap } from '../util.js?v=37';
+         diasDesde } from '../reposicion.js?v=39';
+import { iconoHTML } from '../iconos.js?v=39';
+import { datos } from '../almacen.js?v=39';
+import { editarProducto } from '../catalogo-edit.js?v=39';
+import { SECCIONES, seccionDe, SECCION_POR_ID } from '../secciones.js?v=39';
+import { textosDe as textosDeTicket } from '../alias.js?v=39';
+import { recetas as todasLasRecetas } from '../recetas.js?v=39';
+import { serie, tendencia } from '../historial.js?v=39';
+import { fusionarProductos } from '../fusion.js?v=39';
+import { stockDe, textoStock } from '../despensa.js?v=39';
+import { esBasico, fijarBasico } from '../basicos.js?v=39';
+import { editarStock } from './despensa.js?v=39';
+import { euros, esc, normalizar, $, tap } from '../util.js?v=39';
 
 let fondo, cuerpo, idActual = null, formAbierto = false, tiendaForm = null;
 let fusionando = false, qFusion = '';
@@ -44,6 +47,9 @@ export function iniciarFicha(nodoFondo, nodoCuerpo) {
     if (t.closest('#fi-fusionar')) { tap(); fusionando = !fusionando; qFusion = ''; pintar(); return; }
     const fus = t.closest('[data-fusion-con]');
     if (fus) { confirmarFusion(+fus.dataset.fusionCon); return; }
+
+    if (t.closest('#fi-stock')) { tap(); const id = idActual; editarStock(id); return; }
+    if (t.closest('#fi-basico')) { tap(); const p = POR_ID[idActual]; fijarBasico(idActual, !esBasico(p)); pintar(); return; }
 
     if (t.closest('#fi-historial')) {
       const id = idActual;
@@ -399,6 +405,12 @@ function bloqueFicha(p) {
         <span class="fi-chip">Se vende por ${p.u === 'ud' ? 'unidad' : p.u === 'l' ? 'litro' : 'kg'}</span>
         ${chipTend}
       </div>
+
+      <div class="fi-casa"><small>En casa</small>
+        <b>${stockDe(p.id) ? esc(textoStock(stockDe(p.id))) : 'sin anotar'}</b>
+        <button id="fi-stock">${stockDe(p.id) ? 'Cambiar' : 'Anotar'}</button></div>
+      <button class="fi-basico" id="fi-basico" aria-pressed="${esBasico(p)}">
+        <i aria-hidden="true">✓</i><span>Es un básico de despensa (aceite, sal…): solo me acuerdo de él cuando se acaba</span></button>
 
       <button class="fi-hist" id="fi-historial">
         <span>Cómo ha cambiado el precio</span><b aria-hidden="true">›</b></button>

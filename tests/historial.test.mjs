@@ -123,4 +123,43 @@ test('SEGURIDAD: un ticket importado con cantidades absurdas se limpia', () => {
   assert.equal(v.ticket.lineas[2].q, undefined);   // «0,5» con coma no es un número válido aquí: se descarta, no se adivina
 });
 
+/* --- cambios de precio frente a la última vez (resumen de compra) --- */
+const kiwi = { id: 110, u: 'kg', pu: 85 };
+const hist = [
+  { id: 'a', fecha: '2026-10-01T10:00:00Z', tienda: 'mercadona', lineas: [{ id: 110, precio: 1.75, cant: 1, q: { v: 0.5, u: 'kg' } }] },   // 3,50 €/kg
+  { id: 'b', fecha: '2026-10-20T10:00:00Z', tienda: 'mercadona', lineas: [{ id: 110, precio: 1.80, cant: 1, q: { v: 0.5, u: 'kg' } }] }    // 3,60 €/kg
+];
+const nuevo = (precio, v) => ({ id: 'c', fecha: '2026-11-16T10:00:00Z', tienda: 'mercadona', lineas: [{ id: 110, precio, cant: 1, q: { v, u: 'kg' } }] });
+
+test('cambio de precio: sube frente a la ÚLTIMA compra, no frente a la primera', () => {
+  const t = nuevo(2.0, 0.5);                                     // 4,00 €/kg
+  const c = H.cambioDeLinea(t, t.lineas[0], [t, ...hist], kiwi);
+  assert.deepEqual([c.anterior, c.actual, c.dif, c.sube, c.pct], [3.6, 4, 0.4, true, 11]);
+});
+test('cambio de precio: baja', () => {
+  const t = nuevo(1.5, 0.5);                                     // 3,00 €/kg
+  const c = H.cambioDeLinea(t, t.lineas[0], [t, ...hist], kiwi);
+  assert.deepEqual([c.dif, c.sube], [-0.6, false]);
+});
+test('un cambio menor del 1 % o de un céntimo (un redondeo) no cuenta como cambio', () => {
+  const t = nuevo(1.8, 0.5);                                     // igual que la última
+  assert.equal(H.cambioDeLinea(t, t.lineas[0], [t, ...hist], kiwi), null);
+  const t2 = nuevo(1.803, 0.5);
+  assert.equal(H.cambioDeLinea(t2, t2.lineas[0], [t2, ...hist], kiwi), null);
+});
+test('sin compra anterior, o sin precio normalizable, no se inventa ningún cambio', () => {
+  const t = nuevo(2, 0.5);
+  assert.equal(H.cambioDeLinea(t, t.lineas[0], [t], kiwi), null);                         // primera vez
+  assert.equal(H.cambioDeLinea(t, { id: 110, precio: 2, cant: 1 }, [t, ...hist], { id: 110, u: 'kg' }), null);   // sin peso ni formato
+  assert.equal(H.cambioDeLinea(t, { n: 'a mano', precio: 2 }, [t, ...hist], kiwi), null);
+});
+test('solo se compara con compras ANTERIORES: ver un ticket antiguo no usa las compras posteriores', () => {
+  const viejo = hist[0];
+  const posterior = nuevo(9, 0.5);
+  assert.equal(H.cambioDeLinea(viejo, viejo.lineas[0], [posterior, ...hist], kiwi), null);   // antes de él no había nada
+  const medio = hist[1];
+  const c = H.cambioDeLinea(medio, medio.lineas[0], [posterior, ...hist], kiwi);
+  assert.deepEqual([c.anterior, c.actual], [3.5, 3.6]);
+});
+
 console.log(`\n${n} pruebas${process.exitCode ? ' (hay fallos)' : ' correctas'}`);

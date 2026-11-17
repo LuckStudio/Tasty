@@ -9,14 +9,14 @@
    supermercado y dejar la base de precios hecha.
    ============================================================ */
 
-import { PRODUCTOS, POR_ID } from '../estado.js?v=37';
+import { PRODUCTOS, POR_ID } from '../estado.js?v=39';
 import { preciosDe, guardarPrecio, borrarPrecio, calcularBase,
          aNumero, formatoBase, FORMATOS, NOMBRE_BASE, DIAS_VIEJO,
-         preferencias, alternarPreferencia } from '../precios.js?v=37';
-import { tiendasActivas, TIENDA_POR_ID, colorTienda } from '../tiendas.js?v=37';
-import { CATEGORIAS, CAT_POR_ID } from '../../datos/categorias.js?v=37';
-import { iconoHTML } from '../iconos.js?v=37';
-import { normalizar, euros, $, tap } from '../util.js?v=37';
+         preferencias, alternarPreferencia } from '../precios.js?v=39';
+import { tiendasActivas, TIENDA_POR_ID, colorTienda } from '../tiendas.js?v=39';
+import { CATEGORIAS, CAT_POR_ID } from '../../datos/categorias.js?v=39';
+import { iconoHTML } from '../iconos.js?v=39';
+import { normalizar, euros, $, tap } from '../util.js?v=39';
 
 let raiz;
 let tienda = null;          // tienda sobre la que se trabaja

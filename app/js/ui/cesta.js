@@ -7,11 +7,11 @@
    y que decidas tú.
    ============================================================ */
 
-import { estado, POR_ID } from '../estado.js?v=37';
-import { cestaOptima } from '../precios.js?v=37';
-import { TIENDA_POR_ID, hayFavoritas } from '../tiendas.js?v=37';
-import { iconoHTML } from '../iconos.js?v=37';
-import { euros, tap } from '../util.js?v=37';
+import { estado, POR_ID } from '../estado.js?v=39';
+import { cestaOptima } from '../precios.js?v=39';
+import { TIENDA_POR_ID, hayFavoritas } from '../tiendas.js?v=39';
+import { iconoHTML } from '../iconos.js?v=39';
+import { euros, tap } from '../util.js?v=39';
 
 let raiz;
 let detalle = null;       // id de tienda cuyo desglose se ve
