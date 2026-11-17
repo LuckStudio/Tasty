@@ -168,7 +168,7 @@ test('SEGURIDAD: una copia con basura en despensa, menú y bloques se limpia y n
                   "202": { "cant": 1e12, "estado": "hay" }, "203": { "cant": 2, "estado": "raro" }, "205": { "cant": 3, "unidad": "parsec", "estado": "hay", "d": "x" } },
     "menu": { "no-es-fecha": { "cena": [] }, "2026-12-01": { "desayuno": [{ "r": "../../x", "n": 5 }, { "r": "ok-1", "n": 999 }, { "r": "ok-2", "n": "x" }], "comida": "no", "cena": [], "fuera": { "cena": true, "comida": "si" } },
               "__proto__": { "cena": [{ "r": "x", "n": 1 }] } },
-    "bloques": { "2026-12-01": { "franjas": [{ "f": "2026-12-01", "s": "cena" }, { "f": "mal", "s": "cena" }, { "f": "2026-12-02", "s": "merienda" }] }, "__proto__": { "franjas": [] } }
+    "bloques": { "2026-12-01": { "franjas": [{ "f": "2026-12-01", "s": "cena" }, { "f": "mal", "s": "cena" }, { "f": "2026-12-02", "s": "almuerzo" }] }, "__proto__": { "franjas": [] } }
   }`);
   IO.fusionar(mala);
   assert.equal({}.cant, undefined); assert.equal({}.cena, undefined); assert.equal({}.franjas, undefined);

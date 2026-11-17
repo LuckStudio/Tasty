@@ -4,15 +4,18 @@
    en letra grande y «Añadir al menú».
    ============================================================ */
 
-import { recetaPorId, editarReceta, nombreIngrediente, textoCantidad } from '../recetas.js?v=36';
-import { POR_ID } from '../estado.js?v=36';
-import { cantidadEscalada, anadirReceta, fechaISO, sumarDias, FRANJAS } from '../menu.js?v=36';
-import { disponibilidad, esFalta } from '../despensa.js?v=36';
-import { formatearCantidad } from '../unidades.js?v=36';
+import { recetaPorId, editarReceta, nombreIngrediente, textoCantidad } from '../recetas.js?v=39';
+import { POR_ID } from '../estado.js?v=39';
+import { cantidadEscalada, anadirReceta, fechaISO, sumarDias, franjaDeReceta, mensajeNoCabe } from '../menu.js?v=39';
+import { disponibilidad, esFalta } from '../despensa.js?v=39';
+import { formatearCantidad } from '../unidades.js?v=39';
 import { imagenReceta, puntoReceta, diaCorto, diaLargo, diaNumero, mesCorto, relativo, nombreFranja }
-  from './receta-comun.js?v=36';
-import { COMIDA_POR_ID } from '../recetas.js?v=36';
-import { esc, tap } from '../util.js?v=36';
+  from './receta-comun.js?v=39';
+import { COMIDA_POR_ID } from '../recetas.js?v=39';
+import { personas } from '../hogar.js?v=39';
+import { costePorRacion } from '../menu.js?v=39';
+import { ultimaVezCocinada, vecesCocinada, textoHace } from '../cocina.js?v=39';
+import { esc, tap } from '../util.js?v=39';
 
 let raiz = null, id = null, tab = 'ingredientes', raciones = null, volver = 'menu', cb = {};
 
@@ -40,7 +43,7 @@ export function iniciarReceta(nodo, callbacks) {
     const menos = t.closest('#rc-menos'), mas = t.closest('#rc-mas');
     if (menos || mas) {
       tap();
-      const actual = raciones || r.raciones || 1;
+      const actual = raciones || personas();
       raciones = Math.max(1, Math.min(20, actual + (mas ? 1 : -1)));
       pintarReceta(); return;
     }
@@ -51,31 +54,26 @@ export function iniciarReceta(nodo, callbacks) {
   });
 }
 
-/* Añadir al menú: primero el día, luego la franja */
+/* Añadir al menú: se elige el día; la franja es la de la propia receta (un
+   desayuno solo va en desayunos, una cena en cenas…), así que no se pregunta. */
 function elegirDia(r) {
+  const franja = franjaDeReceta(r.comida);
+  if (!franja) {
+    document.dispatchEvent(new CustomEvent('aviso', { detail: mensajeNoCabe(r, 'comida') }));
+    return;
+  }
   const hoy = fechaISO();
   const dias = Array.from({ length: 7 }, (_, i) => sumarDias(hoy, i));
   document.dispatchEvent(new CustomEvent('abrir-hoja', { detail: {
-    titulo: `¿Qué día cocinas «${r.nombre}»?`,
+    titulo: `¿Qué día pones «${r.nombre}»?`,
     opciones: dias.map(f => ({
       texto: `${relativo(f, hoy) === 'HOY' ? 'Hoy' : relativo(f, hoy) === 'MAÑANA' ? 'Mañana' : diaLargo(f)} · ${diaNumero(f)} ${mesCorto(f)}`,
-      accion: () => setTimeout(() => elegirFranja(r, f), 0)
-    })) } }));
-}
-
-function elegirFranja(r, fecha) {
-  const sugerida = ['desayuno', 'comida', 'cena'].includes(r.comida) ? r.comida : 'comida';
-  const orden = [sugerida, ...FRANJAS.map(f => f.id).filter(x => x !== sugerida)];
-  document.dispatchEvent(new CustomEvent('abrir-hoja', { detail: {
-    titulo: `${diaLargo(fecha)} ${diaNumero(fecha)} · ¿en qué franja?`,
-    opciones: orden.map(f => ({
-      texto: nombreFranja(f),
-      nota: f === sugerida ? 'La habitual de esta receta' : undefined,
+      nota: nombreFranja(franja),
       accion: () => {
-        const res = anadirReceta(fecha, f, r.id, raciones || r.raciones || 1);
+        const res = anadirReceta(f, franja, r.id, raciones || personas());
         document.dispatchEvent(new CustomEvent('aviso', { detail: res.ok
-          ? `Añadida a ${nombreFranja(f).toLowerCase()} del ${diaLargo(fecha)}` : res.error }));
-        if (res.ok) cb.alMenu(fecha);
+          ? `Añadida a ${nombreFranja(franja).toLowerCase()} del ${diaLargo(f)}` : res.error }));
+        if (res.ok) cb.alMenu(f);
       }
     })) } }));
 }
@@ -90,6 +88,21 @@ function estadoChip(ing, r, n) {
   return m ? `<span class="rc-chip ${m[0]}">${m[1]}${d.estado === 'hay' ? tengo : ''}</span>` : '';
 }
 
+/* Última vez que se cocinó y coste aproximado por ración */
+function datosExtra(r) {
+  const ult = ultimaVezCocinada(r.id);
+  const c = costePorRacion(r);
+  const partes = [];
+  if (ult) {
+    const v = vecesCocinada(r.id);
+    partes.push(`Última vez: ${textoHace(ult)}${v > 1 ? ` · ${v} veces` : ''}`);
+  } else partes.push('Todavía no la has cocinado');
+  if (c.porRacion != null) {
+    partes.push(`≈ ${c.porRacion.toFixed(2).replace('.', ',')} € por ración${c.sinPrecio ? ` (${c.sinPrecio} ingredientes sin precio)` : ''}`);
+  }
+  return `<p class="rc-extra">${partes.map(esc).join('<br>')}</p>`;
+}
+
 export function pintarReceta() {
   if (!raiz) return;
   const r = recetaPorId(id);
@@ -97,7 +110,7 @@ export function pintarReceta() {
     raiz.innerHTML = `<div class="rv-cab"><button class="barra-btn rv-atras" id="rc-atras" aria-label="Volver">‹</button><div><h1>Receta no encontrada</h1></div></div>`;
     return;
   }
-  const n = raciones || r.raciones || 1;
+  const n = raciones || personas();
   const comida = COMIDA_POR_ID[r.comida]?.nombre || '';
 
   raiz.innerHTML = `
@@ -116,6 +129,8 @@ export function pintarReceta() {
         <div><small>Raciones</small>
           <span class="res-pasos rc-pasos"><button id="rc-menos" aria-label="Menos raciones">−</button><span>${n}</span><button id="rc-mas" aria-label="Más raciones">+</button></span></div>
       </div>
+
+      ${datosExtra(r)}
 
       <div class="rc-tabs" role="tablist">
         <button role="tab" data-rc-tab="ingredientes" aria-selected="${tab === 'ingredientes'}">Ingredientes</button>

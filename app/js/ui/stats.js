@@ -4,11 +4,11 @@
 
 import { PERIODOS, resumen, porMes, porCategoria, porTienda,
          topProductos, historialPrecio, categoriasSinDatos,
-         claveMes } from '../stats.js?v=36';
-import { POR_ID } from '../estado.js?v=36';
-import { TIENDA_POR_ID } from '../tiendas.js?v=36';
-import { iconoHTML } from '../iconos.js?v=36';
-import { euros } from '../util.js?v=36';
+         claveMes } from '../stats.js?v=39';
+import { POR_ID } from '../estado.js?v=39';
+import { TIENDA_POR_ID } from '../tiendas.js?v=39';
+import { iconoHTML } from '../iconos.js?v=39';
+import { euros } from '../util.js?v=39';
 
 let periodo = 'tres';
 

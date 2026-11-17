@@ -16,11 +16,11 @@
               haber puesto delante el botón de exportar.
    ============================================================ */
 
-import { datos, guardar, borrarTodo } from './almacen.js?v=36';
-import { reconstruirCatalogo, POR_ID } from './estado.js?v=36';
-import { reconstruirTiendas, TIENDA_POR_ID } from './tiendas.js?v=36';
-import { CATALOGO_VERSION } from '../datos/catalogo.js?v=36';
-import { importarRecetas } from './recetas.js?v=36';
+import { datos, guardar, borrarTodo } from './almacen.js?v=39';
+import { reconstruirCatalogo, POR_ID } from './estado.js?v=39';
+import { reconstruirTiendas, TIENDA_POR_ID } from './tiendas.js?v=39';
+import { CATALOGO_VERSION } from '../datos/catalogo.js?v=39';
+import { importarRecetas } from './recetas.js?v=39';
 
 export const FORMATO = 'lista-compra-luckstudio-copia';
 
@@ -74,6 +74,7 @@ export function copiaCompleta() {
     despensa: datos.despensa,
     menu: datos.menu,
     bloques: datos.bloques,
+    cocinadas: datos.cocinadas,
     recetas: datos.recetas,
     ajustes: datos.ajustes
   };
@@ -302,7 +303,7 @@ export function fusionar(copia) {
 
   /* --- menú y bloques: lo que llega sustituye a ese día --- */
   const FECHA = /^\d{4}-\d{2}-\d{2}$/;
-  const FRANJAS = ['desayuno', 'comida', 'cena'];
+  const FRANJAS = ['desayuno', 'comida', 'merienda', 'cena'];
   for (const [fecha, dia] of Object.entries(copia.menu || {})) {
     if (!FECHA.test(fecha) || !dia || typeof dia !== 'object') continue;
     const limpio = {};
@@ -326,6 +327,17 @@ export function fusionar(copia) {
     datos.bloques[fecha] = { franjas: b.franjas.slice(0, 9)
       .filter(x => x && FECHA.test(String(x.f)) && FRANJAS.includes(x.s))
       .map(x => ({ f: x.f, s: x.s })) };
+  }
+
+  /* --- recetas cocinadas: se unen las fechas, las 12 más recientes --- */
+  for (const [id, fechas] of Object.entries(copia.cocinadas || {})) {
+    if (!segura(id) || !/^[a-z0-9_-]{1,60}$/.test(id) || !Array.isArray(fechas)) continue;
+    const limpias = fechas.filter(f => typeof f === 'string' && FECHA.test(f));
+    if (!limpias.length) continue;
+    datos.cocinadas ??= {};
+    const previas = propio(datos.cocinadas, id) ? datos.cocinadas[id] : [];
+    datos.cocinadas[id] = [...new Set([...previas, ...limpias])].sort().reverse().slice(0, 12);
+    informe.cocinadas = (informe.cocinadas || 0) + 1;
   }
 
   /* --- pendientes: se suman las apariciones --- */

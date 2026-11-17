@@ -25,8 +25,8 @@
    superior). Desde Safari normal, no. En Android van siempre.
    ============================================================ */
 
-import { nuevoId } from './util.js?v=36';
-import { datos, guardar } from './almacen.js?v=36';
+import { nuevoId } from './util.js?v=39';
+import { datos, guardar } from './almacen.js?v=39';
 
 export const DIAS = [
   { id: 0, corto: 'D', nombre: 'Domingo' },
@@ -84,7 +84,7 @@ export function recordatorios() {
   return datos.recordatorios || [];
 }
 
-export function crearRecordatorio({ dias, hora, minuto, texto }) {
+export function crearRecordatorio({ dias, hora, minuto, texto, tipo }) {
   if (!datos.recordatorios) datos.recordatorios = [];
   const r = {
     id: nuevoId('r'),
@@ -92,6 +92,7 @@ export function crearRecordatorio({ dias, hora, minuto, texto }) {
     hora: Math.max(0, Math.min(23, parseInt(hora, 10) || 18)),
     minuto: Math.max(0, Math.min(59, parseInt(minuto, 10) || 0)),
     texto: (texto || '').trim() || 'Toca hacer la compra',
+    tipo: tipo === 'cocinar' ? 'cocinar' : 'compra',     // qué abre el aviso: la compra o «Hoy»
     activo: true,
     ultimoAviso: null
   };
@@ -158,14 +159,15 @@ let temporizadores = [];
 function lanzar(r) {
   if (estadoPermiso() !== 'granted') return;
 
+  const cocinar = r.tipo === 'cocinar';
   const opciones = {
-    body: 'Abre la lista y ve directo a comprar.',
+    body: cocinar ? 'Abre Tasty y mira qué toca cocinar.' : 'Abre la lista y ve directo a comprar.',
     icon: 'iconos/app-192.png',
     badge: 'iconos/app-192.png',
     tag: 'compra-' + r.id,
     /* La etiqueta evita que se apilen diez avisos iguales */
     renotify: true,
-    data: { abrir: 'comprador' }
+    data: { abrir: cocinar ? 'hoy' : 'comprador' }
   };
 
   try {

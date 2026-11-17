@@ -16,10 +16,10 @@
      · la sección y el peso medio, si el que se queda no los tenía
    ============================================================ */
 
-import { datos, guardar } from './almacen.js?v=36';
-import { POR_ID } from './estado.js?v=36';
-import { editarProducto } from './catalogo-edit.js?v=36';
-import { moverAlias } from './alias.js?v=36';
+import { datos, guardar } from './almacen.js?v=39';
+import { POR_ID } from './estado.js?v=39';
+import { editarProducto } from './catalogo-edit.js?v=39';
+import { moverAlias } from './alias.js?v=39';
 
 const k = id => String(id);
 

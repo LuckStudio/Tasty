@@ -16,8 +16,29 @@
    No codifica nada real.
    ============================================================ */
 
-import { TIENDA_POR_ID, colorTienda, inicialesTienda } from '../tiendas.js?v=36';
-import { euros } from '../util.js?v=36';
+import { TIENDA_POR_ID, colorTienda, inicialesTienda } from '../tiendas.js?v=39';
+import { datos } from '../almacen.js?v=39';
+import { POR_ID } from '../estado.js?v=39';
+import { preciosDe, SUFIJO_BASE } from '../precios.js?v=39';
+import { cambioDeLinea } from '../historial.js?v=39';
+import { euros, esc } from '../util.js?v=39';
+
+/* Cambios de precio de un ticket frente a la compra anterior de cada producto */
+export function cambiosDeTicket(t) {
+  const cambios = new Map();
+  t.lineas.forEach((l, i) => {
+    const p = l.id ? POR_ID[l.id] : null;
+    if (!p) return;
+    const filas = preciosDe(l.id);
+    const formatoDe = tienda => {
+      const f = filas.find(x => x.tienda === tienda);
+      return f?.cantidad && f?.unidad ? { q: f.cantidad, u: f.unidad } : null;
+    };
+    const c = cambioDeLinea(t, l, datos.tickets, p, formatoDe);
+    if (c) cambios.set(i, { ...c, sufijo: SUFIJO_BASE[p.u] || '' });
+  });
+  return cambios;
+}
 
 const MESES = ['enero','febrero','marzo','abril','mayo','junio','julio',
                'agosto','septiembre','octubre','noviembre','diciembre'];
@@ -103,6 +124,8 @@ export function ticketHTML(t) {
   const sinPrecio = t.lineas.filter(l => l.precio == null).length;
   const dur = duracion(t);
   const pago = t.pago === 'efectivo' ? 'efectivo' : 'tarjeta';
+  const cambios = cambiosDeTicket(t);
+  const dosd = n => Math.abs(n).toFixed(2).replace('.', ',');
 
   return `
     <div class="tk-hoja" ${marca ? `style="--marca:${marca}"` : ''}>
@@ -120,13 +143,17 @@ export function ticketHTML(t) {
       </div>
 
       <div class="tk-lineas">
-        ${t.lineas.map(l => `
+        ${t.lineas.map((l, i) => {
+          const c = cambios.get(i);
+          return `
           <div class="tk-linea" data-nuevo="${!!l.nuevo}"
                data-estimado="${!!l.estimado}">
             <span>${l.n}${l.cant > 1 ? `<em>×${l.cant}</em>` : ''}${
               l.desc ? `<i class="tk-desc">−${euros(l.desc)}</i>` : ''}</span>
             <b>${l.precio != null ? euros(l.precio) : '—'}</b>
-          </div>`).join('')}
+          </div>${c ? `
+          <p class="tk-cambio ${c.sube ? 'tk-sube' : 'tk-baja'}">${c.sube ? '↑' : '↓'} ${dosd(c.dif)} €${esc(c.sufijo)} vs última vez</p>` : ''}`;
+        }).join('')}
       </div>
 
       ${t.descuento > 0 ? `
@@ -139,6 +166,13 @@ export function ticketHTML(t) {
         <span>Total · ${unidades} art.</span>
         <b>${euros(t.total)}</b>
       </div>
+
+      ${t.previsto != null ? `
+        <div class="tk-estimado">
+          <span>Estimado en la lista</span>
+          <b>${euros(t.previsto)}${Math.abs(t.previstoReal - t.previsto) >= 0.01
+            ? ` <i class="${t.previstoReal > t.previsto ? 'tk-sube' : 'tk-baja'}">(${t.previstoReal > t.previsto ? '+' : '−'}${dosd(t.previstoReal - t.previsto)})</i>` : ''}</b>
+        </div>` : ''}
 
       <div class="tk-pago">
         ${pago === 'tarjeta' ? ICONO_TARJETA_TK : ICONO_EFECTIVO_TK}

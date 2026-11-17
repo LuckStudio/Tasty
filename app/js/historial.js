@@ -18,7 +18,7 @@
    Funciones puras: se prueban sin navegador.
    ============================================================ */
 
-import { precioBaseDeCompra } from './unidades.js?v=36';
+import { precioBaseDeCompra } from './unidades.js?v=39';
 
 const redondear = n => Math.round(n * 100) / 100;
 const DIA = 86400000;
@@ -110,4 +110,24 @@ export function baseAUnidad(base, producto) {
   if (producto?.u === 'kg' && producto.pu > 0) return redondear(base * producto.pu / 1000);
   if (producto?.u === 'ud') return base;
   return null;
+}
+
+/* ¿Ha cambiado el precio de esta línea frente a la última vez que se compró?
+   Compara el precio normalizado (€/kg, €/ud…) con la compra anterior de ese
+   mismo producto. Solo cuenta si cambia un 1 % o más y al menos un céntimo:
+   un redondeo no es una subida. Devuelve null si no hay con qué comparar. */
+export function cambioDeLinea(ticket, linea, tickets, producto, formatoDe = null) {
+  if (!linea?.id || !producto) return null;
+  const actual = baseDeLinea(linea, producto, formatoDe, ticket.tienda);
+  if (actual == null) return null;
+
+  const anteriores = tickets.filter(t => t.id !== ticket.id && t.fecha < ticket.fecha);
+  const previos = serie(linea.id, anteriores, producto, formatoDe);
+  const ultimo = previos[previos.length - 1];
+  if (!ultimo || !(ultimo.base > 0)) return null;
+
+  const dif = redondear(actual - ultimo.base);
+  const pct = (actual / ultimo.base - 1) * 100;
+  if (Math.abs(dif) < 0.01 || Math.abs(pct) < 1) return null;
+  return { anterior: ultimo.base, actual, dif, pct: Math.round(pct), sube: dif > 0 };
 }

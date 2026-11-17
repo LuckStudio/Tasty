@@ -33,9 +33,9 @@ let n = 0;
 const test = (nombre, fn) => { try { fn(); n++; console.log('  ok  ', nombre); } catch (e) { console.error('  FALLA', nombre, '\n ', e.message); process.exitCode = 1; } };
 
 console.log('Migración');
-test('un usuario con esquema 8 llega al esquema actual (10) sin perder nada', () => {
-  assert.equal(datos.schema, 10);
-  assert.deepEqual([datos.despensa, datos.menu, datos.bloques], [{}, {}, {}]);
+test('un usuario con esquema 8 llega al esquema actual (11) sin perder nada', () => {
+  assert.equal(datos.schema, 11);
+  assert.deepEqual([datos.despensa, datos.menu, datos.bloques, datos.cocinadas], [{}, {}, {}, {}]);
   assert.equal(datos.tickets.length, 1);
   assert.equal(datos.tickets[0].lineas[0].n, 'Plátanos');
   assert.equal(datos.preciosLocal[101].mercadona.f, 1.6);

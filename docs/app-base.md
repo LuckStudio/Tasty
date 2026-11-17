@@ -147,7 +147,7 @@ Hecho:
 
 Decisiones y límites:
 - Las recetas no traen **duración de los pasos** (el documento original no la da), así que «Empezar a cocinar» abre los pasos de la primera receta. La guía que combina varias recetas en un solo flujo (fase 5) necesita duración, si es tiempo activo o de espera y el recurso (horno, fuego…): se pueden añadir a cada paso (`min`, `tipo`, `recurso`).
-- **Tres franjas** como pide el brief. Las meriendas se pueden asignar a la franja en que se toman.
+- **Tres franjas** como pide el brief. **Cada receta solo se puede poner en su momento del día**: un desayuno solo en desayunos, una comida en comidas y una cena en cenas (el selector solo ofrece esas, la regla vale también desde la ficha de la receta y el menú rechaza lo demás con un mensaje claro). Las **meriendas y los almuerzos no tienen franja** en el menú, así que no se pueden asignar hasta que haya una cuarta franja.
 - Las **fotos de receta** van en `app/recetas/` (ver `recetas/LEEME.txt`) y se activan listándolas en `datos/fotos-recetas.js`. Sin foto se ve el color de la receta con el icono de su ingrediente principal.
 - «Generar lista» añade lo que falta **y lo que no se sabe si hay en casa**, para que sirva con la despensa vacía; lo que se sabe que hay no se añade.
 

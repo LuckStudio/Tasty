@@ -178,3 +178,80 @@ body[data-modo="comprador"] .fab-acaba { display: none; }
 /* El botón flotante no tapa lo último de la pantalla ni los avisos */
 body.con-fab .vista { padding-bottom: 6.5rem; }
 body.con-fab .aviso { bottom: calc(var(--nav-alto) + var(--safe-bottom) + 80px); }
+
+.sl-solo { padding: 0.6rem var(--pad-x) 0; font-family: var(--f-mono); font-size: 0.66rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.sl-solo + .sl-grid { padding-top: 6px; }
+
+/* La merienda: franja fina bajo los tres platos del día */
+.mn-fila { grid-template-rows: auto auto; }
+.mn-fila .mn-dia { grid-row: 1 / span 2; }
+.mn-celda.mn-fina { grid-column: 2 / 5; min-height: 44px; flex-direction: row; align-items: center; flex-wrap: wrap; gap: 0.3rem 0.8rem; padding: 0.35rem 0.6rem; }
+.mn-fina .mn-etq { font-family: var(--f-mono); font-size: 0.52rem; letter-spacing: 0.08em; color: var(--muted); }
+.mn-fina .mn-rec span:last-child { -webkit-line-clamp: 2; }
+.mn-celda.mn-vacia.mn-fina { justify-content: center; font-size: 0.74rem; font-family: var(--f-texto); font-weight: 600; }
+
+.hy-terminar { width: 100%; min-height: 52px; margin-top: 8px; font-size: 0.92rem; }
+.hy-copia { margin-top: calc(0.8rem + var(--safe-top)); align-items: flex-start; flex-wrap: wrap; }
+.hy-copia > span { font-size: 1.3rem; }
+.hy-copia-bot { display: flex; align-items: center; gap: 0.4rem; width: 100%; padding-left: 2rem; }
+.hy-copia .btn-secundario { width: auto; min-height: 44px; padding: 0 1rem; font-size: 0.85rem; }
+.hy-copia ~ .hy-cab { padding-top: 0.8rem; }
+.bl-basicos { margin-top: 0.5rem; font-size: 0.68rem; color: var(--muted); letter-spacing: 0.02em; }
+
+/* ---------- despensa: lo que hay en casa ---------- */
+
+.dp-lista { margin: 0.8rem var(--pad-x) 0; background: var(--ticket); border: 1px solid var(--line-sutil); border-radius: var(--r-lg); overflow: hidden; }
+.dp-lista:has(.hy-vacio), .dp-lista:empty { background: transparent; border: 0; }
+.dp-fila { width: 100%; display: flex; align-items: center; gap: 0.8rem; min-height: 64px; padding: 0.4rem 0.9rem; text-align: left; border-bottom: 1px dashed var(--perforado); }
+.dp-fila:last-child { border-bottom: 0; }
+.dp-t { flex: 1; min-width: 0; }
+.dp-t b { display: block; font-size: 0.95rem; font-weight: 600; }
+.dp-t small { font-size: 0.72rem; color: var(--muted); }
+.dp-cant { font-family: var(--f-mono); font-size: 0.88rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+.dp-mas { width: 32px; height: 32px; display: grid; place-items: center; border-radius: 50%; border: 1.5px dashed var(--perforado); color: var(--muted); }
+.dp-sub { padding: 0.9rem 0.9rem 0.3rem; }
+.fi-casa { display: flex; align-items: center; gap: 0.6rem; margin: 0.4rem 0 0.2rem; padding: 0.4rem 0.4rem 0.4rem 1rem; background: var(--ticket); border: 1px solid var(--line-sutil); border-radius: var(--r-md); min-height: 56px; }
+.fi-casa small { color: var(--muted); font-size: 0.74rem; }
+.fi-casa b { flex: 1; font-family: var(--f-mono); font-size: 1rem; }
+.fi-casa button { min-height: 44px; padding: 0 1rem; border-radius: var(--r-pill); background: var(--papel); font-weight: 600; font-size: 0.85rem; }
+.fi-basico { display: flex; align-items: center; gap: 0.6rem; width: 100%; min-height: 48px; margin-top: 0.4rem; text-align: left; font-size: 0.85rem; }
+.fi-basico i { flex: 0 0 auto; width: 24px; height: 24px; display: grid; place-items: center; border-radius: 6px; border: 1.5px solid var(--perforado); font-style: normal; color: transparent; }
+.fi-basico[aria-pressed="true"] i { background: var(--accent); border-color: var(--accent); color: var(--sobre-acento); }
+.pr-casa { margin: 0.1rem 0.2rem 0; font-family: var(--f-mono); font-size: 0.6rem; letter-spacing: 0.04em; color: var(--hay); }
+
+.rc-extra { margin: 0.9rem 0 0; font-size: 0.82rem; line-height: 1.6; color: var(--muted-2); }
+.mn-coste { padding: 0 var(--pad-x) 0.5rem; font-size: 0.78rem; color: var(--muted-2); }
+.mn-coste b { font-family: var(--f-mono); color: var(--tinta); }
+
+/* ---------- resumen de compra: cambios de precio ---------- */
+.tk-resumen { display: flex; flex-wrap: wrap; align-items: center; gap: 0.2rem 0.8rem; margin: 1rem var(--pad-x) 0; padding: 0.9rem 1rem;
+  background: var(--accent); color: var(--sobre-acento); border-radius: var(--r-lg); }
+.tk-resumen .tk-ok { width: 36px; height: 36px; display: grid; place-items: center; border-radius: 50%; background: rgba(255,255,255,0.25); font-weight: 700; }
+.tk-resumen div { flex: 1; } .tk-resumen b { display: block; font-size: 1rem; } .tk-resumen small { font-size: 0.74rem; opacity: 0.9; }
+.tk-resumen p { width: 100%; display: flex; flex-wrap: wrap; gap: 0.3rem 0.7rem; align-items: center; padding-top: 0.5rem; margin-top: 0.3rem; border-top: 1px solid rgba(255,255,255,0.25); font-size: 0.8rem; font-weight: 600; }
+.tk-resumen p .tk-baja, .tk-resumen p .tk-sube { background: rgba(255,255,255,0.92); padding: 0.15rem 0.55rem; border-radius: var(--r-pill); }
+.tk-cambio { margin: -0.2rem 0 0.4rem; padding-left: 0; font-family: var(--f-mono); font-size: 0.64rem; letter-spacing: 0.03em; text-transform: uppercase; }
+.tk-baja { color: var(--hay); } .tk-sube { color: var(--agotado); }
+.tk-estimado { display: flex; justify-content: space-between; align-items: baseline; padding-top: 0.5rem; margin-top: 0.3rem; font-family: var(--f-mono); font-size: 0.7rem; color: var(--muted); border-top: 1px dashed var(--perforado); }
+.tk-estimado i { font-style: normal; font-weight: 700; }
+
+/* ---------- configuración de la primera vez ---------- */
+.bv-fondo { position: fixed; inset: 0; z-index: 80; overflow-y: auto; background: var(--papel); padding: calc(1rem + var(--safe-top)) var(--pad-x) calc(1.5rem + var(--safe-bottom)); }
+.bv-fondo[hidden] { display: none; }
+.bv-hoja { max-width: 560px; margin: 0 auto; }
+.bv-hoja h1 { font-family: var(--f-titulo); font-size: 1.9rem; font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; margin: 0.4rem 0 1rem; }
+.bv-hoja section { margin-top: 1rem; padding: 1rem; background: var(--ticket); border: 1px solid var(--line-sutil); border-radius: var(--r-lg); }
+.bv-hoja h2 { display: flex; align-items: center; gap: 0.6rem; font-size: 1.02rem; font-weight: 600; }
+.bv-hoja h2 span { width: 26px; height: 26px; display: grid; place-items: center; border-radius: 50%; background: var(--accent); color: var(--sobre-acento); font-family: var(--f-mono); font-size: 0.8rem; }
+.bv-hoja section p { margin: 0.4rem 0 0.8rem; font-size: 0.82rem; line-height: 1.5; color: var(--muted-2); }
+.bv-personas { display: flex; align-items: center; gap: 0.8rem; }
+.bv-personas button { width: 52px; height: 52px; border-radius: 50%; border: 1px solid var(--line); background: var(--papel); font-size: 1.5rem; }
+.bv-personas b { font-family: var(--f-titulo); font-size: 2rem; min-width: 2ch; text-align: center; }
+.bv-personas span { color: var(--muted); font-size: 0.9rem; }
+.bv-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.bv-chips button { display: inline-flex; align-items: center; gap: 0.45rem; min-height: 44px; padding: 0 0.9rem; border-radius: var(--r-pill); border: 1px solid var(--line); background: var(--papel); font-size: 0.85rem; font-weight: 600; }
+.bv-chips button[aria-pressed="true"] { background: var(--tinta); color: var(--papel); border-color: var(--tinta); }
+.bv-chips i { width: 9px; height: 9px; border-radius: 50%; background: var(--marca, var(--muted)); }
+.bv-ico { font-size: 1.1rem; line-height: 1; } .bv-ico img { width: 20px; height: 20px; filter: invert(var(--invertir)); }
+.bv-chips button[aria-pressed="true"] .bv-ico img { filter: invert(var(--invertir-sel)); }
+.bv-hoja .btn-principal { margin-top: 1.4rem; }

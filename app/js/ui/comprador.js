@@ -7,21 +7,21 @@ import { compraActual, alternarHecho, fijarPrecio, cambiarCantidad,
          anadirExtra, quitarLinea, fijarTienda, fijarPago, progreso,
          total, previsto, sinPrecio, cuantosEstimados, fijarDescuento,
          totalDescuento, fijarTiendaSuelta, finalizar, ticketJSON,
-         ticketTexto } from '../compra.js?v=36';
-import { CAT_POR_ID } from '../../datos/categorias.js?v=36';
-import { tiendasActivas, TIENDA_POR_ID } from '../tiendas.js?v=36';
-import { POR_ID } from '../estado.js?v=36';
-import { iconoHTML } from '../iconos.js?v=36';
-import { preciosDe, formatoBase, NOMBRE_BASE, marcaDe } from '../precios.js?v=36';
+         ticketTexto } from '../compra.js?v=39';
+import { CAT_POR_ID } from '../../datos/categorias.js?v=39';
+import { tiendasActivas, TIENDA_POR_ID } from '../tiendas.js?v=39';
+import { POR_ID } from '../estado.js?v=39';
+import { iconoHTML } from '../iconos.js?v=39';
+import { preciosDe, formatoBase, NOMBRE_BASE, marcaDe } from '../precios.js?v=39';
 import { periodicidad, ultimaCompra, diasDesde, textoUrgencia,
-         nivelUrgencia } from '../reposicion.js?v=36';
-import { tiendaPreferida } from '../precios.js?v=36';
-import { ticketHTML } from './ticket.js?v=36';
-import { gruposDeCompra, seccionActual } from '../ruta.js?v=36';
-import { rutaDe, SECCIONES, SECCION_POR_ID } from '../secciones.js?v=36';
-import { editarProducto } from '../catalogo-edit.js?v=36';
-import { inicialesTienda } from '../tiendas.js?v=36';
-import { euros, esc, tap } from '../util.js?v=36';
+         nivelUrgencia } from '../reposicion.js?v=39';
+import { tiendaPreferida } from '../precios.js?v=39';
+import { ticketHTML, cambiosDeTicket } from './ticket.js?v=39';
+import { gruposDeCompra, seccionActual } from '../ruta.js?v=39';
+import { rutaDe, SECCIONES, SECCION_POR_ID } from '../secciones.js?v=39';
+import { editarProducto } from '../catalogo-edit.js?v=39';
+import { inicialesTienda } from '../tiendas.js?v=39';
+import { euros, esc, tap } from '../util.js?v=39';
 
 let raiz, pie, ticketFinal = null;
 let pasillo = false, idxSec = 0;       // modo pasillo: una sección cada vez
@@ -605,7 +605,16 @@ export function pintarTicket(nodo, ticket) {
 
   const tienda = t.tienda ? TIENDA_POR_ID[t.tienda]?.nombre : null;
 
+  const cambios = [...cambiosDeTicket(t).values()];
+  const suben = cambios.filter(c => c.sube).length, bajan = cambios.length - suben;
+
   nodo.innerHTML = `
+    <div class="tk-resumen" role="status">
+      <span class="tk-ok" aria-hidden="true">✓</span>
+      <div><b>Compra registrada</b><small>Despensa y precios actualizados</small></div>
+      ${cambios.length ? `<p>${bajan ? `<span class="tk-baja">↓ ${bajan} ${bajan === 1 ? 'baja' : 'bajan'}</span>` : ''}${
+        suben ? `<span class="tk-sube">↑ ${suben} ${suben === 1 ? 'sube' : 'suben'}</span>` : ''}<small>frente a la última vez</small></p>` : ''}
+    </div>
     ${ticketHTML(t)}
 
     <div class="res-acciones">

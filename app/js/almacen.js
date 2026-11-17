@@ -29,7 +29,7 @@
    ============================================================ */
 
 const CLAVE  = 'luckstudio_compra';
-const SCHEMA = 10;
+const SCHEMA = 11;
 
 /* Toda instalación arranca con una lista, aunque nunca se
    creen más. Así el resto del código no tiene que distinguir
@@ -64,6 +64,7 @@ const INICIAL = {
   despensa: {},
   menu: {},
   bloques: {},
+  cocinadas: {},
   ajustes: { vista: 'frecuencia', agrupar: 'categoria' }
 };
 
@@ -141,6 +142,11 @@ function migrar(datos) {
     datos.menu ??= {};
     datos.bloques ??= {};
     datos.schema = 10;
+  }
+  if (datos.schema < 11) {
+    /* v11: cuándo se cocinó cada receta por última vez */
+    datos.cocinadas ??= {};
+    datos.schema = 11;
   }
   datos.schema = SCHEMA;
   return datos;

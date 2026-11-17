@@ -11,13 +11,13 @@
    donde se dejó (cerrar la app en mitad del súper no borra nada).
    ============================================================ */
 
-import { nuevoId } from './util.js?v=36';
-import { POR_ID } from './estado.js?v=36';
-import { aprenderDeTicket, preciosDe } from './precios.js?v=36';
-import { recordarTienda } from './ruta.js?v=36';
-import { desdeTicket } from './despensa.js?v=36';
-import { registrarPendientes } from './gastos.js?v=36';
-import { datos, guardar } from './almacen.js?v=36';
+import { nuevoId } from './util.js?v=39';
+import { POR_ID } from './estado.js?v=39';
+import { aprenderDeTicket, preciosDe } from './precios.js?v=39';
+import { recordarTienda } from './ruta.js?v=39';
+import { desdeTicket } from './despensa.js?v=39';
+import { registrarPendientes } from './gastos.js?v=39';
+import { datos, guardar } from './almacen.js?v=39';
 const oyentes = new Set();
 
 export function suscribirCompra(fn) {
@@ -209,6 +209,7 @@ function rellenarPreciosDe(idTienda) {
     }
     l.precio = Math.round(fila.formato * l.cant * 100) / 100;
     l.estimado = true;
+    l.est = l.precio;                 // la estimación original, para compararla con lo que se pague
     puestos++;
   }
   return puestos;
@@ -278,10 +279,19 @@ export function finalizar() {
       precio: l.precio,
       desc: l.desc || undefined,
       estimado: !!l.estimado,   // precio previsto, no confirmado
+      ...(l.est != null ? { est: l.est } : {}),
       nuevo: l.k === 'x'        // no estaba en el catálogo ni en la lista
     })),
     noCogidas: c.lineas.filter(l => !l.hecho).map(l => l.n)
   };
+
+  /* Lo estimado en la lista frente a lo que se ha pagado de verdad, solo de
+     las líneas que tenían estimación (el ticket final muestra la diferencia) */
+  const conEst = ticket.lineas.filter(l => l.est != null && l.precio != null);
+  if (conEst.length) {
+    ticket.previsto = Math.round(conEst.reduce((a, l) => a + l.est, 0) * 100) / 100;
+    ticket.previstoReal = Math.round(conEst.reduce((a, l) => a + l.precio, 0) * 100) / 100;
+  }
 
   datos.tickets.unshift(ticket);
   datos.compra = null;

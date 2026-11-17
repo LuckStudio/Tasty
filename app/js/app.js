@@ -11,69 +11,73 @@
    ============================================================ */
 
 import { estado, suscribir, totalArticulos, cargarLista, vaciar,
-         fijarVista, seleccionados } from './estado.js?v=36';
+         fijarVista, seleccionados } from './estado.js?v=39';
 import { compraActual, crearCompra, descartarCompra,
-         suscribirCompra, fijarTienda as fijarTiendaCompra } from './compra.js?v=36';
+         suscribirCompra, fijarTienda as fijarTiendaCompra } from './compra.js?v=39';
 import { suscribirPrecios, cuantosPreciosHay, aprenderDeTicket }
-  from './precios.js?v=36';
-import { CATALOGO_VERSION } from '../datos/catalogo.js?v=36';
-import { leerHash, enlace, codificar } from './url.js?v=36';
-import { vigilarIconos } from './iconos.js?v=36';
-import { iniciarTema, fijarTema, temaActual, TEMAS, fijarAcentoTienda } from './tema.js?v=36';
-import { iniciarGrid, pintarGrid, fijarBusqueda } from './ui/grid.js?v=36';
-import { iniciarResumen, pintarResumen } from './ui/resumen.js?v=36';
+  from './precios.js?v=39';
+import { CATALOGO_VERSION } from '../datos/catalogo.js?v=39';
+import { leerHash, enlace, codificar } from './url.js?v=39';
+import { vigilarIconos } from './iconos.js?v=39';
+import { iniciarTema, fijarTema, temaActual, TEMAS, fijarAcentoTienda } from './tema.js?v=39';
+import { iniciarGrid, pintarGrid, fijarBusqueda } from './ui/grid.js?v=39';
+import { iniciarResumen, pintarResumen } from './ui/resumen.js?v=39';
 import { iniciarComprador, pintarComprador, pintarTicket,
-         fijarTicketVisible } from './ui/comprador.js?v=36';
-import { iniciarFicha, cerrarFicha } from './ui/ficha.js?v=36';
-import { iniciarGastos, pintarGastos, reiniciarGastos } from './ui/gastos.js?v=36';
-import { iniciarAdmin, pintarAdmin, reiniciarAdmin } from './ui/admin.js?v=36';
+         fijarTicketVisible } from './ui/comprador.js?v=39';
+import { iniciarFicha, cerrarFicha } from './ui/ficha.js?v=39';
+import { iniciarGastos, pintarGastos, reiniciarGastos } from './ui/gastos.js?v=39';
+import { iniciarAdmin, pintarAdmin, reiniciarAdmin } from './ui/admin.js?v=39';
 import { iniciarPanelPrecios, pintarPanel, reiniciarPanelPrecios }
-  from './ui/precios-panel.js?v=36';
+  from './ui/precios-panel.js?v=39';
 import { iniciarVistaTiendas, pintarTiendas, reiniciarTiendas }
-  from './ui/tiendas.js?v=36';
-import { suscribirTiendas, TIENDAS, TIENDA_POR_ID } from './tiendas.js?v=36';
-import { abrirEdicionTicket } from './ui/gastos.js?v=36';
+  from './ui/tiendas.js?v=39';
+import { suscribirTiendas, TIENDAS, TIENDA_POR_ID } from './tiendas.js?v=39';
+import { abrirEdicionTicket } from './ui/gastos.js?v=39';
 import { iniciarImportar, pintarImportar, reiniciarImportar }
-  from './ui/importar.js?v=36';
+  from './ui/importar.js?v=39';
 import { iniciarRecordatorios, pintarRecordatorios, reiniciarRecordatorios }
-  from './ui/recordatorios.js?v=36';
+  from './ui/recordatorios.js?v=39';
 import { programar, avisosPerdidos, recordatorios, estadoPermiso }
-  from './recordatorios.js?v=36';
+  from './recordatorios.js?v=39';
 import { suscribirReposicion, limpiarUrgenciasHuerfanas, sugerencias }
-  from './reposicion.js?v=36';
+  from './reposicion.js?v=39';
 import { iniciarVistaListas, pintarListas, reiniciarListas }
-  from './ui/listas.js?v=36';
+  from './ui/listas.js?v=39';
 import { listaActiva, listas, cambiarA, otrasConCosas, suscribirListas }
-  from './listas.js?v=36';
-import { iniciarCesta, pintarCesta, reiniciarCesta } from './ui/cesta.js?v=36';
-import { iniciarDieta, pintarDieta, reiniciarDieta, abrirEnDieta } from './ui/dieta.js?v=36';
-import { suscribirRecetas, resumenDieta, cargarPaquetesIncluidos } from './recetas.js?v=36';
-import { RECETAS_NOVIEMBRE } from '../datos/recetas-noviembre.js?v=36';
+  from './listas.js?v=39';
+import { iniciarCesta, pintarCesta, reiniciarCesta } from './ui/cesta.js?v=39';
+import { iniciarDieta, pintarDieta, reiniciarDieta, abrirEnDieta } from './ui/dieta.js?v=39';
+import { suscribirRecetas, resumenDieta, cargarPaquetesIncluidos } from './recetas.js?v=39';
+import { RECETAS_NOVIEMBRE } from '../datos/recetas-noviembre.js?v=39';
 import { copiaTexto, csvTickets, csvPrecios, descargar, nombreArchivo,
          validarCopia, fusionar, limpiarTodo, cuantoHay, suscribirDatos,
          borrarHistorialTickets }
-  from './datos-io.js?v=36';
-import { suscribirCatalogo, estadoCatalogo } from './catalogo-edit.js?v=36';
+  from './datos-io.js?v=39';
+import { suscribirCatalogo, estadoCatalogo } from './catalogo-edit.js?v=39';
 import { suscribirGastos, ticketPorId, resumenGasto,
-         pendientesSugeridos } from './gastos.js?v=36';
-import { iniciarAjustesGemini, pintarBloqueGemini } from './ui/escaner.js?v=36';
-import { abrirHistorial, iniciarHistorial, pintarHistorial } from './ui/historial.js?v=36';
-import { iniciarProductos, pintarProductos } from './ui/productos.js?v=36';
-import { iniciarHoy, pintarHoy, reiniciarHoy } from './ui/hoy.js?v=36';
-import { iniciarMenu, pintarMenu, reiniciarMenu, fechaDelMenu } from './ui/menu.js?v=36';
-import { abrirReceta, iniciarReceta, pintarReceta } from './ui/receta.js?v=36';
-import { iniciarAcaba, mostrarAcaba } from './ui/acaba.js?v=36';
-import { vigilarFotosDeReceta } from './ui/receta-comun.js?v=36';
-import { suscribirDespensa } from './despensa.js?v=36';
-import { suscribirMenu } from './menu.js?v=36';
-import { abrirRuta, iniciarRuta, pintarRuta } from './ui/ruta.js?v=36';
-import { iniciarTienda, pintarTienda, prepararTienda, tiendaElegida } from './ui/tienda.js?v=36';
-import { $, euros, tap } from './util.js?v=36';
+         pendientesSugeridos } from './gastos.js?v=39';
+import { iniciarAjustesGemini, pintarBloqueGemini } from './ui/escaner.js?v=39';
+import { abrirHistorial, iniciarHistorial, pintarHistorial } from './ui/historial.js?v=39';
+import { iniciarProductos, pintarProductos } from './ui/productos.js?v=39';
+import { iniciarBienvenida, mostrarBienvenidaSiToca } from './ui/bienvenida.js?v=39';
+import { iniciarDespensa, pintarDespensa, reiniciarDespensa } from './ui/despensa.js?v=39';
+import { personas, fijarPersonas, copiaHecha, ultimaCopia } from './hogar.js?v=39';
+import { textoHace as textoHaceCocina } from './cocina.js?v=39';
+import { iniciarHoy, pintarHoy, reiniciarHoy } from './ui/hoy.js?v=39';
+import { iniciarMenu, pintarMenu, reiniciarMenu, fechaDelMenu } from './ui/menu.js?v=39';
+import { abrirReceta, iniciarReceta, pintarReceta } from './ui/receta.js?v=39';
+import { iniciarAcaba, mostrarAcaba } from './ui/acaba.js?v=39';
+import { vigilarFotosDeReceta } from './ui/receta-comun.js?v=39';
+import { suscribirDespensa } from './despensa.js?v=39';
+import { suscribirMenu } from './menu.js?v=39';
+import { abrirRuta, iniciarRuta, pintarRuta } from './ui/ruta.js?v=39';
+import { iniciarTienda, pintarTienda, prepararTienda, tiendaElegida } from './ui/tienda.js?v=39';
+import { $, euros, tap } from './util.js?v=39';
 
 /* Sello de versión. Lo cambia versionar.py junto con las rutas,
    así que ver aquí un número viejo significa que el navegador está
    usando archivos antiguos. */
-export const VERSION_APP = '36';
+export const VERSION_APP = '39';
 
 let vistaActual = 'hoy';
 let modo = 'editor';
@@ -90,7 +94,7 @@ function aplicarTemaTienda() {
 }
 
 /* Las subpantallas se ven bajo la pestaña de la que cuelgan */
-const PESTANA_DE = { receta: 'menu', dieta: 'menu' };
+const PESTANA_DE = { receta: 'menu', dieta: 'menu', despensa: 'hoy' };
 /* Dónde tiene sentido el botón flotante «Se acaba» */
 const CON_FAB = new Set(['hoy', 'menu', 'receta', 'grid', 'resumen', 'dieta']);
 
@@ -117,7 +121,7 @@ function ir(vista) {
     ajustes: 'Ajustes', admin: 'Catálogo', precios: 'Precios',
     tiendas: 'Supermercados', importar: 'Importar',
     recordatorios: 'Recordatorios', listas: 'Listas',
-    cesta: 'Dónde comprar', dieta: 'Dieta', historial: 'Histórico de precios', productos: 'Productos', ruta: 'Rutas de tienda', tienda: 'Elegir tienda',
+    cesta: 'Dónde comprar', dieta: 'Dieta', historial: 'Histórico de precios', productos: 'Productos', despensa: 'En casa', ruta: 'Rutas de tienda', tienda: 'Elegir tienda',
     comprador: 'En el supermercado', ticket: 'Ticket'
   };
   pintarBarra(vista, titulos[vista] || '');
@@ -141,6 +145,7 @@ function ir(vista) {
   if (vista === 'cesta')         pintarCesta();
   if (vista === 'historial')     pintarHistorial();
   if (vista === 'productos')     pintarProductos();
+  if (vista === 'despensa')      pintarDespensa();
   if (vista === 'ruta')          pintarRuta();
   if (vista === 'tienda')        pintarTienda();
   if (vista === 'dieta')         pintarDieta();
@@ -148,6 +153,7 @@ function ir(vista) {
   if (vista === 'ticket')    pintarTicket($('#v-ticket'));
 
   /* Salir cancela cualquier borrador a medias */
+  if (vista !== 'despensa') reiniciarDespensa();
   if (vista !== 'hoy')    reiniciarHoy();
   if (vista !== 'menu')   reiniciarMenu();
   if (vista !== 'gastos') reiniciarGastos();
@@ -453,10 +459,23 @@ function pintarAjustes() {
     </div>
 
 
+    <div class="aj-bloque">
+      <h2>Tu hogar</h2>
+      <div class="aj-dato"><span>Personas en casa</span>
+        <span class="res-pasos"><button id="aj-pers-menos" aria-label="Una persona menos">−</button><span>${personas()}</span><button id="aj-pers-mas" aria-label="Una persona más">+</button></span></div>
+      <p class="ga-nota">Las recetas vienen para 1 persona. Con «Somos ${Math.max(2, personas())}», el menú y las
+      cantidades de la compra parten de ${Math.max(2, personas())} raciones.</p>
+      <div class="aj-dato"><span>Última copia de seguridad</span>
+        <span>${ultimaCopia() ? textoHaceCocina(ultimaCopia().slice(0, 10)) : 'nunca'}</span></div>
+      <button class="btn-secundario" id="aj-bienvenida" style="margin-top:0.8rem">Repetir la configuración inicial</button>
+    </div>
+
     <div class="aj-bloque" id="aj-gemini"></div>
 
     <div class="aj-bloque">
       <h2>Catálogo</h2>
+      <button class="btn-secundario" id="aj-despensa"
+              style="margin-bottom:0.5px">En casa · lo que hay en la despensa</button>
       <button class="btn-secundario" id="aj-productos"
               style="margin-bottom:0.5px">Buscar productos y precios</button>
       <button class="btn-secundario" id="aj-rutas"
@@ -518,6 +537,10 @@ function pintarAjustes() {
 }
 
 $('#v-ajustes').addEventListener('click', e => {
+  if (e.target.closest('#aj-pers-menos')) { tap(); fijarPersonas(personas() - 1); pintarAjustes(); return; }
+  if (e.target.closest('#aj-pers-mas')) { tap(); fijarPersonas(personas() + 1); pintarAjustes(); return; }
+  if (e.target.closest('#aj-bienvenida')) { tap(); document.dispatchEvent(new CustomEvent('abrir-bienvenida')); return; }
+  if (e.target.closest('#aj-despensa')) { tap(); ir('despensa'); return; }
   if (e.target.closest('#aj-productos')) { tap(); ir('productos'); return; }
   if (e.target.closest('#aj-rutas')) { tap(); document.dispatchEvent(new CustomEvent('abrir-ruta', { detail: { volver: 'ajustes' } })); return; }
   if (e.target.closest('#aj-admin'))   { tap(); ir('admin');   return; }
@@ -546,11 +569,12 @@ function exportarTodo() {
       nota: `${cuantoHay().tickets} compras · ${cuantoHay().precios} precios`,
       accion: () => {
         descargar(nombreArchivo('json'), texto);
+        copiaHecha();
         aviso('Archivo descargado');
       } },
     { texto: 'Copiar al portapapeles',
       nota: 'Para pegarlo en otro dispositivo',
-      accion: () => copiar(texto, 'Copia hecha') }
+      accion: () => { copiar(texto, 'Copia hecha'); copiaHecha(); } }
   ]);
 }
 
@@ -583,6 +607,7 @@ function confirmarBorradoTickets() {
       nota: `${hay.tickets} compras · ${euros(hay.gasto)}`,
       accion: () => {
         descargar(nombreArchivo('json'), copiaTexto());
+        copiaHecha();
         aviso('Copia descargada · ya puedes borrar el historial');
       } },
     { texto: `Borrar ${hay.tickets} ${hay.tickets === 1 ? 'ticket' : 'tickets'}`,
@@ -604,6 +629,7 @@ function confirmarBorrado() {
       nota: `${hay.tickets} compras y ${euros(hay.gasto)} de historial`,
       accion: () => {
         descargar(nombreArchivo('json'), copiaTexto());
+        copiaHecha();
         aviso('Exportado · ahora ya puedes borrar');
       } },
     { texto: 'Borrar todo sin exportar',
@@ -747,7 +773,7 @@ function repintarCocina() {
   if (vistaActual === 'menu')   pintarMenu();
   if (vistaActual === 'receta') pintarReceta();
 }
-suscribirDespensa(repintarCocina);
+suscribirDespensa(() => { repintarCocina(); if (vistaActual === 'despensa') pintarDespensa(); if (vistaActual === 'productos') pintarProductos(); });
 suscribirMenu(repintarCocina);
 
 suscribirRecetas(() => {
@@ -833,11 +859,13 @@ function arrancar() {
   iniciarAjustesGemini();
   iniciarHistorial($('#v-historial'), vista => ir(vista));
   iniciarProductos($('#v-productos'));
+  iniciarDespensa($('#v-despensa'), { alVolver: () => ir('hoy') });
   iniciarRuta($('#v-ruta'), vista => ir(vista));
   vigilarFotosDeReceta();
   iniciarAcaba();
+  iniciarBienvenida();
   const verReceta = (origen) => (id, raciones, opciones = {}) => { abrirReceta(id, origen, { raciones, ...opciones }); ir('receta'); };
-  iniciarHoy($('#v-hoy'), { alMenu: () => ir('menu'), alVerReceta: verReceta('hoy') });
+  iniciarHoy($('#v-hoy'), { alMenu: () => ir('menu'), alVerReceta: verReceta('hoy'), alDespensa: () => ir('despensa') });
   iniciarMenu($('#v-menu'), { alRecetas: () => ir('dieta'), alVerReceta: verReceta('menu'), alResumen: () => ir('resumen') });
   iniciarReceta($('#v-receta'), {
     alVolver: v => ir(v === 'hoy' || v === 'menu' ? v : 'menu'),
@@ -852,6 +880,7 @@ function arrancar() {
     alSalir: () => salirComprador()
   });
   document.addEventListener('elegir-tienda', () => { prepararTienda(); ir('tienda'); });
+  document.addEventListener('exportar-copia', () => exportarTodo());
   document.addEventListener('abrir-ruta', e => {
     abrirRuta(e.detail?.tienda, e.detail?.volver || (vistaActual === 'ruta' ? 'ajustes' : vistaActual));
     ir('ruta');
@@ -941,6 +970,7 @@ function arrancar() {
   marcarPendientes();
   marcarDieta();
   ir('hoy');                  // la pantalla de inicio es «Qué toca hoy»
+  mostrarBienvenidaSiToca();  // solo si la app está sin estrenar
   revisarRecordatorios();
 }
 
@@ -958,6 +988,13 @@ function revisarRecordatorios() {
   if (!perdidos.length) return;
 
   const r = perdidos[0].recordatorio;
+  if (r.tipo === 'cocinar') {
+    abrirHoja(r.texto, [
+      { texto: 'Ver qué toca hoy', accion: () => ir('hoy') },
+      { texto: 'Ahora no' }
+    ]);
+    return;
+  }
   abrirHoja(r.texto, [
     { texto: 'Ir a comprar',
       nota: `${totalArticulos()} cosas en la lista`,
@@ -969,6 +1006,7 @@ function revisarRecordatorios() {
 
 /* El service worker avisa cuando se toca una notificación */
 navigator.serviceWorker?.addEventListener?.('message', e => {
+  if (e.data?.tipo === 'abrir-hoy') { ir('hoy'); return; }
   if (e.data?.tipo === 'abrir-comprador') {
     document.dispatchEvent(new CustomEvent('ver-como-comprador'));
   }

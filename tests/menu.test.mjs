@@ -50,6 +50,41 @@ test('añadir recetas a una franja; la misma receta no se repite, se actualizan 
   M.anadirReceta(LUN, 'cena', 'extra', 2);
   assert.equal(M.diaDe(LUN).cena.length, 2);                  // plato y acompañamiento
 });
+test('cada receta solo cabe en su momento del día: desayuno en desayuno, comida en comida, cena en cena', () => {
+  assert.equal(M.cabeEnFranja(R.recetaPorId('tostadas'), 'desayuno'), true);
+  assert.equal(M.cabeEnFranja(R.recetaPorId('tostadas'), 'comida'), false);
+  assert.equal(M.cabeEnFranja(R.recetaPorId('lentejas'), 'comida'), true);
+  assert.equal(M.cabeEnFranja(R.recetaPorId('lentejas'), 'cena'), false);
+  assert.equal(M.cabeEnFranja(R.recetaPorId('salmon'), 'cena'), true);
+  assert.equal(M.cabeEnFranja(R.recetaPorId('salmon'), 'desayuno'), false);
+  assert.equal(M.cabeEnFranja(null, 'cena'), false);
+});
+test('el menú rechaza una receta en el momento equivocado, con un mensaje claro, y no la guarda', () => {
+  const dia = '2026-12-07';
+  const r = M.anadirReceta(dia, 'desayuno', 'salmon', 2);
+  assert.equal(r.ok, false);
+  assert.equal(r.error, '«Salmón al horno» es una cena: no se puede poner en el desayuno.');
+  assert.equal(M.anadirReceta(dia, 'cena', 'tostadas').error, '«Tostadas de aguacate y huevo» es un desayuno: no se puede poner en la cena.');
+  assert.equal(M.anadirReceta(dia, 'comida', 'extra').ok, false);
+  assert.equal(datos.menu[dia], undefined);                       // y no deja un día vacío a medias
+  assert.equal(M.anadirReceta(dia, 'cena', 'salmon', 2).ok, true); // en su sitio, sí
+  M.vaciarDia(dia);
+});
+test('hay cuatro franjas; las meriendas caben en la merienda y los almuerzos no tienen franja', () => {
+  R.importarRecetas({ recetas: [
+    { id: 'merienda-x', nombre: 'Yogur con fruta', comida: 'merienda', plan: 'dieta', raciones: 1, ingredientes: [{ id: 503, cant: 1, unidad: 'ud' }] },
+    { id: 'almuerzo-x', nombre: 'Bocadillo', comida: 'almuerzo', plan: 'dieta', raciones: 1, ingredientes: [{ id: 601, cant: 1, unidad: 'ud' }] }] });
+  assert.deepEqual(M.FRANJAS.map(f => f.id), ['desayuno', 'comida', 'merienda', 'cena']);
+  assert.equal(M.franjaDeReceta('merienda'), 'merienda');
+  assert.equal(M.franjaDeReceta('almuerzo'), null);
+  assert.equal(M.anadirReceta('2026-12-07', 'merienda', 'merienda-x').ok, true);
+  assert.equal(M.anadirReceta('2026-12-07', 'cena', 'merienda-x').error, '«Yogur con fruta» es una merienda: no se puede poner en la cena.');
+  for (const f of ['desayuno', 'comida', 'merienda', 'cena']) assert.equal(M.anadirReceta('2026-12-07', f, 'almuerzo-x').ok, false);
+  assert.equal(M.anadirReceta('2026-12-07', 'comida', 'almuerzo-x').error,
+    '«Bocadillo» es un almuerzo, y el menú solo tiene desayuno, comida, merienda y cena.');
+  assert.deepEqual(M.diaDe('2026-12-07').merienda, [{ r: 'merienda-x', n: 1 }]);
+  M.vaciarDia('2026-12-07');
+});
 test('datos no válidos se rechazan sin romper nada', () => {
   assert.equal(M.anadirReceta('mañana', 'cena', 'salmon').ok, false);
   assert.equal(M.anadirReceta(LUN, 'merienda', 'salmon').ok, false);
@@ -153,30 +188,33 @@ test('comparado con la despensa: hay, falta, se acaba y desconocido', () => {
   assert.equal(est(402), 'falta');
   assert.equal(est(701), 'agotado');
   assert.equal(est(202), 'acaba');
-  assert.equal(est(715), 'desconocido');
+  assert.equal(est(715), 'basico');                        // especias: un básico del que no se sabe nada se da por «hay»
   assert.deepEqual(l.find(x => x.id === 201).tengo, { cant: 650, unidad: 'g' });
   const r = M.resumenConsolidado(l);
   assert.equal(r.faltan, 2);                    // merluza y aceite
   assert.equal(r.acaban, 1);
-  assert.equal(r.ingredientes, l.length);
+  assert.equal(r.ingredientes + r.basicos, l.length);      // los básicos van aparte (aceite, especias…)
+  assert.ok(r.nombresBasicos.includes('Especias'));
 });
 test('lo que falta pasa a la lista de la compra una sola vez', () => {
   for (const k of Object.keys(datos.lista)) delete datos.lista[k];
   const l = M.consolidar(M.recetasDeBloque(LUN).filter(x => ['salmon', 'lentejas'].includes(x.receta.id)));
   assert.deepEqual(M.faltasDe(l).sort(), [402, 701]);
-  assert.deepEqual(M.faltasALaLista(l), { anadidos: 2, yaEstaban: 0, sinSaber: 0 });
-  assert.deepEqual(M.faltasALaLista(l), { anadidos: 0, yaEstaban: 2, sinSaber: 0 });
+  assert.deepEqual(M.faltasALaLista(l), { anadidos: 2, yaEstaban: 0, sinSaber: 0, unidades: 2 });
+  assert.deepEqual(M.faltasALaLista(l), { anadidos: 0, yaEstaban: 2, sinSaber: 0, unidades: 0 });
   assert.equal(datos.lista[402], 1);
 });
-test('al generar la lista entra también lo que no se sabe si hay, pero no lo que se sabe que hay', () => {
+test('al generar la lista entra también lo que no se sabe si hay, pero no lo que se sabe que hay ni los básicos', () => {
   for (const k of Object.keys(datos.lista)) delete datos.lista[k];
-  const l = M.consolidar(M.recetasDeBloque(LUN).filter(x => ['salmon', 'lentejas'].includes(x.receta.id)));
+  const l = M.consolidar([...M.recetasDeBloque(LUN).filter(x => ['salmon', 'lentejas'].includes(x.receta.id)),
+    { receta: R.recetaPorId('tostadas'), raciones: 2 }]);            // las tostadas traen aguacate y pan: no se sabe si hay
   const estrictas = M.faltasDe(l);
   const todas = M.faltasDe(l, { incluirDesconocidos: true });
   assert.ok(todas.length > estrictas.length);
   assert.equal(todas.includes(201), false);                // el tomate: se sabe que hay de sobra
   assert.equal(todas.includes(202), false);                // la cebolla «se acaba»: se sabe, no se repite
-  assert.ok(todas.includes(715));                          // especias: no se sabe
+  assert.equal(todas.includes(715), false);                // las especias son un básico: no se piden
+  assert.ok(todas.includes(112));                          // el aguacate: no se sabe
   const r = M.faltasALaLista(l, { incluirDesconocidos: true });
   assert.equal(r.anadidos, todas.length);
   assert.ok(r.sinSaber >= 1);
@@ -219,6 +257,58 @@ test('cada receta tiene siempre el mismo color, de la paleta', () => {
   assert.ok(M.PALETA_RECETAS.includes(M.colorDeReceta(r)));
   const colores = new Set(datos.recetas.map(M.colorDeReceta));
   assert.ok(colores.size >= 2);
+});
+
+test('un básico de despensa solo se pide cuando se acaba', () => {
+  const B = (id, estado) => ({ id, estado, basico: true, total: 0, sinCantidad: true, unidad: null, desglose: [] });
+  const l = [B(702, 'basico'), B(701, 'agotado'), B(716, 'acaba'), B(715, 'hay')];
+  assert.deepEqual(M.faltasDe(l).sort(), [701, 716]);
+});
+test('los básicos se pueden cambiar por producto y vuelven a su valor por defecto', async () => {
+  const BA = await app('js/basicos.js');
+  const sal = E.POR_ID[702], pollo = E.POR_ID[302];
+  assert.equal(BA.esBasico(sal), true);                   // por defecto
+  assert.equal(BA.esBasico(pollo), false);
+  BA.fijarBasico(302, true);  assert.equal(BA.esBasico(E.POR_ID[302]), true);
+  BA.fijarBasico(702, false); assert.equal(BA.esBasico(E.POR_ID[702]), false);
+  BA.fijarBasico(302, undefined); BA.fijarBasico(702, undefined);
+  assert.deepEqual([BA.esBasico(E.POR_ID[302]), BA.esBasico(E.POR_ID[702])], [false, true]);
+});
+test('CANTIDADES REALES: con el formato conocido se piden los paquetes necesarios (670 g en bandejas de 500 g = 2)', () => {
+  datos.preciosLocal[204] = { mercadona: { f: 1.5, b: 3, q: 500, u: 'g', d: '2026-11-01' } };       // patatas, bandeja de 500 g
+  const f = { id: 204, estado: 'desconocido', total: 670, unidad: 'g', sinCantidad: false, tengo: null };
+  assert.equal(M.cantidadAComprar(f), 2);
+  assert.equal(M.cantidadAComprar({ ...f, total: 500 }), 1);          // justo, sin pasarse
+  assert.equal(M.cantidadAComprar({ ...f, total: 501 }), 2);
+  assert.equal(M.cantidadAComprar({ ...f, total: 1600 }), 4);
+});
+test('cantidades: descuenta lo que ya hay en casa', () => {
+  const f = { id: 204, estado: 'falta', total: 1200, unidad: 'g', sinCantidad: false, tengo: { cant: 450, unidad: 'g' } };
+  assert.equal(M.cantidadAComprar(f), 2);                              // faltan 750 g → 2 bandejas
+});
+test('cantidades: por unidades si se vende por unidades, y 1 si no hay forma de saberlo', () => {
+  assert.equal(M.cantidadAComprar({ id: 112, estado: 'falta', total: 3, unidad: 'ud', sinCantidad: false, tengo: null }), 3);   // aguacates
+  assert.equal(M.cantidadAComprar({ id: 402, estado: 'falta', total: 600, unidad: 'g', sinCantidad: false, tengo: null }), 1);  // merluza, sin formato conocido
+  assert.equal(M.cantidadAComprar({ id: 201, estado: 'falta', total: 0, unidad: null, sinCantidad: true, tengo: null }), 1);
+  assert.equal(M.cantidadAComprar({ id: 112, estado: 'falta', total: 500, unidad: 'ud', sinCantidad: false, tengo: null }), 99);  // tope
+});
+test('la lista generada lleva las cantidades reales, no una unidad de cada cosa', () => {
+  for (const k of Object.keys(datos.lista)) delete datos.lista[k];
+  const lista = M.consolidar([{ receta: { id: 'x', raciones: 1, ingredientes: [{ id: 204, cant: 670, unidad: 'g' }, { id: 112, cant: 3, unidad: 'ud' }] }, raciones: 1 }]);
+  const r = M.faltasALaLista(lista, { incluirDesconocidos: true });
+  assert.equal(datos.lista[204], 2);
+  assert.equal(datos.lista[112], 3);
+  assert.deepEqual([r.anadidos, r.unidades], [2, 5]);
+  for (const k of Object.keys(datos.lista)) delete datos.lista[k];
+});
+test('coste: de lo consolidado con los precios conocidos; lo que no tiene precio se cuenta aparte; los básicos no cuentan', () => {
+  datos.preciosLocal[110] = { mercadona: { f: 1.75, b: 3.49, d: '2026-11-01' } };
+  const rec = { id: 'c', raciones: 2, ingredientes: [{ id: 110, cant: 500, unidad: 'g' }, { id: 112, cant: 2, unidad: 'ud' }, { id: 701, cant: 10, unidad: 'ml' }] };
+  const c = M.costeDe(M.consolidar([{ receta: rec, raciones: 2 }]));
+  assert.equal(c.total, 1.75);                  // kiwi: 500 g a 3,49 €/kg
+  assert.deepEqual([c.conocidos, c.sinPrecio], [1, 1]);   // el aguacate sin precio; el aceite es básico y no cuenta
+  const r = M.costePorRacion(rec);
+  assert.equal(r.porRacion, 0.88);              // 1,75 € entre 2 raciones
 });
 
 for (const [nombre, fn] of cola) {
